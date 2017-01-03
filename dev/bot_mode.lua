@@ -24,7 +24,7 @@ M.Mode = MODE_LANING;
 M.PrevMode = "none";
 function M:DebugStateChange()
   if(self.PrevMode ~= self.Mode) then
-      print("Antimage bot STATE: "..self.Mode.." <- "..self.PrevMode);
+      print(GetBot():GetUnitName().." bot MODE: "..self.Mode.." <- "..self.PrevMode);
       self.PrevMode = self.Mode;
   end
 end

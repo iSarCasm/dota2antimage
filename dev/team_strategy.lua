@@ -14,6 +14,7 @@ M.Strategy = STRATEGY_IDLE;
 --------------------------------------------------------
 --------------------------------------------------------
 function M:UpdateState()
+  self.Strategy = STRATEGY_LANING;
   if (DotaTime() > 14*60) then
     self.Strategy = STATE_FARMING;
   end
@@ -23,7 +24,7 @@ end
 M.PrevStrategy = "none";
 function M:DebugStateChange()
   if(self.PrevStrategy ~= self.Strategy) then
-      print("Team "..GetTeam().." state: "..self.Strategy.." <- "..self.PrevStrategy);
+      print("Team "..GetTeam().." STRATEGY: "..self.Strategy.." <- "..self.PrevStrategy);
       self.PrevStrategy = self.Strategy;
   end
 end

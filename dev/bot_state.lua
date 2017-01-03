@@ -69,7 +69,7 @@ function M.StateWaitCreeps(self, BotInfo, Mode, Strategy)
 end
 
 function M.StateLhD(self, BotInfo, Mode, Strategy)
-  print ("LAST HIT!")
+  -- print ("LAST HIT!")
 end
 --------------------------------------------------------
 M.StateMachine = {};
@@ -81,7 +81,7 @@ M.StateMachine.STATE_LH_D         = M.StateLhD;
 M.PrevState = "none";
 function M:DebugStateChange()
   if(self.PrevState ~= self.StateMachine.State) then
-      print("Antimage bot STATE: "..self.StateMachine.State.." <- "..self.PrevState);
+      print(GetBot():GetUnitName().." bot CURRENT STATE: "..self.StateMachine.State.." <- "..self.PrevState);
       self.PrevState = self.StateMachine.State;
   end
 end

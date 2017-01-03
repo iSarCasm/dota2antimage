@@ -1,3 +1,3 @@
 function Think()
-  --dont move guys
+  -- empty
 end
