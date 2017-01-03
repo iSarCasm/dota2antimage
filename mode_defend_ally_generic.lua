@@ -31,7 +31,7 @@ function GetDesire()
 	local fBestDefendScore = 0;
 	local npcBestDefendableAlly = nil;
 	local npcBestAttackingEnemy = nil;
-	
+
 	local tableNearbyRetreatingAlliedHeroes = npcBot:GetNearbyHeroes( 1000, false, BOT_MODE_RETREAT );
 	if ( #tableNearbyRetreatingAlliedHeroes == 0 )
 	then
