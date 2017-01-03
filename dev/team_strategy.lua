@@ -7,23 +7,24 @@ local STRATEGY_SPLITTING   = "STRATEGY_SPLITTING";
 local STRATEGY_PUSHING     = "STRATEGY_PUSHING";
 local STRATEGY_GANKING     = "STRATEGY_GANKING";
 --------------------------------------------------------
-function M:UpdateState(StateMachine)
+M.LastCalled = {};
+M.LastCalled[TEAM_DIRE]    = nil;
+M.LastCalled[TEAM_RADIANT] = nil;
+M.Strategy = STRATEGY_IDLE;
+--------------------------------------------------------
+--------------------------------------------------------
+function M:UpdateState()
   if (DotaTime() > 14*60) then
-    M.Strategy = STATE_FARMING;
+    self.Strategy = STATE_FARMING;
   end
 end
+
 --------------------------------------------------------
-M.LastCalled = {};
-M.LastCalled[TEAM_RADIANT]  = math.floor(DotaTime());
-M.LastCalled[TEAM_DIRE]     = math.floor(DotaTime());
-M.Strategy = STATE_IDLE;
---------------------------------------------------------
---------------------------------------------------------
-M.PrevState = "none";
+M.PrevStrategy = "none";
 function M:DebugStateChange()
-  if(self.PrevState ~= M.Strategy) then
-      print("Team "..GetTeam().." state: "..M.Strategy.." <- "..self.PrevState);
-      self.PrevState = M.Strategy;
+  if(self.PrevStrategy ~= self.Strategy) then
+      print("Team "..GetTeam().." state: "..self.Strategy.." <- "..self.PrevStrategy);
+      self.PrevStrategy = self.Strategy;
   end
 end
 
@@ -33,12 +34,11 @@ function M:DebugCallTimes()
 end
 --------------------------------------------------------
 function M:Update()
-  if (self.LastCalled[GetTeam()] != DotaTime()) then
-    self.LastCalled[GetTeam()] = DotaTime();
-    self.UpdateState(StateMachine);
-    self.DebugCallTimes();
+  if (self.LastCalled[GetTeam()] ~= math.floor(DotaTime())) then
+    self.LastCalled[GetTeam()] = math.floor(DotaTime());
+    self:UpdateState();
   end
-  self.DebugStateChange();
+  self:DebugStateChange();
 end
 
 return M;

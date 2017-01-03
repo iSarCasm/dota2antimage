@@ -1,4 +1,5 @@
 local M = {}
+local DotaBotUtility  = require(GetScriptDirectory().."/dev/utility");
 --------------------------------------------------------
 local STATE_ESCAPE                = "STATE_ESCAPE";
 local STATE_JUKE                  = "STATE_JUKE";
@@ -52,7 +53,7 @@ local STATE_BUYBACK               = "STATE_BUYBACK";
 local STATE_TP_BOTTLE             = "STATE_TP_BOTTLE";
 local STATE_TP_BOTTLERESTORE      = "STATE_TP_BOTTLERESTORE";
 --------------------------------------------------------
-function M:UpdateState(StateMachine, BotInfo)
+function M:UpdateState(BotInfo, Mode, Strategy)
   if (DotaTime() < 30) then
     self.StateMachine.State = STATE_WAIT_CREEPS;
   else
@@ -61,34 +62,34 @@ function M:UpdateState(StateMachine, BotInfo)
 end
 --------------------------------------------------------
 --------------------------------------------------------
-function M:StateWaitCreeps(StateMachine, BotInfo)
+function M.StateWaitCreeps(self, BotInfo, Mode, Strategy)
   local npcBot = GetBot();
   local tower = DotaBotUtility:GetFrontTowerAt(BotInfo.LANE);
   npcBot:Action_MoveToLocation(tower:GetLocation());
 end
 
-function M:StateLhD(StateMachine, BotInfo)
+function M.StateLhD(self, BotInfo, Mode, Strategy)
   print ("LAST HIT!")
 end
 --------------------------------------------------------
 M.StateMachine = {};
 M.StateMachine.State         = STATE_IDLE;
-M.StateMachine.STATE_WAIT_CREEPS  = StateWaitCreeps;
-M.StateMachine.STATE_LH_D         = StateLhD;
+M.StateMachine.STATE_WAIT_CREEPS  = M.StateWaitCreeps;
+M.StateMachine.STATE_LH_D         = M.StateLhD;
 --------------------------------------------------------
 --------------------------------------------------------
 M.PrevState = "none";
 function M:DebugStateChange()
-  if(self.PrevState ~= StateMachine.State) then
+  if(self.PrevState ~= self.StateMachine.State) then
       print("Antimage bot STATE: "..self.StateMachine.State.." <- "..self.PrevState);
-      self.PrevState = StateMachine.State;
+      self.PrevState = self.StateMachine.State;
   end
 end
 --------------------------------------------------------
-function M:Act(BotInfo)
-  self.UpdateState(self.StateMachine, BotInfo);
-  self.StateMachine[self.StateMachine.State](self.StateMachine, BotInfo);
-  self.DebugStateChange();
+function M:Act(BotInfo, Mode, Strategy)
+  self:UpdateState(BotInfo, Mode, Strategy);
+  self.StateMachine[self.StateMachine.State](self, BotInfo, Mode, Strategy);
+  self:DebugStateChange();
 end
 
 return M;

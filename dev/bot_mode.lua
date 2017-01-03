@@ -12,32 +12,26 @@ local MODE_INITIATING  = "MODE_INITIATING";
 local MODE_HELPING     = "MODE_HELPING";
 local MODE_ROSHING     = "MODE_ROSHING";
 --------------------------------------------------------
-function StateIdle(StateMachine, BotInfo)
-  M.Mode = STATE_LANING;
-end
-
-function UpdateState(BotInfo, M.Mode)
-  -- local npcBot = GetBot();
+function M:UpdateState(BotInfo, TeamStrategy)
   if (DotaTime() > 14*60) then
-    M.Mode = STATE_FARMING;
-    -- local tower = DotaBotUtility:GetFrontTowerAt(BotInfo.LANE);
-    -- npcBot:Action_MoveToLocation(tower:GetLocation());
+    self.Mode = MODE_FARMING;
   end
 end
 --------------------------------------------------------
-local M.Mode = STATE_LANING;
+M.Mode = MODE_LANING;
 --------------------------------------------------------
 --------------------------------------------------------
-local PrevMode = "none";
-function DebugStateChange()
-  if(PrevMode ~= M.Mode) then
-      print("Antimage bot STATE: "..M.Mode.." <- "..PrevMode);
-      PrevMode = M.Mode;
+M.PrevMode = "none";
+function M:DebugStateChange()
+  if(self.PrevMode ~= self.Mode) then
+      print("Antimage bot STATE: "..self.Mode.." <- "..self.PrevMode);
+      self.PrevMode = self.Mode;
   end
 end
 --------------------------------------------------------
-function M:Update(BotInfo, M.Mode)
-  UpdateState(BotInfo, M.Mode);
+function M:Update(BotInfo, TeamStrategy)
+  self:UpdateState(BotInfo, TeamStrategy);
+  self:DebugStateChange();
 end
 
 return M;
