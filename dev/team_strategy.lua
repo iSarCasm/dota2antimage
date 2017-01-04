@@ -16,7 +16,7 @@ M.Strategy = STRATEGY_IDLE;
 function M:UpdateState()
   self.Strategy = STRATEGY_LANING;
   if (DotaTime() > 14*60) then
-    self.Strategy = STATE_FARMING;
+    self.Strategy = STRATEGY_FARMING;
   end
 end
 
