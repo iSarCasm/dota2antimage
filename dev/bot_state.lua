@@ -1,6 +1,7 @@
 local M = {}
 local DotaBotUtility  = require(GetScriptDirectory().."/dev/utility");
-local Creeping        = require(GetScriptDirectory().."/dev/state/creeping");
+local StateWaitCreeps = require(GetScriptDirectory().."/dev/state/state_wait_creeps");
+local StateLhD        = require(GetScriptDirectory().."/dev/state/state_lh_d");
 --------------------------------------------------------
 local STATE_ESCAPE                = "STATE_ESCAPE";
 local STATE_JUKE                  = "STATE_JUKE";
@@ -62,30 +63,10 @@ function M:UpdateState(BotInfo, Mode, Strategy)
   end
 end
 --------------------------------------------------------
---------------------------------------------------------
-function M.StateWaitCreeps(self, BotInfo, Mode, Strategy)
-  local bot = GetBot();
-  local tower = DotaBotUtility:GetFrontTowerAt(BotInfo.LANE);
-  bot:Action_MoveToLocation(tower:GetLocation());
-end
-
-function M.StateLhD(self, BotInfo, Mode, Strategy)
-  local bot = GetBot();
-  local comfort_point = Creeping:GetComfortPoint(BotInfo);
-  Creeping:LastHitAndDeny();
-  if (comfort_point ~= nil and bot:GetCurrentActionType() ~= BOT_ACTION_TYPE_ATTACK) then
-    bot:Action_MoveToLocation(comfort_point);
-    DebugDrawText(25, 200, "Current location: "..bot:GetLocation()[1].." "..bot:GetLocation()[2], 255, 255, 255);
-    DebugDrawText(25, 220, "Target location: "..comfort_point[1].." "..comfort_point[2], 255, 255, 255);
-    DebugDrawCircle(Vector(comfort_point[1], comfort_point[2], bot:GetGroundHeight()), 20, 0, 255, 0);
-    DebugDrawLine(bot:GetLocation(), Vector(comfort_point[1], comfort_point[2], bot:GetGroundHeight()), 0, 255, 0);
-  end
-end
---------------------------------------------------------
 M.State = STATE_IDLE;
 M.StateMachine = {};
-M.StateMachine.STATE_WAIT_CREEPS  = M.StateWaitCreeps;
-M.StateMachine.STATE_LH_D         = M.StateLhD;
+M.StateMachine.STATE_WAIT_CREEPS  = StateWaitCreeps;
+M.StateMachine.STATE_LH_D         = StateLhD;
 --------------------------------------------------------
 --------------------------------------------------------
 M.PrevState = "none";
@@ -98,8 +79,12 @@ end
 --------------------------------------------------------
 function M:Act(BotInfo, Mode, Strategy)
   self:UpdateState(BotInfo, Mode, Strategy);
-  self.StateMachine[self.State](self, BotInfo, Mode, Strategy);
+  self.StateMachine[self.State]:Run(BotInfo, Mode, Strategy);
   self:DebugStateChange();
+end
+
+function M:MiniState()
+  return self.StateMachine[self.State].StateMachine.State;
 end
 
 return M;
