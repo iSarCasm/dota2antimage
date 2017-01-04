@@ -3,11 +3,10 @@ require(GetScriptDirectory().."/dev/constants/roles");
 local TeamStrategy    = require(GetScriptDirectory().."/dev/team_strategy");
 local BotMode         = require(GetScriptDirectory().."/dev/bot_mode");
 local BotState        = require(GetScriptDirectory().."/dev/bot_state");
+local BotInfo         = require(GetScriptDirectory().."/dev/bot_info")
 --------------------------------------------------------
 --------------------------------------------------------
-local BotInfo = {};
-      BotInfo.LANE = LANE_TOP;
-      BotInfo.ROLE = ROLE_CARRY;
+BotInfo:Init(LANE_TOP, ROLE_CARRY);
 --------------------------------------------------------
 --------------------------------------------------------
 function DebugStatesFields()
@@ -17,8 +16,10 @@ function DebugStatesFields()
 end
 --------------------------------------------------------
 function Think(  )
+  local MyInfo = BotInfo[GetBot():GetUnitName()];
   TeamStrategy:Update();
-  BotMode:Update(BotInfo, TeamStrategy.Strategy);
-  BotState:Act(BotInfo, BotMode.Mode, TeamStrategy.Strategy);
+  BotMode:Update(MyInfo, TeamStrategy.Strategy);
+  BotState:Act(MyInfo, BotMode.Mode, TeamStrategy.Strategy);
+  BotInfo:GatherData();
   DebugStatesFields();
 end

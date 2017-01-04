@@ -1,6 +1,6 @@
 local M = {}
 local DotaBotUtility  = require(GetScriptDirectory().."/dev/utility");
-local Creeping        = require(GetScriptDirectory().."/dev/states/creeping");
+local Creeping        = require(GetScriptDirectory().."/dev/state/creeping");
 --------------------------------------------------------
 local STATE_ESCAPE                = "STATE_ESCAPE";
 local STATE_JUKE                  = "STATE_JUKE";
@@ -55,7 +55,7 @@ local STATE_TP_BOTTLE             = "STATE_TP_BOTTLE";
 local STATE_TP_BOTTLERESTORE      = "STATE_TP_BOTTLERESTORE";
 --------------------------------------------------------
 function M:UpdateState(BotInfo, Mode, Strategy)
-  if (DotaTime() < 30) then
+  if (DotaTime() < 20) then
     self.State = STATE_WAIT_CREEPS;
   else
     self.State = STATE_LH_D;
@@ -72,12 +72,13 @@ end
 function M.StateLhD(self, BotInfo, Mode, Strategy)
   local bot = GetBot();
   local comfort_point = Creeping:GetComfortPoint(BotInfo);
-  if (comfort_point ~= nil) then
+  Creeping:LastHitAndDeny();
+  if (comfort_point ~= nil and bot:GetCurrentActionType() ~= BOT_ACTION_TYPE_ATTACK) then
     bot:Action_MoveToLocation(comfort_point);
     DebugDrawText(25, 200, "Current location: "..bot:GetLocation()[1].." "..bot:GetLocation()[2], 255, 255, 255);
     DebugDrawText(25, 220, "Target location: "..comfort_point[1].." "..comfort_point[2], 255, 255, 255);
-    DebugDrawCircle(bot:GetLocation(), 20, 0, 255, 0);
-    DebugDrawLine(bot:GetLocation(), comfort_point, 0, 255, 0);
+    DebugDrawCircle(Vector(comfort_point[1], comfort_point[2], bot:GetGroundHeight()), 20, 0, 255, 0);
+    DebugDrawLine(bot:GetLocation(), Vector(comfort_point[1], comfort_point[2], bot:GetGroundHeight()), 0, 255, 0);
   end
 end
 --------------------------------------------------------

@@ -181,6 +181,42 @@ function M:GetFrontTowerAt(LANE)
     return nil;
 end
 
+function M:GetEnemyFrontTowerAt(LANE)
+    local T1 = -1;
+    local T2 = -1;
+    local T3 = -1;
+
+    if(LANE == LANE_TOP) then
+        T1 = TOWER_TOP_1;
+        T2 = TOWER_TOP_2;
+        T3 = TOWER_TOP_3;
+    elseif(LANE == LANE_MID) then
+        T1 = TOWER_MID_1;
+        T2 = TOWER_MID_2;
+        T3 = TOWER_MID_3;
+    elseif(LANE == LANE_BOT) then
+        T1 = TOWER_BOT_1;
+        T2 = TOWER_BOT_2;
+        T3 = TOWER_BOT_3;
+    end
+    local team = (GetTeam() == 2) and 3 or 2;
+    local tower = GetTower(team,T1);
+    if(tower ~= nil and tower:IsAlive())then
+        return tower;
+    end
+
+    tower = GetTower(team,T2);
+    if(tower ~= nil and tower:IsAlive())then
+        return tower;
+    end
+
+    tower = GetTower(team,T3);
+    if(tower ~= nil and tower:IsAlive())then
+        return tower;
+    end
+    return nil;
+end
+
 function M:CreepGC()
     -- does it works? i don't know
     print("CreepGC");
@@ -215,7 +251,7 @@ function M:UpdateCreepHealth(creep)
         self["creeps"][creep][GameTime()] = creep:GetHealth();
     end
 
-    if(#self["creeps"] > 1000) then
+    if(#self["creeps"] > 200) then
         self:CreepGC();
     end
 end
@@ -240,23 +276,23 @@ function sortFunc(a , b)
     end
 end
 
-function M:GetCreepHealthDeltaPerSec(creep)
+function M:GetCreepHealthDeltaPerSec(creep, time)
     if self["creeps"] == nil then
         self["creeps"] = {};
     end
 
     if(self["creeps"][creep] == nil) then
-        return 10000000;
+        return 0;
     else
         for _time,_health in pairsByKeys(self["creeps"][creep],sortFunc)
         do
             -- only Consider very recent datas
-            if(GameTime() - _time < 3) then
+            if(GameTime() - _time < time) then
                 local e = (_health - creep:GetHealth()) / (GameTime() - _time);
                 return e;
             end
         end
-        return 10000000;
+        return 0;
     end
 
 end
