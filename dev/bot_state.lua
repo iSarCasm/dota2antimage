@@ -1,5 +1,6 @@
 local M = {}
 local DotaBotUtility  = require(GetScriptDirectory().."/dev/utility");
+local Creeping        = require(GetScriptDirectory().."/dev/states/creeping");
 --------------------------------------------------------
 local STATE_ESCAPE                = "STATE_ESCAPE";
 local STATE_JUKE                  = "STATE_JUKE";
@@ -10,7 +11,7 @@ local STATE_ATTACK                = "STATE_ATTACK";
 local STATE_WAIT_FIGHT            = "STATE_WAIT_FIGHT";
 local STATE_WAIT_INITIATE         = "STATE_WAIT_INITIATE";
 local STATE_WAIT_CREEPS           = "STATE_WAIT_CREEPS";
-
+-- creeping states
 local STATE_OUTPUSH               = "STATE_OUTPUSH";
 local STATE_STACK                 = "STATE_STACK";
 local STATE_EXPING                = "STATE_EXPING";
@@ -55,40 +56,48 @@ local STATE_TP_BOTTLERESTORE      = "STATE_TP_BOTTLERESTORE";
 --------------------------------------------------------
 function M:UpdateState(BotInfo, Mode, Strategy)
   if (DotaTime() < 30) then
-    self.StateMachine.State = STATE_WAIT_CREEPS;
+    self.State = STATE_WAIT_CREEPS;
   else
-    self.StateMachine.State = STATE_LH_D;
+    self.State = STATE_LH_D;
   end
 end
 --------------------------------------------------------
 --------------------------------------------------------
 function M.StateWaitCreeps(self, BotInfo, Mode, Strategy)
-  local npcBot = GetBot();
+  local bot = GetBot();
   local tower = DotaBotUtility:GetFrontTowerAt(BotInfo.LANE);
-  npcBot:Action_MoveToLocation(tower:GetLocation());
+  bot:Action_MoveToLocation(tower:GetLocation());
 end
 
 function M.StateLhD(self, BotInfo, Mode, Strategy)
-  -- print ("LAST HIT!")
+  local bot = GetBot();
+  local comfort_point = Creeping:GetComfortPoint(BotInfo);
+  if (comfort_point ~= nil) then
+    bot:Action_MoveToLocation(comfort_point);
+    DebugDrawText(25, 200, "Current location: "..bot:GetLocation()[1].." "..bot:GetLocation()[2], 255, 255, 255);
+    DebugDrawText(25, 220, "Target location: "..comfort_point[1].." "..comfort_point[2], 255, 255, 255);
+    DebugDrawCircle(bot:GetLocation(), 20, 0, 255, 0);
+    DebugDrawLine(bot:GetLocation(), comfort_point, 0, 255, 0);
+  end
 end
 --------------------------------------------------------
+M.State = STATE_IDLE;
 M.StateMachine = {};
-M.StateMachine.State         = STATE_IDLE;
 M.StateMachine.STATE_WAIT_CREEPS  = M.StateWaitCreeps;
 M.StateMachine.STATE_LH_D         = M.StateLhD;
 --------------------------------------------------------
 --------------------------------------------------------
 M.PrevState = "none";
 function M:DebugStateChange()
-  if(self.PrevState ~= self.StateMachine.State) then
-      print(GetBot():GetUnitName().." bot CURRENT STATE: "..self.StateMachine.State.." <- "..self.PrevState);
-      self.PrevState = self.StateMachine.State;
+  if(self.PrevState ~= self.State) then
+      print(GetBot():GetUnitName().." bot CURRENT STATE: "..self.State.." <- "..self.PrevState);
+      self.PrevState = self.State;
   end
 end
 --------------------------------------------------------
 function M:Act(BotInfo, Mode, Strategy)
   self:UpdateState(BotInfo, Mode, Strategy);
-  self.StateMachine[self.StateMachine.State](self, BotInfo, Mode, Strategy);
+  self.StateMachine[self.State](self, BotInfo, Mode, Strategy);
   self:DebugStateChange();
 end
 
