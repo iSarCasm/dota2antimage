@@ -1,5 +1,6 @@
 local M = {}
 local DotaBotUtility  = require(GetScriptDirectory().."/dev/utility");
+local BotActions      = require(GetScriptDirectory().."/dev/bot_actions");
 -------------------------------------------------
 M.STATE_WALK_TO_WAIT = "STATE_WALK_TO_WAIT";
 M.STATE_WAIT = "STATE_WAIT"
@@ -12,7 +13,8 @@ function M.StateWalkToWait(self, BotInfo, Mode, Strategy)
     local pos = tower:GetLocation();
     local distance = GetUnitToLocationDistance(bot, pos);
     if (distance > 200) then
-      bot:Action_MoveToLocation(pos);
+      -- bot:Action_MoveToLocation(pos);
+      BotActions.ActionMoveToLocation:Call(pos);
     else
       self.StateMachine.State = self.STATE_WAIT;
     end

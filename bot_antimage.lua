@@ -14,13 +14,17 @@ function DebugStatesFields()
   DebugDrawText(25, 120, "Mode: "..BotMode.Mode, 255, 255, 255);
   DebugDrawText(25, 140, "State: "..BotState.State, 255, 255, 255);
   DebugDrawText(25, 160, "Mini-State: "..BotState:MiniState(), 255, 255, 255);
+  DebugDrawText(25, 180, "Action: "..BotInfo:ActionName(), 255, 255, 255)
 end
 --------------------------------------------------------
 function Think(  )
   local MyInfo = BotInfo[GetBot():GetUnitName()];
+
   TeamStrategy:Update();
   BotMode:Update(MyInfo, TeamStrategy.Strategy);
   BotState:Act(MyInfo, BotMode.Mode, TeamStrategy.Strategy);
+  BotInfo:Act();
+
   BotInfo:GatherData();
   DebugStatesFields();
 end

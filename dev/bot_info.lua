@@ -5,10 +5,50 @@ function M:Init(lane, role)
   self[name] = {};
   self[name].LANE = lane;
   self[name].ROLE = role;
+
   self[name].lastHealth = 0;
   self[name].health = 0;
   self[name].lastHealthCapture = DotaTime();
   self[name].healthDelta = 0;
+
+  self[name].action = nil;
+end
+
+function M:Me()
+  return self[GetBot():GetUnitName()];
+end
+
+function M:SetAction(action)
+  local name = GetBot():GetUnitName();
+  if (self[name].action) then
+    if (self[name].action ~= action) then
+      self[name].action:Finish();
+    end
+  else
+    self[name].action = action;
+    action:Run();
+  end
+end
+
+function M:Act()
+  local name = GetBot():GetUnitName();
+  if (self[name].action) then
+    self[name].action:Run();
+  end
+end
+
+function M:ClearAction()
+  local name = GetBot():GetUnitName();
+  self[name].action = nil;
+end
+
+function M:ActionName()
+  local name = GetBot():GetUnitName();
+  if (self[name].action) then
+    return self[name].action.name;
+  else
+    return "nil";
+  end
 end
 
 function M:GatherData()
