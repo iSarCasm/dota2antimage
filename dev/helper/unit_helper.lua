@@ -84,4 +84,14 @@ function M:TimeOnAttacks(unit, hits)
   end
 end
 
+function M:TimeToGetInRange(unit, target)
+  local dist = GetUnitToUnitDistance(unit, target);
+  local range = unit:GetAttackRange();
+  if (dist < range) then
+    return 0;
+  else
+    return (dist-range) / unit:GetBaseMovementSpeed();
+  end
+end
+
 return M;

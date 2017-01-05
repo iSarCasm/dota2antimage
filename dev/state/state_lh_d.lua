@@ -12,8 +12,10 @@ M.STATE_ATTACK_CREEP = "STATE_ATTACK_CREEP"
 M.STATE_AGRO_OFF = "STATE_AGRO_OFF";
 ----------------------------------------------
 -- Some Shitty CONSTANTS I made up
-M.TOWER_POWER = 800;
-M.SAFETY = 0.4;
+M.TOWER_POWER = 1200;
+M.TOWER_DANGER = 400;
+M.SAFETY = 0.25;
+M.LOW_HEALTH = 400;
 M.ENEMY_RANGE_REWARD = 14;
 M.ENEMY_MELEE_REWARD = 8;
 M.HEALTH_PERCENTAGE_POWER = 9;
@@ -28,8 +30,8 @@ M.NORMAL_DELTA_DROP = 40;
 M.POTENTIAL = 3;
 M.HEALTH_FACTOR = 1.75;
 M.ADDITIONAL_RANGE = 40;
-M.MIN_RANGE = 200;
-M.FAR_RANGE_ADD = 150;
+M.MIN_RANGE = 180;
+M.FAR_RANGE_ADD = 350;
 ----------------------------------------------
 function M:GetComfortPoint(BotInfo)
   local bot = GetBot();
@@ -82,7 +84,7 @@ function M:GetComfortPoint(BotInfo)
     self.enemyVector[2] = self.enemyVector[2] / positions_count;
   end
   -- Enemy Tower
-  if (enemy_tower and (GetUnitToUnitDistance(bot, enemy_tower)) < 750) then
+  if (enemy_tower and (GetUnitToUnitDistance(bot, enemy_tower)) < 800) then
     power_balance = power_balance - self.TOWER_POWER;
   end
   -- Ally Creep Vector
@@ -126,24 +128,28 @@ function M:GetComfortPoint(BotInfo)
   -- result pos
   local middleVector = (self.enemyVector + self.allyVector) / 2;
   if (ally_power <= 0) then -- no ally
+    DebugDrawText(25, 400, "balance "..power_balance, 255, 255, 255);
     if (tower and GetUnitToUnitDistance(bot, tower) > 400) then
       -- go to tower
       resultVector = self.towerVector;
     elseif (power_balance < 0) then
       -- run from them
+      print("here!");
       resultVector = self.enemyVector + VectorHelper:Normalize((pos - self.enemyVector)) * Min(range, self.MIN_RANGE);
     else -- no enemies either
       resultVector = self.towerVector;
     end
   else
-    local min = Min(range+self.FAR_RANGE_ADD, self.MIN_RANGE)
-    local max = Max(range+self.FAR_RANGE_ADD, self.MIN_RANGE)
-    local clamp = Max((self.SAFETY-power_balance/total_power) * (min+max), min);
+    local min = Min(range+self.FAR_RANGE_ADD, self.MIN_RANGE);
+    local max = Max(range+self.FAR_RANGE_ADD, self.MIN_RANGE);
+    local hp_factor = Max(1+2*(Max(self.LOW_HEALTH - bot:GetHealth(),0)/self.LOW_HEALTH), 1);
+    local clamp1 = Max(hp_factor * (self.SAFETY-power_balance/total_power) * (min+max), 0);
+    local clamp2 = Max(hp_factor * (self.SAFETY-power_balance/total_power) * (min+max), min);
     -- hide behind ally
     if (enemy_power > 0) then
-      resultVector = middleVector + (VectorHelper:Normalize((self.allyVector - self.enemyVector)) * clamp);
+      resultVector = middleVector + (VectorHelper:Normalize((self.allyVector - self.enemyVector)) * clamp1);
     else
-      resultVector = self.allyVector + (VectorHelper:Normalize((self.allyVector - self.enemyVector)) * clamp);
+      resultVector = self.allyVector + (VectorHelper:Normalize((self.allyVector - self.enemyVector)) * clamp2);
     end
     -- DebugDrawText(25, 260, "power_balance: "..power_balance,255,255,255);
     -- DebugDrawText(25, 280, "clamp: "..self.SAFETY-power_balance/total_power,255,255,255);
@@ -157,32 +163,32 @@ function M.StateWalkToCreeps(self, BotInfo, Mode, Strategy)
   local comfort_point = self:GetComfortPoint(BotInfo);
   local lane = UnitHelper:GetUnitLane(bot);
   local tower = DotaBotUtility:GetFrontTowerAt(lane);
-  if (comfort_point ~= nil) then
-    target = Creeping:CreepWithNHitsOfHealth(1000, true, true, 1);
-    if (target) then
-      self.StateMachine.State = self.STATE_ATTACK_CREEP;
+
+  target = Creeping:CreepWithNHitsOfHealth(1000, true, true, 1);
+  if (target) then
+    self.StateMachine.State = self.STATE_ATTACK_CREEP;
+    return;
+  end
+
+  if (comfort_point) then
+    if (Creeping:isAttackedByCreeps(BotInfo) and GetUnitToUnitDistance(bot, tower) > 600) then
+      self.StateMachine.State = self.STATE_AGRO_OFF;
       return;
     else
-      if (Creeping:isAttackedByCreeps(BotInfo) and GetUnitToUnitDistance(bot, tower) > 600) then
-        self.StateMachine.State = self.STATE_AGRO_OFF;
-        return;
-      else
-        local dist = GetUnitToLocationDistance(bot, comfort_point);
-        if (dist > 250) then
-          -- bot:Action_MoveToLocation(comfort_point);
-          BotActions.ActionMoveToLocation:Call(comfort_point);
-        elseif (dist < 150) then
-          local weak = Creeping:WeakestCreep(1000, false);
-          if (weak) then
-            if (not UnitHelper:IsFacingEntity(bot, weak, 10)) then
-              BotActions.ActionCancelAttack:Call(weak);
-            end
+      local dist = GetUnitToLocationDistance(bot, comfort_point);
+      if (dist > 250) then
+        BotActions.ActionMoveToLocation:Call(comfort_point);
+      elseif (dist < 200) then
+        local weak = Creeping:WeakestCreep(1000, false);
+        if (weak) then
+          if (not UnitHelper:IsFacingEntity(bot, weak, 10)) then
+            BotActions.ActionCancelAttack:Call(weak);
           end
         end
-        -- Debug
-        DebugDrawCircle(Vector(comfort_point[1], comfort_point[2], bot:GetGroundHeight()), 20, 0, 255, 0);
-        DebugDrawLine(bot:GetLocation(), Vector(comfort_point[1], comfort_point[2], bot:GetGroundHeight()), 0, 255, 0);
       end
+      -- Debug
+      DebugDrawCircle(Vector(comfort_point[1], comfort_point[2], bot:GetGroundHeight()), 20, 0, 255, 0);
+      DebugDrawLine(bot:GetLocation(), Vector(comfort_point[1], comfort_point[2], bot:GetGroundHeight()), 0, 255, 0);
     end
   end
 end
@@ -190,8 +196,7 @@ end
 function M.StateAttackCreep(self, BotInfo, Mode, Strategy)
   local bot = GetBot();
   target = Creeping:CreepWithNHitsOfHealth(1000, true, true, 1)
-  if (target ~= nil) then
-    -- bot:Action_AttackUnit(target, false);
+  if (target and (not self.DangerUnderTower())) then
     BotActions.ActionAttackUnit:Call(target, false);
   else
     self.StateMachine.State = self.STATE_WALK_TO_CREEPS;
@@ -203,8 +208,14 @@ function M.StateAgroOff(self, BotInfo, Mode, Strategy)
   local comfort_point = Creeping:AgroOffVec(BotInfo);
   local lane = UnitHelper:GetUnitLane(bot);
   local tower = DotaBotUtility:GetFrontTowerAt(lane);
-  if (comfort_point ~= nil) then
-    -- bot:Action_MoveToLocation(comfort_point); -- stick to creeps
+
+  target = Creeping:CreepWithNHitsOfHealth(1000, true, true, 1);
+  if (target) then
+    self.StateMachine.State = self.STATE_ATTACK_CREEP;
+    return;
+  end
+
+  if (comfort_point) then
     BotActions.ActionMoveToLocation:Call(comfort_point);
   end
   if (not Creeping:isAttackedByCreeps(BotInfo) or GetUnitToUnitDistance(bot, tower) < 600) then
@@ -212,6 +223,20 @@ function M.StateAgroOff(self, BotInfo, Mode, Strategy)
   end
 end
 -------------------------------------------------
+function M.DangerUnderTower()
+  local enemy_tower = DotaBotUtility:GetEnemyFrontTowerAt(UnitHelper:GetUnitLane(bot));
+  if (enemy_tower) then
+    if (GetUnitToUnitDistance(GetBot(), enemy_tower) < 850) then
+      local ally_creeps = enemy_tower:GetNearbyCreeps(850, false);
+      if (ally_creeps) then
+        if (#ally_creeps < 3) then
+          return true;
+        end
+      end
+    end
+  end
+  return false
+end
 -------------------------------------------------
 M.StateMachine = {}
 M.StateMachine.State = M.STATE_WALK_TO_CREEPS;

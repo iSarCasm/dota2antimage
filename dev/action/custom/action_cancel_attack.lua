@@ -9,13 +9,10 @@ end
 
 function M:Run()
   local bot = GetBot();
-  print("cancel attack");
   if (self.attackMoment == nil) then
-    print("didnt attack");
     self.attackMoment = DotaTime();
     bot:Action_AttackUnit(self.target, true);
   else
-    print("waiting "..(DotaTime() - self.attackMoment));
     if ((DotaTime() - self.attackMoment) > bot:GetAttackPoint()*0.5) then
       self:Finish();
     end
@@ -23,7 +20,6 @@ function M:Run()
 end
 
 function M:Finish()
-  print("finish");
   local bot = GetBot();
   self.attackMoment = nil;
   bot:Action_ClearActions(true);

@@ -7,6 +7,7 @@ local BotInfo         = require(GetScriptDirectory().."/dev/bot_info")
 --------------------------------------------------------
 --------------------------------------------------------
 BotInfo:Init(LANE_TOP, ROLE_CARRY);
+BotInfo:Me().projectileSpeed = 0;
 --------------------------------------------------------
 --------------------------------------------------------
 function DebugStatesFields()

@@ -1,22 +1,29 @@
 local M = {};
 ----------------------------------------------
+local BotInfo         = require(GetScriptDirectory().."/dev/bot_info")
 local DotaBotUtility  = require(GetScriptDirectory().."/dev/utility");
 local UnitHelper      = require(GetScriptDirectory().."/dev/helper/unit_helper");
 local VectorHelper    = require(GetScriptDirectory().."/dev/helper/vector_helper");
 ----------------------------------------------
+function M:ExtrapolatedDamage(creep, time)
+  return Max(DotaBotUtility:GetCreepHealthDeltaPerSec(creep, 1.5) * time * 0.25, 0);
+end
+
 function M:CreepWithNHitsOfHealth(range, enemy, ally, hits)
   if ((enemy and ally) == false) then return nil end;
   local bot = GetBot();
   local pos = bot:GetLocation();
-  local range  = bot:GetAttackRange();
-  local bot_damage = bot:GetBaseDamage();
 
+  local bot_damage = bot:GetBaseDamage();
   if (enemy) then
     local enemy_creeps = bot:GetNearbyCreeps(range, true);
     for _,creep in pairs(enemy_creeps)
     do
       if (creep:IsAlive()) then
-        if (creep:GetHealth() < creep:GetActualDamage(bot_damage, DAMAGE_TYPE_PHYSICAL) * hits) then
+        local time_to_damage = UnitHelper:TimeToGetInRange(bot, creep) + UnitHelper:TimeOnAttacks(bot, hits) + 2.5 * UnitHelper:ProjectileTimeTravel(bot, creep, BotInfo:Me().projectileSpeed) * hits;
+        local extrapolated_damage = self:ExtrapolatedDamage(creep, time_to_damage);
+        local total_damage = bot_damage + extrapolated_damage;
+        if (creep:GetHealth() < creep:GetActualDamage(total_damage, DAMAGE_TYPE_PHYSICAL)) then
           return creep;
         end
       end
@@ -28,7 +35,10 @@ function M:CreepWithNHitsOfHealth(range, enemy, ally, hits)
     for _,creep in pairs(ally_creeps)
     do
       if (creep:IsAlive()) then
-        if (creep:GetHealth() < creep:GetActualDamage(bot_damage, DAMAGE_TYPE_PHYSICAL) * hits) then
+        local time_to_damage = UnitHelper:TimeToGetInRange(bot, creep) + UnitHelper:TimeOnAttacks(bot, hits) + UnitHelper:ProjectileTimeTravel(bot, creep, BotInfo:Me().projectileSpeed) * hits;
+        local extrapolated_damage = self:ExtrapolatedDamage(creep, time_to_damage);
+        local total_damage = bot_damage + extrapolated_damage;
+        if (creep:GetHealth() < creep:GetActualDamage(total_damage, DAMAGE_TYPE_PHYSICAL)) then
           return creep;
         end
       end
