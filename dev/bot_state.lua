@@ -1,7 +1,9 @@
 local M = {}
+local BotInfo         = require(GetScriptDirectory().."/dev/bot_info")
 local DotaBotUtility  = require(GetScriptDirectory().."/dev/utility");
 local StateWaitCreeps = require(GetScriptDirectory().."/dev/state/state_wait_creeps");
 local StateLhD        = require(GetScriptDirectory().."/dev/state/state_lh_d");
+local StateBuyItems   = require(GetScriptDirectory().."/dev/state/state_buy_items");
 --------------------------------------------------------
 local STATE_ESCAPE                = "STATE_ESCAPE";
 local STATE_JUKE                  = "STATE_JUKE";
@@ -55,11 +57,17 @@ local STATE_BUYBACK               = "STATE_BUYBACK";
 local STATE_TP_BOTTLE             = "STATE_TP_BOTTLE";
 local STATE_TP_BOTTLERESTORE      = "STATE_TP_BOTTLERESTORE";
 --------------------------------------------------------
-function M:UpdateState(BotInfo, Mode, Strategy)
-  if (DotaTime() < 20) then
-    self.State = STATE_WAIT_CREEPS;
+function M:UpdateState(Mode, Strategy)
+  if (DotaTime() < -80) then
+    if (BotInfo:CanBuyNextItem()) then
+      self.State = STATE_BUY_ITEMS;
+    end
   else
-    self.State = STATE_LH_D;
+    if (DotaTime() < 20) then
+      self.State = STATE_WAIT_CREEPS;
+    else
+      self.State = STATE_LH_D;
+    end
   end
 end
 --------------------------------------------------------
@@ -67,6 +75,7 @@ M.State = STATE_IDLE;
 M.StateMachine = {};
 M.StateMachine.STATE_WAIT_CREEPS  = StateWaitCreeps;
 M.StateMachine.STATE_LH_D         = StateLhD;
+M.StateMachine.STATE_BUY_ITEMS    = StateBuyItems;
 --------------------------------------------------------
 --------------------------------------------------------
 M.PrevState = "none";
@@ -77,9 +86,9 @@ function M:DebugStateChange()
   end
 end
 --------------------------------------------------------
-function M:Act(BotInfo, Mode, Strategy)
-  self:UpdateState(BotInfo, Mode, Strategy);
-  self.StateMachine[self.State]:Run(BotInfo, Mode, Strategy);
+function M:Act(Mode, Strategy)
+  self:UpdateState(Mode, Strategy);
+  self.StateMachine[self.State]:Run(BotInfo:Me(), Mode, Strategy);
   self:DebugStateChange();
 end
 

@@ -12,7 +12,7 @@ local MODE_INITIATING  = "MODE_INITIATING";
 local MODE_HELPING     = "MODE_HELPING";
 local MODE_ROSHING     = "MODE_ROSHING";
 --------------------------------------------------------
-function M:UpdateState(BotInfo, TeamStrategy)
+function M:UpdateState(TeamStrategy)
   if (DotaTime() > 14*60) then
     self.Mode = MODE_FARMING;
   end
@@ -29,8 +29,8 @@ function M:DebugStateChange()
   end
 end
 --------------------------------------------------------
-function M:Update(BotInfo, TeamStrategy)
-  self:UpdateState(BotInfo, TeamStrategy);
+function M:Update(TeamStrategy)
+  self:UpdateState(TeamStrategy);
   self:DebugStateChange();
 end
 

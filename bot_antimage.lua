@@ -8,6 +8,57 @@ local BotInfo         = require(GetScriptDirectory().."/dev/bot_info")
 --------------------------------------------------------
 BotInfo:Init(LANE_TOP, ROLE_CARRY);
 BotInfo:Me().projectileSpeed = 0;
+BotInfo:Me().itemBuild = {
+		"item_tango",
+		"item_tango",
+		"item_flask",
+		"item_quelling_blade",
+    "item_branches",
+
+		"item_ring_of_health",
+		"item_ring_of_regen",
+
+		"item_boots",
+		"item_boots_of_elves",
+		"item_gloves",
+
+		"item_claymore",
+		"item_broadsword",
+		"item_void_stone",
+
+    "item_quelling_blade",
+
+		"item_ring_of_protection",
+		"item_sobi_mask",
+		"item_recipe_headdress",
+		"item_lifesteal",
+
+		"item_blade_of_alacrity",
+		"item_boots_of_elves",
+		"item_recipe_yasha",
+		"item_ultimate_orb",
+		"item_recipe_manta",
+
+    "item_belt_of_strength",
+    "item_javelin",
+    "item_recipe_basher",
+
+    "item_reaver",
+    "item_vitality_booster",
+    "item_recipe_heart",
+
+    "item_eagle",
+    "item_quarterstaff",
+    "item_talisman_of_evasion",
+
+    "item_boots",
+    "item_recipe_travel_boots",
+
+    "item_hyperstone",
+    "item_hyperstone",
+
+    "item_recipe_travel_boots"
+}
 --------------------------------------------------------
 --------------------------------------------------------
 function DebugStatesFields()
@@ -19,11 +70,9 @@ function DebugStatesFields()
 end
 --------------------------------------------------------
 function Think(  )
-  local MyInfo = BotInfo[GetBot():GetUnitName()];
-
   TeamStrategy:Update();
-  BotMode:Update(MyInfo, TeamStrategy.Strategy);
-  BotState:Act(MyInfo, BotMode.Mode, TeamStrategy.Strategy);
+  BotMode:Update(TeamStrategy.Strategy);
+  BotState:Act(BotMode.Mode, TeamStrategy.Strategy);
   BotInfo:Act();
 
   BotInfo:GatherData();

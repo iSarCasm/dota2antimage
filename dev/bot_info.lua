@@ -18,6 +18,10 @@ function M:Me()
   return self[GetBot():GetUnitName()];
 end
 
+function M:CanBuyNextItem()
+  return (GetBot():GetGold() >= GetItemCost(self[GetBot():GetUnitName()].itemBuild[1]));
+end
+
 function M:SetAction(action)
   local name = GetBot():GetUnitName();
   if (self[name].action) then
