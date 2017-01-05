@@ -1,5 +1,4 @@
 local M = {}
-local DotaBotUtility  = require(GetScriptDirectory().."/dev/utility");
 local BotActions      = require(GetScriptDirectory().."/dev/bot_actions");
 -------------------------------------------------
 M.STATE_WALK_TO_SHOP = "STATE_WALK_TO_SHOP";

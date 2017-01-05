@@ -1,5 +1,6 @@
 --------------------------------------------------------
 require(GetScriptDirectory().."/dev/constants/roles");
+require(GetScriptDirectory().."/dev/constants/runes");
 local TeamStrategy    = require(GetScriptDirectory().."/dev/team_strategy");
 local BotMode         = require(GetScriptDirectory().."/dev/bot_mode");
 local BotState        = require(GetScriptDirectory().."/dev/bot_state");
