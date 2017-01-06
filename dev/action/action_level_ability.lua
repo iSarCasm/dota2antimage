@@ -15,9 +15,11 @@ function M:Run()
     return;
   end
   print("ability choice is "..self.ability);
-  bot:Action_LevelAbility(self.ability);
-  if (self.table) then
-      table.remove(self.table, 1);
+  if (bot:GetAbilityPoints() > 0) then
+    bot:Action_LevelAbility(self.ability);
+    if (self.table) then
+        table.remove(self.table, 1);
+    end
   end
 end
 

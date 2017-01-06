@@ -58,7 +58,7 @@ end
 function M:GatherData()
   local bot = GetBot();
   local name = bot:GetUnitName();
-  if ((DotaTime() - self[name].lastHealthCapture) > 0.75) then
+  if ((DotaTime() - self[name].lastHealthCapture) > 0.35) then
     self[name].lastHealthCapture = DotaTime();
     self[name].lastHealth = self[name].health;
     self[name].health = bot:GetHealth();

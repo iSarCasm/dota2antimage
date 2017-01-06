@@ -61,8 +61,8 @@ BotInfo:Me().itemBuild = {
     "item_recipe_travel_boots"
 }
 BotInfo:Me().abilityBuild = {
-	"antimage_mana_break",
 	"antimage_blink",
+	"antimage_mana_break",
 	"antimage_spell_shield",
 	"antimage_mana_break",
 	"antimage_mana_break",

@@ -1,4 +1,5 @@
-local M = {}
+local M = {};
+local InventoryHelper = require(GetScriptDirectory().."/dev/helper/inventory_helper");
 
 M.LanePoints = {}
 function M:InitLanePoints()
@@ -90,8 +91,22 @@ function M:TimeToGetInRange(unit, target)
   if (dist < range) then
     return 0;
   else
-    return (dist-range) / unit:GetBaseMovementSpeed();
+    return (dist-range) / unit:GetCurrentMovementSpeed();
   end
+end
+
+function M:GetPhysDamageToUnit(unit, target, isAlly, isCreep, hasMana)
+  local total = unit:GetBaseDamage();
+  if (isCreep and (not isAlly) and InventoryHelper:Contains(unit, "item_quelling_blade", true)) then
+    total = total + 24;
+  end
+  if (hasMana and (not isAlly)) then
+    local mana_break = unit:GetAbilityByName("antimage_mana_break");
+    if (mana_break) then
+      total = total + mana_break:GetSpecialValueFloat("damage_per_burn") * mana_break:GetSpecialValueFloat("mana_per_hit");
+    end
+  end
+  return target:GetActualDamage(total, DAMAGE_TYPE_PHYSICAL);
 end
 
 return M;

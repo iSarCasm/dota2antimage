@@ -12,7 +12,7 @@ M.STATE_ATTACK_CREEP = "STATE_ATTACK_CREEP"
 M.STATE_AGRO_OFF = "STATE_AGRO_OFF";
 ----------------------------------------------
 -- Some Shitty CONSTANTS I made up
-M.TOWER_POWER = 1200;
+M.TOWER_POWER = 800;
 M.TOWER_DANGER = 400;
 M.SAFETY = 0.25;
 M.LOW_HEALTH = 400;
@@ -218,7 +218,7 @@ function M.StateAgroOff(self, BotInfo, Mode, Strategy)
   if (comfort_point) then
     BotActions.ActionMoveToLocation:Call(comfort_point);
   end
-  if (not Creeping:isAttackedByCreeps(BotInfo) or GetUnitToUnitDistance(bot, tower) < 600) then
+  if (not Creeping:isAttackedByCreeps(BotInfo) or GetUnitToUnitDistance(bot, tower) < 700) then
     self.StateMachine.State = self.STATE_WALK_TO_CREEPS;
   end
 end
@@ -228,10 +228,20 @@ function M.DangerUnderTower()
   if (enemy_tower) then
     if (GetUnitToUnitDistance(GetBot(), enemy_tower) < 950) then
       local ally_creeps = enemy_tower:GetNearbyCreeps(950, false);
+      local ally_m_creeps = {};
       if (ally_creeps) then
-        if (#ally_creeps < 3) then
+        for k,creep in pairs(ally_creeps)
+        do
+          local isMelee = (string.find(creep:GetUnitName(), "melee") ~= nil);
+          if (isMelee) then
+            ally_m_creeps[k] = creep;
+          end
+        end
+        if (#ally_m_creeps < 2) then
           return true;
         end
+      else
+        return true
       end
     end
   end
