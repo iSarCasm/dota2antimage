@@ -24,6 +24,10 @@ function M:CreepWithNHitsOfHealth(range, enemy, ally, hits)
         local extrapolated_damage = self:ExtrapolatedDamage(creep, time_to_damage);
         local total_damage = bot_damage + extrapolated_damage;
         if (creep:GetHealth() < creep:GetActualDamage(total_damage, DAMAGE_TYPE_PHYSICAL)) then
+          print("My  Damage: "..bot_damage);
+          print("Ext Damage: "..extrapolated_damage);
+          print("Sum Damage: "..total_damage);
+          print("Time: "..time_to_damage);
           return creep;
         end
       end

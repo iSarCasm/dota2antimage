@@ -60,6 +60,27 @@ BotInfo:Me().itemBuild = {
 
     "item_recipe_travel_boots"
 }
+BotInfo:Me().abilityBuild = {
+	"antimage_mana_break",
+	"antimage_blink",
+	"antimage_spell_shield",
+	"antimage_mana_break",
+	"antimage_mana_break",
+	"antimage_mana_void",
+	"antimage_mana_break",
+	"antimage_blink",
+	"antimage_blink",
+	"special_bonus_attack_damage_20",
+	"antimage_blink",
+	"antimage_mana_void",
+	"antimage_spell_shield",
+	"antimage_spell_shield",
+	"special_bonus_attack_speed_20",
+	"antimage_spell_shield",
+	"antimage_mana_void",
+	"special_bonus_all_stats_10",
+	"special_bonus_agility_25"
+}
 --------------------------------------------------------
 --------------------------------------------------------
 function DebugStatesFields()

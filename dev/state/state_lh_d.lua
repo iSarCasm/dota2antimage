@@ -84,7 +84,7 @@ function M:GetComfortPoint(BotInfo)
     self.enemyVector[2] = self.enemyVector[2] / positions_count;
   end
   -- Enemy Tower
-  if (enemy_tower and (GetUnitToUnitDistance(bot, enemy_tower)) < 800) then
+  if (enemy_tower and (GetUnitToUnitDistance(bot, enemy_tower)) < 950) then
     power_balance = power_balance - self.TOWER_POWER;
   end
   -- Ally Creep Vector
@@ -226,8 +226,8 @@ end
 function M.DangerUnderTower()
   local enemy_tower = DotaBotUtility:GetEnemyFrontTowerAt(UnitHelper:GetUnitLane(bot));
   if (enemy_tower) then
-    if (GetUnitToUnitDistance(GetBot(), enemy_tower) < 850) then
-      local ally_creeps = enemy_tower:GetNearbyCreeps(850, false);
+    if (GetUnitToUnitDistance(GetBot(), enemy_tower) < 950) then
+      local ally_creeps = enemy_tower:GetNearbyCreeps(950, false);
       if (ally_creeps) then
         if (#ally_creeps < 3) then
           return true;

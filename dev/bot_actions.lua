@@ -5,6 +5,7 @@ M.ActionMoveToLocation  = require(GetScriptDirectory().."/dev/action/action_move
 M.ActionClearActions    = require(GetScriptDirectory().."/dev/action/action_clear_actions");
 M.ActionPurchaseNextItem = require(GetScriptDirectory().."/dev/action/action_purchase_next_item");
 M.ActionPickUpRune       = require(GetScriptDirectory().."/dev/action/action_pickup_rune");
+M.ActionLevelAbility     = require(GetScriptDirectory().."/dev/action/action_level_ability");
 
 M.ActionCancelAttack    = require(GetScriptDirectory().."/dev/action/custom/action_cancel_attack");
 

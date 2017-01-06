@@ -5,6 +5,7 @@ local StateWaitCreeps = require(GetScriptDirectory().."/dev/state/state_wait_cre
 local StateLhD        = require(GetScriptDirectory().."/dev/state/state_lh_d");
 local StateBuyItems   = require(GetScriptDirectory().."/dev/state/state_buy_items");
 local StateControlBountyRune = require(GetScriptDirectory().."/dev/state/state_control_bounty_rune");
+local StateLearningAbilities = require(GetScriptDirectory().."/dev/state/state_learning_abilities");
 --------------------------------------------------------
 local STATE_ESCAPE                = "STATE_ESCAPE";
 local STATE_JUKE                  = "STATE_JUKE";
@@ -64,7 +65,9 @@ function M:UpdateState(Mode, Strategy)
       self.State = STATE_BUY_ITEMS;
     end
   else
-    if (DotaTime() < 5) then
+    if (DotaTime() < - 70) then
+      self.State = STATE_LEARNING_ABILITIES;
+    elseif (DotaTime() < 5) then
       self.State = STATE_CONTROL_BOUNTYRUNE;
     elseif (DotaTime() < 20) then
       self.State = STATE_WAIT_CREEPS;
@@ -80,6 +83,7 @@ M.StateMachine.STATE_WAIT_CREEPS  = StateWaitCreeps;
 M.StateMachine.STATE_LH_D         = StateLhD;
 M.StateMachine.STATE_BUY_ITEMS    = StateBuyItems;
 M.StateMachine.STATE_CONTROL_BOUNTYRUNE = StateControlBountyRune;
+M.StateMachine.STATE_LEARNING_ABILITIES = StateLearningAbilities;
 --------------------------------------------------------
 --------------------------------------------------------
 M.PrevState = "none";

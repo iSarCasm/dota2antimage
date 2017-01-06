@@ -18,11 +18,6 @@ function M.StateWalkToRune(self, BotInfo, Mode, Strategy)
 end
 
 function M.StateWaitRune(self, BotInfo, Mode, Strategy)
-  print("xxxxx")
-  print("status"..GetRuneStatus(RUNE_BOUNTY_1));
-  print("status"..GetRuneStatus(RUNE_BOUNTY_2));
-  print("status"..GetRuneStatus(RUNE_BOUNTY_3));
-  print("status"..GetRuneStatus(RUNE_BOUNTY_4));
   if (GetRuneStatus(self.RUNE) == 1) then
     self.StateMachine.State = self.STATE_PICK_RUNE;
   end
