@@ -25,10 +25,10 @@ function M:CreepWithNHitsOfHealth(range, enemy, ally, hits)
         end
         local total_damage = bot_damage + creep:GetActualDamage(extrapolated_damage, DAMAGE_TYPE_PHYSICAL);
         if (creep:GetHealth() < total_damage) then
-          print("My  Damage: "..bot_damage);
-          print("Ext Damage: "..extrapolated_damage);
-          print("Sum Damage: "..total_damage);
-          print("Time: "..time_to_damage);
+          -- print("My  Damage: "..bot_damage);
+          -- print("Ext Damage: "..extrapolated_damage);
+          -- print("Sum Damage: "..total_damage);
+          -- print("Time: "..time_to_damage);
           return creep;
         end
       end
@@ -65,8 +65,8 @@ function M:AgroOffVec()
   return tower:GetLocation();
 end
 
-function M:isAttackedByCreeps(BotInfo)
-  return (BotInfo.healthDelta < 0); -- bad
+function M:isAttackedByCreeps()
+  return (BotInfo:Me().healthDelta < 0); -- bad
 end
 
 function M:WeakestCreep(range, ally)

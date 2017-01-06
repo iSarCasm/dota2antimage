@@ -1,6 +1,7 @@
 --------------------------------------------------------
 require(GetScriptDirectory().."/dev/constants/roles");
 require(GetScriptDirectory().."/dev/constants/runes");
+require(GetScriptDirectory().."/dev/constants/shops");
 local TeamStrategy    = require(GetScriptDirectory().."/dev/team_strategy");
 local BotMode         = require(GetScriptDirectory().."/dev/bot_mode");
 local BotState        = require(GetScriptDirectory().."/dev/bot_state");
@@ -96,6 +97,15 @@ function Think(  )
   BotMode:Update(TeamStrategy.Strategy);
   BotState:Act(BotMode.Mode, TeamStrategy.Strategy);
   BotInfo:Act();
+
+	GetBot():Action_DropItem(GetBot():GetItemInSlot(0), GetBot():GetLocation());
+  GetBot():Action_DropItem(GetBot():GetItemInSlot(1), GetBot():GetLocation());
+  GetBot():Action_DropItem(GetBot():GetItemInSlot(2), GetBot():GetLocation());
+  GetBot():Action_DropItem(GetBot():GetItemInSlot(3), GetBot():GetLocation());
+  GetBot():Action_DropItem(GetBot():GetItemInSlot(4), GetBot():GetLocation());
+  GetBot():Action_DropItem(GetBot():GetItemInSlot(5), GetBot():GetLocation());
+  GetBot():Action_DropItem(GetBot():GetItemInSlot(6), GetBot():GetLocation());
+  GetBot():Action_DropItem(GetBot():GetItemInSlot(7), GetBot():GetLocation());
 
   BotInfo:GatherData();
   DebugStatesFields();

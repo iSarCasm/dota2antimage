@@ -18,6 +18,7 @@ function M:UpdateState()
   if (DotaTime() > 14*60) then
     self.Strategy = STRATEGY_FARMING;
   end
+  self:DebugStateChange();
 end
 
 --------------------------------------------------------
@@ -39,7 +40,6 @@ function M:Update()
     self.LastCalled[GetTeam()] = math.floor(DotaTime());
     self:UpdateState();
   end
-  self:DebugStateChange();
 end
 
 return M;

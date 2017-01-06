@@ -2,7 +2,7 @@ local M = {}
 ----------------------------------------------
 local BotActions      = require(GetScriptDirectory().."/dev/bot_actions");
 local DotaBotUtility  = require(GetScriptDirectory().."/dev/utility");
-local Creeping        = require(GetScriptDirectory().."/dev/state/creeping");
+local Creeping        = require(GetScriptDirectory().."/dev/state/state_farming_lane/creeping");
 local UnitHelper      = require(GetScriptDirectory().."/dev/helper/unit_helper");
 local VectorHelper    = require(GetScriptDirectory().."/dev/helper/vector_helper");
 ----------------------------------------------
@@ -171,7 +171,7 @@ function M.StateWalkToCreeps(self, BotInfo, Mode, Strategy)
   end
 
   if (comfort_point) then
-    if (Creeping:isAttackedByCreeps(BotInfo) and GetUnitToUnitDistance(bot, tower) > 600) then
+    if (Creeping:isAttackedByCreeps() and GetUnitToUnitDistance(bot, tower) > 600) then
       self.StateMachine.State = self.STATE_AGRO_OFF;
       return;
     else
@@ -218,7 +218,7 @@ function M.StateAgroOff(self, BotInfo, Mode, Strategy)
   if (comfort_point) then
     BotActions.ActionMoveToLocation:Call(comfort_point);
   end
-  if (not Creeping:isAttackedByCreeps(BotInfo) or GetUnitToUnitDistance(bot, tower) < 700) then
+  if (not Creeping:isAttackedByCreeps() or GetUnitToUnitDistance(bot, tower) < 700) then
     self.StateMachine.State = self.STATE_WALK_TO_CREEPS;
   end
 end

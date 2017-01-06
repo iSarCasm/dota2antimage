@@ -1,6 +1,6 @@
 local M = {}
 local BotInfo = require(GetScriptDirectory().."/dev/bot_info")
-M.name = "Purchase Next Item";
+M.name = "Level Ability";
 -------------------------------------------------
 function M:Call(ability, table)
   self.ability = ability;
@@ -14,11 +14,17 @@ function M:Run()
     self.Finish();
     return;
   end
-  print("ability choice is "..self.ability);
   if (bot:GetAbilityPoints() > 0) then
-    bot:Action_LevelAbility(self.ability);
-    if (self.table) then
-        table.remove(self.table, 1);
+    local ability = bot:GetAbilityByName(self.ability);
+    if(ability and ability:CanAbilityBeUpgraded()) then
+      local was = ability:GetLevel();
+      bot:Action_LevelAbility(self.ability);
+      if ((ability:GetLevel() - was) > 0) then
+        print("Ability "..self.ability.." leveled from "..was.." to "..ability:GetLevel());
+        if (self.table) then
+          table.remove(self.table, 1);
+        end
+      end
     end
   end
 end
