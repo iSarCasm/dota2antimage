@@ -7,6 +7,9 @@ M.STATE_BUY = "STATE_BUY"
 M.Potential = {};
 M.Shop = SHOP_SIDE_TOP;
 -------------------------------------------------
+function M:ArgumentString()
+  return "("..self.Shop..")";
+end
 -------------------------------------------------
 function M:EvaluatePotential(BotInfo, Mode, Strategy)
   local bot = GetBot();

@@ -1,5 +1,6 @@
 local M = {}
 local BotActions      = require(GetScriptDirectory().."/dev/bot_actions");
+local Game            = require(GetScriptDirectory().."/dev/game");
 -------------------------------------------------
 M.STATE_WALK_TO_RUNE = "STATE_WALK_TO_RUNE";
 M.STATE_WAIT_RUNE = "STATE_WAIT_RUNE"
@@ -8,6 +9,9 @@ M.STATE_PICK_RUNE = "STATE_PICK_RUNE"
 M.Potential = {};
 M.Rune = RUNE_BOUNTY_3;
 -------------------------------------------------
+function M:ArgumentString()
+  return "("..self.Rune..")";
+end
 -------------------------------------------------
 function M:EvaluatePotential(BotInfo, Mode, Strategy)
   local bot = GetBot();
@@ -15,12 +19,14 @@ function M:EvaluatePotential(BotInfo, Mode, Strategy)
   local highest = -9999999;
   for i = 1, #runes do
     local rune = runes[i];
-    local rewardFromLaning = self:LaningReward(rune, BotInfo, Mode, Strategy);
-    local reward = 100 + rewardFromLaning; -- bounty gives ~100 gold
+    local reward = 60 + self:LaningReward(rune, BotInfo, Mode, Strategy); -- bounty gives ~60 gold
+
     local walkSpeed = bot:GetCurrentMovementSpeed();
-    local walkDistance = GetUnitToLocationDistance(bot, BOUNTY_RUNES[rune]);
+    local walkDistance = GetUnitToLocationDistance(bot, GetRuneSpawnLocation(rune));
     local effortWalk = walkDistance / walkSpeed;
-    local effortWait = 30; -- i dont keep track of runes currenly :(
+
+    local effortWait = Game:TimeToRune(rune);
+
     local effort = effortWait + effortWalk;
     local potential = reward / effort;
     self.Potential[rune] = potential;
@@ -55,7 +61,7 @@ end
 -------------------------------------------------
 function M.StateWalkToRune(self, BotInfo, Mode, Strategy)
   local bot = GetBot();
-  local loc = BOUNTY_RUNES[self.Rune];
+  local loc = GetRuneSpawnLocation(self.Rune);
   if (GetUnitToLocationDistance(bot, loc) < 200) then
     self.StateMachine.State = self.STATE_WAIT_RUNE;
   else

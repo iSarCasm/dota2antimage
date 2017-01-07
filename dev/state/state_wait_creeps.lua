@@ -7,7 +7,10 @@ M.STATE_WAIT = "STATE_WAIT"
 -------------------------------------------------
 -------------------------------------------------
 function M:EvaluatePotential(BotInfo, Mode, Strategy)
-  return 7.1;
+  if (DotaTime() > 0 and DotaTime() < 15) then
+    return 10;
+  end
+  return 0;
 end
 -------------------------------------------------
 -------------------------------------------------
@@ -18,7 +21,6 @@ function M.StateWalkToWait(self, BotInfo, Mode, Strategy)
     local pos = tower:GetLocation();
     local distance = GetUnitToLocationDistance(bot, pos);
     if (distance > 200) then
-      -- bot:Action_MoveToLocation(pos);
       BotActions.ActionMoveToLocation:Call(pos);
     else
       self.StateMachine.State = self.STATE_WAIT;

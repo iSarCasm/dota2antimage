@@ -110,6 +110,12 @@ function M:DebugStateChange()
       self.PrevState = self.State;
   end
 end
+function M:ArgumentString()
+  if (self.StateMachine[self.State].ArgumentString) then
+    return self.StateMachine[self.State]:ArgumentString();
+  end
+  return "";
+end
 --------------------------------------------------------
 function M:Act(Mode, Strategy)
   self:UpdateState(BotInfo:Me(), Mode, Strategy);

@@ -6,6 +6,7 @@ local TeamStrategy    = require(GetScriptDirectory().."/dev/team_strategy");
 local BotMode         = require(GetScriptDirectory().."/dev/bot_mode");
 local BotState        = require(GetScriptDirectory().."/dev/bot_state");
 local BotInfo         = require(GetScriptDirectory().."/dev/bot_info")
+local Game         		= require(GetScriptDirectory().."/dev/game")
 --------------------------------------------------------
 --------------------------------------------------------
 BotInfo:Init(LANE_TOP, ROLE_CARRY);
@@ -87,25 +88,18 @@ BotInfo:Me().abilityBuild = {
 function DebugStatesFields()
   DebugDrawText(25, 100, "Strategy: "..TeamStrategy.Strategy, 255, 255, 255);
   DebugDrawText(25, 120, "Mode: "..BotMode.Mode, 255, 255, 255);
-  DebugDrawText(25, 140, "State: "..BotState.State, 255, 255, 255);
+  DebugDrawText(25, 140, "State: "..BotState.State.." "..BotState:ArgumentString(), 255, 255, 255);
   DebugDrawText(25, 160, "Mini-State: "..BotState:MiniState(), 255, 255, 255);
   DebugDrawText(25, 180, "Action: "..BotInfo:ActionName(), 255, 255, 255)
 end
 --------------------------------------------------------
 function Think(  )
+	Game:Update();
+	
   TeamStrategy:Update();
   BotMode:Update(TeamStrategy.Strategy);
   BotState:Act(BotMode.Mode, TeamStrategy.Strategy);
   BotInfo:Act();
-
-	GetBot():Action_DropItem(GetBot():GetItemInSlot(0), GetBot():GetLocation());
-  GetBot():Action_DropItem(GetBot():GetItemInSlot(1), GetBot():GetLocation());
-  GetBot():Action_DropItem(GetBot():GetItemInSlot(2), GetBot():GetLocation());
-  GetBot():Action_DropItem(GetBot():GetItemInSlot(3), GetBot():GetLocation());
-  GetBot():Action_DropItem(GetBot():GetItemInSlot(4), GetBot():GetLocation());
-  GetBot():Action_DropItem(GetBot():GetItemInSlot(5), GetBot():GetLocation());
-  GetBot():Action_DropItem(GetBot():GetItemInSlot(6), GetBot():GetLocation());
-  GetBot():Action_DropItem(GetBot():GetItemInSlot(7), GetBot():GetLocation());
 
   BotInfo:GatherData();
   DebugStatesFields();

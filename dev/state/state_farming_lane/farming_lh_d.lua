@@ -127,14 +127,13 @@ function M:GetComfortPoint(BotInfo)
   end
   -- result pos
   local middleVector = (self.enemyVector + self.allyVector) / 2;
+  DebugDrawText(25, 300, "balance "..power_balance, 255, 255, 255);
   if (ally_power <= 0) then -- no ally
-    DebugDrawText(25, 400, "balance "..power_balance, 255, 255, 255);
     if (tower and GetUnitToUnitDistance(bot, tower) > 400) then
       -- go to tower
       resultVector = self.towerVector;
     elseif (power_balance < 0) then
       -- run from them
-      print("here!");
       resultVector = self.enemyVector + VectorHelper:Normalize((pos - self.enemyVector)) * Min(range, self.MIN_RANGE);
     else -- no enemies either
       resultVector = self.towerVector;
