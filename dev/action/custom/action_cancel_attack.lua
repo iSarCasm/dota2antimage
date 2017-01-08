@@ -13,7 +13,7 @@ function M:Run()
     self.attackMoment = DotaTime();
     bot:Action_AttackUnit(self.target, true);
   else
-    if ((DotaTime() - self.attackMoment) > bot:GetAttackPoint()*0.5) then
+    if ((DotaTime() - self.attackMoment) > bot:GetAttackPoint()*0.75) then
       self:Finish();
     end
   end

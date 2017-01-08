@@ -113,12 +113,6 @@ function Think(  )
   BotState:Update(BotMode.Mode, TeamStrategy.Strategy);
 	AbilityItems:Think(BotMode.Mode, TeamStrategy.Strategy);
 
-	local item = GetBot():GetItemInSlot(3);
-	DebugDrawText(25, 220, "1: "..item:GetTargetFlags(), 255, 255, 255)
-	-- DebugDrawText(25, 240, "2: "..item:GetToggleState(), 255, 255, 255)
-	-- DebugDrawText(25, 260, "3: "..item:IsAttributeBonus(), 255, 255, 255)
-	DebugDrawText(25, 280, "4: "..item:GetBehavior(), 255, 255, 255)
-
 	DebugStatesFields();
 
 	BotInfo:Act();

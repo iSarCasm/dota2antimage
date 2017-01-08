@@ -9,8 +9,13 @@ function ItemTango:Think(Mode, Strategy)
   if (not bot:HasModifier("modifier_tango_heal")) then
     if ((bot:GetMaxHealth()-bot:GetHealth()) > 150) then
       local trees = bot:GetNearbyTrees(700);
-      if (trees[1]) then
-        BotActions.ActionUseAbility:Call(self.name, trees[1]);
+      if (trees) then
+        for i = 1, #trees do
+          if (bot:IsLocationPassable(GetTreeLocation(trees[i]))) then
+            BotActions.ActionUseAbility:Call(self.name, trees[i]);
+            return;
+          end
+        end
       end
     end
   end
