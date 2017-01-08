@@ -14,6 +14,8 @@ function M:Run()
 end
 
 function M:Finish()
+  self.target = nil;
+  self.bOnce = nil;
   BotInfo:ClearAction();
 end
 -------------------------------------------------

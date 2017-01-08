@@ -11,15 +11,15 @@ function RewardBountyRune:LaningReward(Rune, Mode)
   if (Mode == MODE_LANING) then
     if (GetTeam() == TEAM_RADIANT) then
       if (BotInfo:Me().LANE == LANE_TOP or BotInfo:Me().LANE == LANE_MID) then
-        return ((Rune == RUNE_BOUNTY_1) and 100 or 0);
+        return ((Rune == RUNE_BOUNTY_1) and 0 or -30);
       else
-        return ((Rune == RUNE_BOUNTY_2) and 100 or 0);
+        return ((Rune == RUNE_BOUNTY_2) and 0 or -30);
       end
     else
       if (BotInfo:Me().LANE == LANE_BOT or BotInfo:Me().LANE == LANE_MID) then
-        return ((Rune == RUNE_BOUNTY_4) and 100 or 0);
+        return ((Rune == RUNE_BOUNTY_4) and 0 or -30);
       else
-        return ((Rune == RUNE_BOUNTY_3) and 100 or 0);
+        return ((Rune == RUNE_BOUNTY_3) and 0 or -30);
       end
     end
   else

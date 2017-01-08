@@ -117,7 +117,7 @@ function M:ArgumentString()
   return "";
 end
 --------------------------------------------------------
-function M:Act(Mode, Strategy)
+function M:Update(Mode, Strategy)
   self:UpdateState(BotInfo:Me(), Mode, Strategy);
   self.StateMachine[self.State]:Run(BotInfo:Me(), Mode, Strategy);
 end

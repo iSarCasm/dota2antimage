@@ -1,15 +1,16 @@
 local M = {}
 local BotInfo = require(GetScriptDirectory().."/dev/bot_info")
-M.name = "Purchase Next Item";
+M.name = "Purchase Item";
 -------------------------------------------------
-function M:Call()
+function M:Call(item)
+  self.item = item;
   BotInfo:SetAction(self);
 end
 
 function M:Run()
   local bot = GetBot();
   local me = BotInfo:Me();
-  local item = me.itemBuild[1];
+  local item =self.item;
   if (item == nil) then
     self.Finish();
     return;
@@ -22,6 +23,7 @@ function M:Run()
 end
 
 function M:Finish()
+  self.item = nil;
   BotInfo:ClearAction();
 end
 -------------------------------------------------

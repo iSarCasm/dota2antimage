@@ -24,21 +24,31 @@ end
 
 function M:SetAction(action)
   local name = GetBot():GetUnitName();
-  if (self[name].action) then
+  self[name].actionAssigned = true;
+  if (self[name].action and self[name].actionWasSet ~= DotaTime()) then
     if (self[name].action ~= action) then
       self[name].action:Finish();
+      if (self[name].action == nil) then
+        self[name].actionWasSet = DotaTime();
+        self[name].action = action;
+      end
     end
   else
+    self[name].actionWasSet = DotaTime();
     self[name].action = action;
-    action:Run();
   end
 end
 
 function M:Act()
   local name = GetBot():GetUnitName();
   if (self[name].action) then
-    self[name].action:Run();
+    if (self[name].actionAssigned) then
+      self[name].action:Run();
+    else
+      self[name].action:Finish();
+    end
   end
+  self[name].actionAssigned = false;
 end
 
 function M:ClearAction()
@@ -48,7 +58,7 @@ end
 
 function M:ActionName()
   local name = GetBot():GetUnitName();
-  if (self[name].action) then
+  if (self[name].action and self[name].actionAssigned) then
     return self[name].action.name;
   else
     return "nil";

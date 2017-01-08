@@ -4,8 +4,8 @@ local RewardBuyItems  = require(GetScriptDirectory().."/dev/state/_decision_maki
 local EffortWalk      = require(GetScriptDirectory().."/dev/state/_decision_making/effort/effort_walk");
 local EffortDanger    = require(GetScriptDirectory().."/dev/state/_decision_making/effort/effort_danger");
 -------------------------------------------------
-M.STATE_WALK_TO_SHOP = "STATE_WALK_TO_SHOP";
-M.STATE_BUY = "STATE_BUY"
+M.STATE_WALK_TO_SHOP  = "STATE_WALK_TO_SHOP";
+M.STATE_BUY           = "STATE_BUY"
 -------------------------------------------------
 M.Potential = {};
 M.Shop = SHOP_SIDE_TOP;
@@ -37,6 +37,9 @@ function M:EvaluatePotential(BotInfo, Mode, Strategy)
     shop = shops[i];
     -- print("the shop is "..shop.." "..EffortWalk:ToLocation(SHOP[shop]).." + "..EffortDanger:OfLocation(SHOP[shop]));
     local effort = EffortWalk:ToLocation(SHOP[shop]) + EffortDanger:OfLocation(SHOP[shop]);
+    if (fountain and (not side) and shop == GetShop()) then
+      effort = 1; -- fountain only? insta buy
+    end
     local potential = reward / effort;
 
     self.Potential[shop] = potential;
@@ -60,7 +63,7 @@ function M.StateWalkToShop(self, BotInfo, Mode, Strategy)
 end
 
 function M.StateBuy(self, BotInfo, Mode, Strategy)
-  BotActions.ActionPurchaseNextItem:Call();
+  BotActions.ActionPurchaseItem:Call(BotInfo.itemBuild[1]);
 end
 -------------------------------------------------
 function M:ShopDistance(shop)

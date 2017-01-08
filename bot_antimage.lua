@@ -9,19 +9,26 @@ local TeamStrategy    = require(GetScriptDirectory().."/dev/team_strategy");
 local BotMode         = require(GetScriptDirectory().."/dev/bot_mode");
 local BotState        = require(GetScriptDirectory().."/dev/bot_state");
 local BotInfo         = require(GetScriptDirectory().."/dev/bot_info")
+local AbilityItems    = require(GetScriptDirectory().."/dev/abilities/ability_items")
 local Game         		= require(GetScriptDirectory().."/dev/game")
 --------------------------------------------------------
 --------------------------------------------------------
 BotInfo:Init(LANE_TOP, ROLE_CARRY);
 BotInfo:Me().projectileSpeed = 0;
+BotInfo:Me().abilities = {
+	"antimage_blink",
+	"antimage_mana_break",
+	"antimage_spell_shield",
+	"antimage_mana_void"
+}
 BotInfo:Me().itemBuild = {
+		"item_courier", -- wTF?????
 		"item_tango",
 		"item_tango",
 		"item_flask",
 		"item_quelling_blade",
-    "item_branches",
+		-- "item_branches",
 
-		"item_claymore",
 
 		"item_ring_of_health",
 		"item_ring_of_regen",
@@ -30,6 +37,7 @@ BotInfo:Me().itemBuild = {
 		"item_boots_of_elves",
 		"item_gloves",
 
+		"item_claymore",
 		"item_broadsword",
 		"item_void_stone",
 
@@ -76,11 +84,11 @@ BotInfo:Me().abilityBuild = {
 	"antimage_mana_break",
 	"antimage_blink",
 	"antimage_blink",
-	"special_bonus_attack_damage_20",
 	"antimage_blink",
+	"antimage_spell_shield",
+	"antimage_spell_shield",
 	"antimage_mana_void",
-	"antimage_spell_shield",
-	"antimage_spell_shield",
+	"special_bonus_attack_damage_20",
 	"special_bonus_attack_speed_20",
 	"antimage_spell_shield",
 	"antimage_mana_void",
@@ -102,9 +110,11 @@ function Think(  )
 
   TeamStrategy:Update();
   BotMode:Update(TeamStrategy.Strategy);
-  BotState:Act(BotMode.Mode, TeamStrategy.Strategy);
-  BotInfo:Act();
+  BotState:Update(BotMode.Mode, TeamStrategy.Strategy);
+	AbilityItems:Think(BotMode.Mode, TeamStrategy.Strategy);
 
+	DebugStatesFields();
+
+	BotInfo:Act();
   BotInfo:GatherData();
-  DebugStatesFields();
 end

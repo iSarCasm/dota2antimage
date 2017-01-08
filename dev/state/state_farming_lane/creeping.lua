@@ -3,6 +3,7 @@ local M = {};
 local BotInfo         = require(GetScriptDirectory().."/dev/bot_info")
 local DotaBotUtility  = require(GetScriptDirectory().."/dev/utility");
 local UnitHelper      = require(GetScriptDirectory().."/dev/helper/unit_helper");
+local VectorHelper    = require(GetScriptDirectory().."/dev/helper/vector_helper");
 ----------------------------------------------
 function M:ExtrapolatedDamage(creep, time)
   return Max(DotaBotUtility:GetCreepHealthDeltaPerSec(creep, 3) * time * 0.5, 0);
@@ -62,7 +63,7 @@ function M:AgroOffVec()
   local bot = GetBot();
   local lane = UnitHelper:GetUnitLane(bot);
   local tower = DotaBotUtility:GetFrontTowerAt(lane);
-  return tower:GetLocation();
+  return bot:GetLocation() + (VectorHelper:Normalize(tower:GetLocation() - bot:GetLocation()) * 400); -- walk back range
 end
 
 function M:isAttackedByCreeps()

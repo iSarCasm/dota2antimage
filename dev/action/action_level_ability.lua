@@ -30,6 +30,8 @@ function M:Run()
 end
 
 function M:Finish()
+  self.ability = nil;
+  self.table = nil;
   BotInfo:ClearAction();
 end
 -------------------------------------------------

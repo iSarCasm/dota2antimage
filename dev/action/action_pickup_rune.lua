@@ -13,6 +13,7 @@ function M:Run()
 end
 
 function M:Finish()
+  self.rune = nil;
   BotInfo:ClearAction();
 end
 -------------------------------------------------
