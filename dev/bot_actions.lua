@@ -9,7 +9,8 @@ M.ActionLevelAbility     = require(GetScriptDirectory().."/dev/action/action_lev
 M.ActionUseAbility       = require(GetScriptDirectory().."/dev/action/action_use_ability");
 M.ActionCourierDeliver   = require(GetScriptDirectory().."/dev/action/action_courier_deliver");
 
-
 M.ActionCancelAttack    = require(GetScriptDirectory().."/dev/action/custom/action_cancel_attack");
+M.ActionPtSwitchAbility = require(GetScriptDirectory().."/dev/action/custom/action_pt_switch_ability");
+M.ActionComboAbility    = require(GetScriptDirectory().."/dev/action/custom/action_combo_ability");
 
 return M;

@@ -7,9 +7,6 @@ M.STATE_WAIT = "STATE_WAIT"
 -------------------------------------------------
 -------------------------------------------------
 function M:EvaluatePotential(BotInfo, Mode, Strategy)
-  if (DotaTime() > 0 and DotaTime() < 15) then
-    return 10;
-  end
   return 0;
 end
 -------------------------------------------------

@@ -29,13 +29,13 @@ BotInfo:Me().itemBuild = {
 		"item_quelling_blade",
 		-- "item_branches",
 
+		"item_boots",
+		"item_belt_of_strength",
+		"item_gloves",
 
 		"item_ring_of_health",
 		"item_ring_of_regen",
 
-		"item_boots",
-		"item_boots_of_elves",
-		"item_gloves",
 
 		"item_claymore",
 		"item_broadsword",
@@ -112,6 +112,12 @@ function Think(  )
   BotMode:Update(TeamStrategy.Strategy);
   BotState:Update(BotMode.Mode, TeamStrategy.Strategy);
 	AbilityItems:Think(BotMode.Mode, TeamStrategy.Strategy);
+
+	local item = GetBot():GetItemInSlot(3);
+	DebugDrawText(25, 220, "1: "..item:GetTargetFlags(), 255, 255, 255)
+	-- DebugDrawText(25, 240, "2: "..item:GetToggleState(), 255, 255, 255)
+	-- DebugDrawText(25, 260, "3: "..item:IsAttributeBonus(), 255, 255, 255)
+	DebugDrawText(25, 280, "4: "..item:GetBehavior(), 255, 255, 255)
 
 	DebugStatesFields();
 

@@ -24,36 +24,40 @@ end
 
 function M:SetAction(action)
   local name = GetBot():GetUnitName();
-  self[name].actionAssigned = true;
-  if (self[name].action and self[name].actionWasSet ~= DotaTime()) then
-    if (self[name].action ~= action) then
-      self[name].action:Finish();
-      if (self[name].action == nil) then
-        self[name].actionWasSet = DotaTime();
-        self[name].action = action;
-      end
-    end
-  else
-    self[name].actionWasSet = DotaTime();
-    self[name].action = action;
-  end
+  self[name].actionAssigned = action;
+  print(DotaTime().." try assign "..self[name].actionAssigned.name);
 end
 
 function M:Act()
   local name = GetBot():GetUnitName();
   if (self[name].action) then
+    if (self[name].actionAssigned and self[name].action ~= self[name].actionAssigned) then
+      self[name].action:Finish();
+      if (self[name].action == nil) then
+        self[name].action = self[name].actionAssigned;
+      end
+    end
+  else
     if (self[name].actionAssigned) then
+      self[name].action = self[name].actionAssigned;
+    end
+  end
+
+  if (self[name].action) then
+    if (self[name].actionAssigned and self[name].finished) then
+      self[name].finished = false;
       self[name].action:Run();
     else
       self[name].action:Finish();
     end
   end
-  self[name].actionAssigned = false;
+  self[name].actionAssigned = nil;
 end
 
 function M:ClearAction()
   local name = GetBot():GetUnitName();
   self[name].action = nil;
+  self[name].finished = true;
 end
 
 function M:ActionName()
