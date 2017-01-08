@@ -7,6 +7,8 @@ M.ActionPurchaseItem    = require(GetScriptDirectory().."/dev/action/action_purc
 M.ActionPickUpRune       = require(GetScriptDirectory().."/dev/action/action_pickup_rune");
 M.ActionLevelAbility     = require(GetScriptDirectory().."/dev/action/action_level_ability");
 M.ActionUseAbility       = require(GetScriptDirectory().."/dev/action/action_use_ability");
+M.ActionCourierDeliver   = require(GetScriptDirectory().."/dev/action/action_courier_deliver");
+
 
 M.ActionCancelAttack    = require(GetScriptDirectory().."/dev/action/custom/action_cancel_attack");
 
