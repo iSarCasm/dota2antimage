@@ -2,6 +2,10 @@ local M = {}
 ----------------------------------------------
 local BotActions = require(GetScriptDirectory().."/dev/bot_actions");
 local MapHelper  = require(GetScriptDirectory().."/dev/helper/map_helper");
+local RewardFarmCreepwave   = require(GetScriptDirectory().."/dev/state/_decision_making/reward/reward_farm_creepwave");
+local EffortWalk            = require(GetScriptDirectory().."/dev/state/_decision_making/effort/effort_walk");
+local EffortKillCreepwave   = require(GetScriptDirectory().."/dev/state/_decision_making/effort/effort_kill_creepwave");
+local EffortDanger          = require(GetScriptDirectory().."/dev/state/_decision_making/effort/effort_danger");
 ----------------------------------------------
 local FarmingLhD = require(GetScriptDirectory().."/dev/state/state_farming_lane/farming_lh_d");
 ----------------------------------------------
@@ -22,20 +26,14 @@ end
 function M:EvaluatePotential(BotInfo, Mode, Strategy)
   local bot = GetBot();
   local lanes = { LANE_TOP, LANE_MID, LANE_BOT };
-  local highest = -9999999;
+  local highest = VERY_LOW_INT;
   for i = 1, #lanes do
     local lane = lanes[i];
-    local reward = ((DotaTime()-15) > 0 and 200 + (self:LaningReward(lane, BotInfo, Mode)) or 0); -- approx creep wave gold? creep swapn time 15
-    local walkSpeed = bot:GetCurrentMovementSpeed();
-    local lane_location = MapHelper:LaneFrontLocation(GetTeam(), self.Lane, false);
-    local walkDistance = GetUnitToLocationDistance(bot, lane_location);
-    local effortWalk = walkDistance / walkSpeed;
 
-    local creep_health = 2000; -- approx creep wave health
-    local dps = bot:GetBaseDamage();
-    local effortFarming = creep_health / dps;
+    local reward = RewardFarmCreepwave:Generic(lane, BotInfo, Mode);
+    local lane_location = MapHelper:LaneFrontLocation(GetTeam(), lane, false);
+    local effort = EffortWalk:ToLocation(lane_location) + EffortDanger:OfLocation(lane_location) + EffortKillCreepwave:Generic();
 
-    local effort = effortWalk + effortFarming;
     local potential = reward / effort;
     self.Potential[lane] = potential;
     if (potential > highest) then
@@ -44,15 +42,6 @@ function M:EvaluatePotential(BotInfo, Mode, Strategy)
     end
   end
   return self.Potential[self.Lane];
-end
-
-function M:LaningReward(Lane, BotInfo, Mode)
-  if (Mode == MODE_LANING) then
-    if (Lane == BotInfo.LANE) then
-      return 100;
-    end
-  end
-  return 0;
 end
 ----------------------------------------------
 ----------------------------------------------

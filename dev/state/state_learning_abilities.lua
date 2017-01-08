@@ -1,12 +1,12 @@
 local M = {}
-local BotActions      = require(GetScriptDirectory().."/dev/bot_actions");
+local BotActions = require(GetScriptDirectory().."/dev/bot_actions");
 -------------------------------------------------
 M.StateMachine = {}
 -------------------------------------------------
 -------------------------------------------------
 function M:EvaluatePotential(BotInfo, Mode, Strategy)
   local bot = GetBot();
-  return ((bot:GetAbilityPoints() > 0) and 100 or 0);
+  return ((bot:GetAbilityPoints() > 0) and 100 or -999);
 end
 -------------------------------------------------
 function M:Reset()

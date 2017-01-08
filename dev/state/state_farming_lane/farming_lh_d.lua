@@ -7,9 +7,9 @@ local UnitHelper      = require(GetScriptDirectory().."/dev/helper/unit_helper")
 local VectorHelper    = require(GetScriptDirectory().."/dev/helper/vector_helper");
 ----------------------------------------------
 ----------------------------------------------
-M.STATE_WALK_TO_CREEPS = "STATE_WALK_TO_CREEPS";
-M.STATE_ATTACK_CREEP = "STATE_ATTACK_CREEP"
-M.STATE_AGRO_OFF = "STATE_AGRO_OFF";
+M.STATE_WALK_TO_CREEPS  = "STATE_WALK_TO_CREEPS";
+M.STATE_ATTACK_CREEP    = "STATE_ATTACK_CREEP"
+M.STATE_AGRO_OFF        = "STATE_AGRO_OFF";
 ----------------------------------------------
 -- Some Shitty CONSTANTS I made up
 M.TOWER_POWER = 800;

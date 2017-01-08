@@ -1,6 +1,9 @@
 local M = {}
-local BotActions      = require(GetScriptDirectory().."/dev/bot_actions");
-local Game            = require(GetScriptDirectory().."/dev/game");
+local BotActions        = require(GetScriptDirectory().."/dev/bot_actions");
+local RewardBountyRune  = require(GetScriptDirectory().."/dev/state/_decision_making/reward/reward_bounty_rune");
+local EffortWalk        = require(GetScriptDirectory().."/dev/state/_decision_making/effort/effort_walk");
+local EffortWait        = require(GetScriptDirectory().."/dev/state/_decision_making/effort/effort_wait");
+local EffortDanger      = require(GetScriptDirectory().."/dev/state/_decision_making/effort/effort_danger");
 -------------------------------------------------
 M.STATE_WALK_TO_RUNE = "STATE_WALK_TO_RUNE";
 M.STATE_WAIT_RUNE = "STATE_WAIT_RUNE"
@@ -16,19 +19,15 @@ end
 function M:EvaluatePotential(BotInfo, Mode, Strategy)
   local bot = GetBot();
   local runes = {RUNE_BOUNTY_1, RUNE_BOUNTY_2, RUNE_BOUNTY_3, RUNE_BOUNTY_4};
-  local highest = -9999999;
+  local highest = VERY_LOW_INT;
   for i = 1, #runes do
     local rune = runes[i];
-    local reward = 60 + self:LaningReward(rune, BotInfo, Mode, Strategy); -- bounty gives ~60 gold
 
-    local walkSpeed = bot:GetCurrentMovementSpeed();
-    local walkDistance = GetUnitToLocationDistance(bot, GetRuneSpawnLocation(rune));
-    local effortWalk = walkDistance / walkSpeed;
-
-    local effortWait = Game:TimeToRune(rune);
-
-    local effort = effortWait + effortWalk;
+    local reward = RewardBountyRune:Generic(rune, Mode);
+    local rune_location = GetRuneSpawnLocation(rune);
+    local effort = EffortWait:Rune(rune) + EffortWalk:ToLocation(rune_location) + EffortDanger:OfLocation(rune_location);
     local potential = reward / effort;
+
     self.Potential[rune] = potential;
     if (potential > highest) then
       self.Rune = rune;
@@ -36,26 +35,6 @@ function M:EvaluatePotential(BotInfo, Mode, Strategy)
     end
   end
   return self.Potential[self.Rune];
-end
-
-function M:LaningReward(Rune, BotInfo, Mode, Strategy)
-  if (Mode == MODE_LANING) then
-    if (GetTeam() == TEAM_RADIANT) then
-      if (BotInfo.LANE == LANE_TOP or BotInfo.LANE == LANE_MID) then
-        return ((Rune == RUNE_BOUNTY_1) and 100 or 0);
-      else
-        return ((Rune == RUNE_BOUNTY_2) and 100 or 0);
-      end
-    else
-      if (BotInfo.LANE == LANE_BOT or BotInfo.LANE == LANE_MID) then
-        return ((Rune == RUNE_BOUNTY_4) and 100 or 0);
-      else
-        return ((Rune == RUNE_BOUNTY_3) and 100 or 0);
-      end
-    end
-  else
-    return 0;
-  end
 end
 -------------------------------------------------
 -------------------------------------------------

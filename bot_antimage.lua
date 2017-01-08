@@ -1,7 +1,10 @@
 --------------------------------------------------------
+require(GetScriptDirectory().."/dev/constants/generic");
 require(GetScriptDirectory().."/dev/constants/roles");
 require(GetScriptDirectory().."/dev/constants/runes");
 require(GetScriptDirectory().."/dev/constants/shops");
+require(GetScriptDirectory().."/dev/constants/fountains");
+require(GetScriptDirectory().."/dev/helper/global_helper");
 local TeamStrategy    = require(GetScriptDirectory().."/dev/team_strategy");
 local BotMode         = require(GetScriptDirectory().."/dev/bot_mode");
 local BotState        = require(GetScriptDirectory().."/dev/bot_state");
@@ -18,6 +21,8 @@ BotInfo:Me().itemBuild = {
 		"item_quelling_blade",
     "item_branches",
 
+		"item_claymore",
+
 		"item_ring_of_health",
 		"item_ring_of_regen",
 
@@ -25,7 +30,6 @@ BotInfo:Me().itemBuild = {
 		"item_boots_of_elves",
 		"item_gloves",
 
-		"item_claymore",
 		"item_broadsword",
 		"item_void_stone",
 
@@ -95,7 +99,7 @@ end
 --------------------------------------------------------
 function Think(  )
 	Game:Update();
-	
+
   TeamStrategy:Update();
   BotMode:Update(TeamStrategy.Strategy);
   BotState:Act(BotMode.Mode, TeamStrategy.Strategy);

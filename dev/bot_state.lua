@@ -78,7 +78,7 @@ function M:SetState(State)
 end
 
 function M:UpdateState(BotInfo, Mode, Strategy)
-  local highestPotential = -999999;
+  local highestPotential = VERY_LOW_INT;
   local highestState = self.State;
   for i = 1, #self.ScanStates do
     local state = self.ScanStates[i];

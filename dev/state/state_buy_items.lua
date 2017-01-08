@@ -1,5 +1,8 @@
 local M = {}
 local BotActions      = require(GetScriptDirectory().."/dev/bot_actions");
+local RewardBuyItems  = require(GetScriptDirectory().."/dev/state/_decision_making/reward/reward_buy_items");
+local EffortWalk      = require(GetScriptDirectory().."/dev/state/_decision_making/effort/effort_walk");
+local EffortDanger    = require(GetScriptDirectory().."/dev/state/_decision_making/effort/effort_danger");
 -------------------------------------------------
 M.STATE_WALK_TO_SHOP = "STATE_WALK_TO_SHOP";
 M.STATE_BUY = "STATE_BUY"
@@ -12,18 +15,14 @@ function M:ArgumentString()
 end
 -------------------------------------------------
 function M:EvaluatePotential(BotInfo, Mode, Strategy)
-  local bot = GetBot();
-  local gold = bot:GetGold();
   local item = BotInfo.itemBuild[1];
-  local reward = GetItemCost(item);
-
-  if (gold < reward) then
-    return 0;
-  end
-
+  local reward = RewardBuyItems:Item(item);
+  if (reward < 0) then return reward end;
   local secret = IsItemPurchasedFromSecretShop(item);
   local side = IsItemPurchasedFromSideShop(item);
   local fountain = (not secret);
+  -- print("item is "..item);
+  -- print("secret: "..(secret and "YES" or "NO ").."side: "..(side and "YES" or "NO ").." fountain: "..(fountain and "YES" or "NO "));
   local shops = {};
   if (secret) then
     shops = {SHOP_SECRET_RADIANT, SHOP_SECRET_RADIANT};
@@ -32,37 +31,28 @@ function M:EvaluatePotential(BotInfo, Mode, Strategy)
   elseif (fountain) then
     shops = {SHOP_RADIANT, SHOP_DIRE};
   end
-  local highest = -9999999;
+
+  local highest = VERY_LOW_INT;
   for i = 1, #shops do
-    local walkSpeed = bot:GetCurrentMovementSpeed();
-    local walkDistance = GetUnitToLocationDistance(bot, SHOP[shops[i]]);
-    local effortWalk = walkDistance / walkSpeed;
-    local effort = effortWalk;
+    shop = shops[i];
+    -- print("the shop is "..shop.." "..EffortWalk:ToLocation(SHOP[shop]).." + "..EffortDanger:OfLocation(SHOP[shop]));
+    local effort = EffortWalk:ToLocation(SHOP[shop]) + EffortDanger:OfLocation(SHOP[shop]);
     local potential = reward / effort;
-    self.Potential[shops[i]] = potential;
+
+    self.Potential[shop] = potential;
     if (potential > highest) then
-      self.Shop = shops[i];
+      self.Shop = shop;
       highest = potential;
     end
   end
   return self.Potential[self.Shop];
-end
-
-function M:ShopDistance(shop)
-  if (shop == SHOP_DIRE or shop == SHOP_RADIANT) then
-    return GetBot():DistanceFromFountain();
-  elseif (shop == SHOP_SIDE_BOT or shop == SHOP_SIDE_TOP) then
-    return GetBot():DistanceFromSideShop();
-  else
-    return GetBot():DistanceFromSecretShop();
-  end
 end
 -------------------------------------------------
 -------------------------------------------------
 function M.StateWalkToShop(self, BotInfo, Mode, Strategy)
   local bot = GetBot();
   local loc = SHOP[self.Shop];
-  if (self:ShopDistance(self.Shop) < 10) then
+  if (self:ShopDistance(self.Shop) < 10 or (self.Shop == GetShop())) then
     self.StateMachine.State = self.STATE_BUY;
   else
     BotActions.ActionMoveToLocation:Call(loc);
@@ -71,6 +61,16 @@ end
 
 function M.StateBuy(self, BotInfo, Mode, Strategy)
   BotActions.ActionPurchaseNextItem:Call();
+end
+-------------------------------------------------
+function M:ShopDistance(shop)
+  if (shop == SHOP_DIRE or shop == SHOP_RADIANT) then
+    return GetBot():DistanceFromFountain();
+  elseif (shop == SHOP_SIDE_BOT or shop == SHOP_SIDE_TOP) then
+    return GetBot():DistanceFromSideShop();
+  else
+    return GetBot():DistanceFromSecretShop();
+  end
 end
 -------------------------------------------------
 -------------------------------------------------
