@@ -3,6 +3,7 @@ local RewardBuyItems = {}
 local BotInfo = require(GetScriptDirectory().."/dev/bot_info")
 ----------------------------------------------------
 function RewardBuyItems:Item(item)
+  if (not item) then return -999 end;
   local bot = GetBot();
   local gold = bot:GetGold();
   local cost = GetItemCost(item);

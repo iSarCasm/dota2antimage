@@ -23,30 +23,34 @@ BotInfo:Me().abilities = {
 }
 BotInfo:Me().itemBuild = {
 		"item_courier", -- wTF?????
+
 		"item_tango",
 		"item_tango",
 		"item_flask",
 		"item_quelling_blade",
+
+		"item_stout_shield",
+		"item_slippers",
+		"item_slippers",
 		-- "item_branches",
+
+		"item_ring_of_health",
+		-- "item_ring_of_regen",
 
 		"item_boots",
 		"item_belt_of_strength",
 		"item_gloves",
-
-		"item_ring_of_health",
-		"item_ring_of_regen",
-
 
 		"item_claymore",
 		"item_broadsword",
 		"item_void_stone",
 
     "item_quelling_blade",
-
-		"item_ring_of_protection",
-		"item_sobi_mask",
-		"item_recipe_headdress",
-		"item_lifesteal",
+		--
+		-- "item_ring_of_protection",
+		-- "item_sobi_mask",
+		-- "item_recipe_headdress",
+		-- "item_lifesteal",
 
 		"item_blade_of_alacrity",
 		"item_boots_of_elves",
@@ -90,10 +94,10 @@ BotInfo:Me().abilityBuild = {
 	"antimage_spell_shield",
 	"antimage_mana_void",
 	"antimage_mana_void",
-	"special_bonus_attack_damage_20",
-	"special_bonus_attack_speed_20",
-	"special_bonus_all_stats_10",
-	"special_bonus_agility_25"
+	-- "special_bonus_attack_damage_20",
+	-- "special_bonus_attack_speed_20",
+	-- "special_bonus_all_stats_10",
+	-- "special_bonus_agility_25"
 }
 --------------------------------------------------------
 --------------------------------------------------------

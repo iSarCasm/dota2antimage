@@ -11,7 +11,7 @@ function ItemTango:Think(Mode, Strategy)
       local trees = bot:GetNearbyTrees(700);
       if (trees) then
         for i = 1, #trees do
-          if (bot:IsLocationPassable(GetTreeLocation(trees[i]))) then
+          if (IsLocationPassable(GetTreeLocation(trees[i]))) then
             BotActions.ActionUseAbility:Call(self.name, trees[i]);
             return;
           end

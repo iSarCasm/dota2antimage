@@ -44,10 +44,10 @@ function M:Act()
   end
 
   if (self[name].action) then
-    if (self[name].actionAssigned and self[name].finished) then
+    if (self[name].actionAssigned and (self[name].finished or self[name].actionAssigned == self[name].action)) then
       self[name].finished = false;
       self[name].action:Run();
-    else
+    elseif (self[name].actionAssigned ~= self[name].action) then
       self[name].action:Finish();
     end
   end
