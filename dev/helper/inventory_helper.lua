@@ -22,4 +22,21 @@ function InventoryHelper:GetItemByName(unit, item_name, hasToBeActiveSlot)
   return nil;
 end
 
+function InventoryHelper:WorthOfItemsCanBeBought(build)
+  local gold = GetBot():GetGold();
+  local goldLeft = gold;
+  local worth = 0;
+  for i = 1, #build do
+    local cost = GetItemCost(build[i]);
+    if (goldLeft >= cost) then
+      goldLeft = goldLeft - cost;
+      worth = worth + cost;
+    else
+      return worth;
+    end
+  end
+end
+
+
+
 return InventoryHelper;

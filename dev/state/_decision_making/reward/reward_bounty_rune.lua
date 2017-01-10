@@ -4,7 +4,11 @@ local BotInfo = require(GetScriptDirectory().."/dev/bot_info")
 local Game    = require(GetScriptDirectory().."/dev/game");
 ----------------------------------------------------
 function RewardBountyRune:Generic(Rune, Mode)
-  return 60 + self:LaningReward(Rune, Mode); -- bounty gives ~60 gold
+  local basic_reward = 60;
+  if (DotaTime() < 1) then
+    basic_reward = 100;
+  end
+  return basic_reward + self:LaningReward(Rune, Mode); -- bounty gives ~60 gold
 end
 
 function RewardBountyRune:LaningReward(Rune, Mode)

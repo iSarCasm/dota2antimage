@@ -4,6 +4,7 @@ local DotaBotUtility  = require(GetScriptDirectory().."/dev/utility");
 --------------------------------------------------------
 local StateWaitCreeps = require(GetScriptDirectory().."/dev/state/state_wait_creeps");
 local StateFarmingLane = require(GetScriptDirectory().."/dev/state/state_farming_lane");
+local StateFarmJungle = require(GetScriptDirectory().."/dev/state/state_farming_jungle");
 local StateBuyItems    = require(GetScriptDirectory().."/dev/state/state_buy_items");
 local StateControlBountyRune = require(GetScriptDirectory().."/dev/state/state_control_bounty_rune");
 local StateLearningAbilities = require(GetScriptDirectory().."/dev/state/state_learning_abilities");
@@ -30,7 +31,7 @@ local STATE_FARMING_LANE          = "STATE_FARMING_LANE";
 -- local STATE_LH_D_NOPUSH           = "STATE_LH_D_NOPUSH";
 -- local STATE_LH_D_PUSH             = "STATE_LH_D_PUSH";
 -- local STATE_LH_PSH                = "STATE_LH_PSH";
-local STATE_FARM_NEUTRALS         = "STATE_FARM_NEUTRALS";
+local STATE_FARM_JUNGLE           = "STATE_FARM_JUNGLE";
 local STATE_CREEP_SKIP            = "STATE_CREEP_SKIP";
 
 local STATE_ATTACK_FORT           = "STATE_ATTACK_FORT";
@@ -64,6 +65,7 @@ local STATE_TP_BOTTLE_REFILL      = "STATE_TP_BOTTLE_REFILL";
 --------------------------------------------------------
 M.ScanStates = {
   STATE_FARMING_LANE,
+  STATE_FARM_JUNGLE,
   STATE_CONTROL_BOUNTYRUNE,
   STATE_WAIT_CREEPS,
   STATE_DELIVER_ITEMS,
@@ -100,6 +102,7 @@ M.State = STATE_IDLE;
 M.StateMachine = {};
 M.StateMachine.STATE_WAIT_CREEPS  = StateWaitCreeps;
 M.StateMachine.STATE_FARMING_LANE = StateFarmingLane;
+M.StateMachine.STATE_FARM_JUNGLE  = StateFarmJungle;
 M.StateMachine.STATE_BUY_ITEMS    = StateBuyItems;
 M.StateMachine.STATE_CONTROL_BOUNTYRUNE = StateControlBountyRune;
 M.StateMachine.STATE_LEARNING_ABILITIES = StateLearningAbilities;

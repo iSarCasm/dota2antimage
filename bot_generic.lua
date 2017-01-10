@@ -1,3 +1,3 @@
-function Think()
-  -- empty
-end
+-- function Think()
+--   -- empty
+-- end

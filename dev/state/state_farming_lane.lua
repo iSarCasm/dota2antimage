@@ -1,9 +1,11 @@
 local M = {}
 ----------------------------------------------
+local Game       = require(GetScriptDirectory().."/dev/game");
 local BotActions = require(GetScriptDirectory().."/dev/bot_actions");
 local MapHelper  = require(GetScriptDirectory().."/dev/helper/map_helper");
 local RewardFarmCreepwave   = require(GetScriptDirectory().."/dev/state/_decision_making/reward/reward_farm_creepwave");
 local EffortWalk            = require(GetScriptDirectory().."/dev/state/_decision_making/effort/effort_walk");
+local EffortWait            = require(GetScriptDirectory().."/dev/state/_decision_making/effort/effort_wait");
 local EffortKillCreepwave   = require(GetScriptDirectory().."/dev/state/_decision_making/effort/effort_kill_creepwave");
 local EffortDanger          = require(GetScriptDirectory().."/dev/state/_decision_making/effort/effort_danger");
 ----------------------------------------------
@@ -20,7 +22,7 @@ M.FarmingType = {}
 M.FarmingType.FARMING_LH_D = FarmingLhD;
 ----------------------------------------------
 function M:ArgumentString()
-  return "("..self.Lane..")";
+  return "("..self.Lane..", "..self.FarmingType[self.FarmingType.Type].StateMachine.State..")";
 end
 -------------------------------------------------
 function M:EvaluatePotential(BotInfo, Mode, Strategy)
@@ -32,8 +34,7 @@ function M:EvaluatePotential(BotInfo, Mode, Strategy)
 
     local reward = RewardFarmCreepwave:Generic(lane, BotInfo, Mode);
     local lane_location = MapHelper:LaneFrontLocation(GetTeam(), lane, false);
-    local effort = EffortWalk:ToLocation(lane_location) + EffortDanger:OfLocation(lane_location) + EffortKillCreepwave:Generic();
-
+    local effort = EffortWalk:ToLocation(lane_location) + EffortDanger:OfLocation(lane_location) + EffortWait:Creeps(lane) + EffortKillCreepwave:Generic();
     local potential = reward / effort;
     self.Potential[lane] = potential;
     if (potential > highest) then

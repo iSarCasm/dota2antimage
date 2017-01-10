@@ -4,6 +4,7 @@ require(GetScriptDirectory().."/dev/constants/roles");
 require(GetScriptDirectory().."/dev/constants/runes");
 require(GetScriptDirectory().."/dev/constants/shops");
 require(GetScriptDirectory().."/dev/constants/fountains");
+require(GetScriptDirectory().."/dev/constants/jungle");
 require(GetScriptDirectory().."/dev/helper/global_helper");
 local TeamStrategy    = require(GetScriptDirectory().."/dev/team_strategy");
 local BotMode         = require(GetScriptDirectory().."/dev/bot_mode");
@@ -93,7 +94,7 @@ BotInfo:Me().abilityBuild = {
 	"antimage_spell_shield",
 	"antimage_spell_shield",
 	"antimage_mana_void",
-	"antimage_mana_void",
+	-- "antimage_mana_void",
 	-- "special_bonus_attack_damage_20",
 	-- "special_bonus_attack_speed_20",
 	-- "special_bonus_all_stats_10",

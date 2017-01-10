@@ -1,15 +1,15 @@
 local RewardFarmCreepwave = {}
 ----------------------------------------------------
 function RewardFarmCreepwave:Generic(Lane, BotInfo, Mode)
-  return ((DotaTime()-15) > 0 and (200 + (self:LaningReward(Lane, BotInfo, Mode))) or 0);
+  return 170 + (self:LaningReward(Lane, BotInfo, Mode));
 end
 
 function RewardFarmCreepwave:LaningReward(Lane, BotInfo, Mode)
   if (Mode == MODE_LANING) then
     if (Lane == BotInfo.LANE) then
-      return 50;
+      return 0;
     end
-    return -100;
+    return -70;
   end
   return 0;
 end

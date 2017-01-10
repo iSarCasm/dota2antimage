@@ -16,7 +16,7 @@ end
 -------------------------------------------------
 function M:EvaluatePotential(BotInfo, Mode, Strategy)
   local item = BotInfo.itemBuild[1];
-  local reward = RewardBuyItems:Item(item);
+  local reward = RewardBuyItems:Items(BotInfo.itemBuild);
   if (reward < 0) then return reward end;
   local secret = IsItemPurchasedFromSecretShop(item);
   local side = IsItemPurchasedFromSideShop(item);
@@ -36,7 +36,7 @@ function M:EvaluatePotential(BotInfo, Mode, Strategy)
   for i = 1, #shops do
     shop = shops[i];
     -- print("the shop is "..shop.." "..EffortWalk:ToLocation(SHOP[shop]).." + "..EffortDanger:OfLocation(SHOP[shop]));
-    local effort = EffortWalk:ToLocation(SHOP[shop]) + EffortDanger:OfLocation(SHOP[shop]);
+    local effort = EffortWalk:ToShop(shop) + EffortDanger:OfLocation(SHOP[shop]);
     if (fountain and (not side) and shop == GetShop()) then
       effort = 1; -- fountain only? insta buy
     end
