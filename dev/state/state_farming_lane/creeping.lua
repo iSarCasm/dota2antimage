@@ -67,7 +67,7 @@ function M:AgroOffVec()
 end
 
 function M:isAttackedByCreeps()
-  return (BotInfo:Me().healthDelta < 0); -- bad
+  return (GetBot():TimeSinceDamagedByTower() < 1 or GetBot():TimeSinceDamagedByCreep() < 0.5); -- ok
 end
 
 function M:WeakestCreep(range, ally)
