@@ -25,7 +25,6 @@ end
 function M:SetAction(action)
   local name = GetBot():GetUnitName();
   self[name].actionAssigned = action;
-  print(DotaTime().." try assign "..self[name].actionAssigned.name);
 end
 
 function M:Act()
@@ -35,6 +34,7 @@ function M:Act()
       self[name].action:Finish();
       if (self[name].action == nil) then
         self[name].action = self[name].actionAssigned;
+        print(DotaTime().." try assign "..self[name].actionAssigned.name);
       end
     end
   else

@@ -9,6 +9,7 @@ local StateBuyItems    = require(GetScriptDirectory().."/dev/state/state_buy_ite
 local StateControlBountyRune = require(GetScriptDirectory().."/dev/state/state_control_bounty_rune");
 local StateLearningAbilities = require(GetScriptDirectory().."/dev/state/state_learning_abilities");
 local StateDeliverItems      = require(GetScriptDirectory().."/dev/state/state_deliver_items");
+local StateHealFountain      = require(GetScriptDirectory().."/dev/state/state_heal_fountain");
 --------------------------------------------------------
 local STATE_ESCAPE                = "STATE_ESCAPE";
 local STATE_JUKE                  = "STATE_JUKE";
@@ -67,10 +68,11 @@ M.ScanStates = {
   STATE_FARMING_LANE,
   STATE_FARM_JUNGLE,
   STATE_CONTROL_BOUNTYRUNE,
-  STATE_WAIT_CREEPS,
+  STATE_HEAL_FOUNTAIN,
   STATE_DELIVER_ITEMS,
   STATE_BUY_ITEMS,
-  STATE_LEARNING_ABILITIES
+  STATE_LEARNING_ABILITIES,
+  STATE_WAIT_CREEPS
 }
 --------------------------------------------------------
 function M:SetState(State)
@@ -107,6 +109,7 @@ M.StateMachine.STATE_BUY_ITEMS    = StateBuyItems;
 M.StateMachine.STATE_CONTROL_BOUNTYRUNE = StateControlBountyRune;
 M.StateMachine.STATE_LEARNING_ABILITIES = StateLearningAbilities;
 M.StateMachine.STATE_DELIVER_ITEMS      = StateDeliverItems;
+M.StateMachine.STATE_HEAL_FOUNTAIN      = StateHealFountain;
 --------------------------------------------------------
 --------------------------------------------------------
 M.PrevState = "none";

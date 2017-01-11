@@ -14,6 +14,12 @@ function M:Call(ability, second)
       self.location = second;
     end
   end
+  if (ability == "item_tango") then
+    print("second is "..second);
+    print("tree set? "..(self.tree and self.tree or "nope"));
+    print("target set? "..(self.target and self.target or "nope"));
+    print("location set? "..(self.location and self.location or "nope"));
+  end
   BotInfo:SetAction(self);
 end
 
