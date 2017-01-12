@@ -11,6 +11,7 @@ local StateLearningAbilities = require(GetScriptDirectory().."/dev/state/state_l
 local StateDeliverItems      = require(GetScriptDirectory().."/dev/state/state_deliver_items");
 local StateHealFountain      = require(GetScriptDirectory().."/dev/state/state_heal_fountain");
 local StateAttackHero        = require(GetScriptDirectory().."/dev/state/state_attack_hero");
+local StateEscape            = require(GetScriptDirectory().."/dev/state/state_escape");
 --------------------------------------------------------
 local STATE_ESCAPE                = "STATE_ESCAPE";
 local STATE_JUKE                  = "STATE_JUKE";
@@ -71,6 +72,7 @@ M.ScanStates = {
   STATE_CONTROL_RUNE,
   STATE_HEAL_FOUNTAIN,
   STATE_ATTACK_HERO,
+  STATE_ESCAPE,
   STATE_DELIVER_ITEMS,
   STATE_BUY_ITEMS,
   STATE_LEARNING_ABILITIES,
@@ -114,6 +116,7 @@ M.StateMachine.STATE_LEARNING_ABILITIES = StateLearningAbilities;
 M.StateMachine.STATE_DELIVER_ITEMS      = StateDeliverItems;
 M.StateMachine.STATE_HEAL_FOUNTAIN      = StateHealFountain;
 M.StateMachine.STATE_ATTACK_HERO        = StateAttackHero;
+M.StateMachine.STATE_ESCAPE             = StateEscape;
 --------------------------------------------------------
 --------------------------------------------------------
 M.PrevState = "none";

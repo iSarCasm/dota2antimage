@@ -69,6 +69,8 @@ function M.StateKillCamp(self, BotInfo, Mode, Strategy)
   local creeps = bot:GetNearbyCreeps(700, true);
   if (#creeps > 0) then
     BotActions.ActionAttackUnit:Call(creeps[1], false);
+  else
+    self.StateMachine.State = self.STATE_WALK_TO_CAMP;
   end
   -- BotActions.ActionAttackMove:Call(JUNGLE_CAMP[self.Jungle].Location);
 end

@@ -2,7 +2,7 @@ local EffortKillHero = {}
 ----------------------------------------------------
 local UnitHelper      = require(GetScriptDirectory().."/dev/helper/unit_helper");
 ----------------------------------------------------
-EffortKillHero.Multiplayer = 5;
+EffortKillHero.Multiplayer = 0.5;
 ----------------------------------------------------
 function EffortKillHero:Hero(Hero)
   local bot = GetBot();

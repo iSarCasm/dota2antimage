@@ -67,6 +67,7 @@ function M:AgroOffVec()
 end
 
 function M:isAttackedByCreeps()
+  DebugDrawText(250, 250, "damaged? "..((GetBot():TimeSinceDamagedByTower() < 1 or GetBot():TimeSinceDamagedByCreep() < 0.5) and "yes" or "no"), 255,255,255);
   return (GetBot():TimeSinceDamagedByTower() < 1 or GetBot():TimeSinceDamagedByCreep() < 0.5); -- ok
 end
 

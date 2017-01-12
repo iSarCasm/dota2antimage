@@ -88,8 +88,8 @@ function Game:UpdateJungle()
   local bot = GetBot();
   for jungle = 1, JUNGLE_TOTAL do
     local jungle_location = JUNGLE_CAMP[jungle].Location;
-    if (GetUnitToLocationDistance(bot, jungle_location) < 400) then
-      local creeps = bot:GetNearbyCreeps(400, true);
+    if (GetUnitToLocationDistance(bot, jungle_location) < 300) then
+      local creeps = bot:GetNearbyCreeps(800, true);
       -- print("creeps "..#creeps);
       if (#creeps == 0) then
         self.JungleStates[jungle] = 0;

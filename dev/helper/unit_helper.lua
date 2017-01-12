@@ -124,7 +124,7 @@ function M:GetPhysDamageToUnit(unit, target, isAlly, isCreep, hasMana)
       total = total + mana_break:GetSpecialValueFloat("damage_per_burn") * mana_break:GetSpecialValueFloat("mana_per_hit");
     end
   end
-  return target:GetActualDamage(50+total, DAMAGE_TYPE_PHYSICAL); -- until fixed
+  return target:GetActualDamage(total, DAMAGE_TYPE_PHYSICAL);
 end
 
 function M:NetWorth(unit)
