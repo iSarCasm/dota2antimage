@@ -21,10 +21,16 @@ end
 function M:EvaluatePotential(BotInfo, Mode, Strategy)
   local bot = GetBot();
   local highest = VERY_LOW_INT;
+  -- print("Jungle: ");
   for jungle = 1, JUNGLE_TOTAL do
     local reward = RewardFarmJungle:Camp(jungle, Mode);
     local jungle_location = JUNGLE_CAMP[jungle].Location;
     local effort = EffortKillJungle:Camp(jungle) + EffortWait:Jungle(jungle) + EffortWalk:ToLocation(jungle_location) + EffortDanger:OfLocation(jungle_location);
+    -- print("Camp: .."..JUNGLE_CAMP[jungle].Name);
+    -- print("Kill: "..EffortKillJungle:Camp(jungle));
+    -- print("Wait: "..EffortWait:Jungle(jungle));
+    -- print("Walk: "..EffortWalk:ToLocation(jungle_location));
+    -- print("Danger: "..EffortDanger:OfLocation(jungle_location));
     local potential = reward / effort;
 
     self.Potential[jungle] = potential;

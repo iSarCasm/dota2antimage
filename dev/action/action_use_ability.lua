@@ -4,26 +4,32 @@ local InventoryHelper = require(GetScriptDirectory().."/dev/helper/inventory_hel
 M.name = "Use Ability";
 -------------------------------------------------
 function M:Call(ability, second)
-  self.ability = ability;
-  if (second) then
-    if (type(second) == "number") then
-      self.tree = second;
-    elseif (second.GetUnitName) then
-      self.target = second;
+  local args = {ability, second};
+  self.args = args;
+  BotInfo:SetAction(self, args);
+end
+
+function M:SetArgs()
+  self.ability = self.args[1];
+  self.second = self.args[2];
+  if (self.second) then
+    if (type(self.second) == "number") then
+      self.tree = self.second;
+    elseif (self.second.GetUnitName) then
+      self.target = self.second;
     else  -- this is vector, right?
-      self.location = second;
+      self.location = self.second;
     end
   end
-  if (ability == "item_tango") then
-    print("second is "..second);
+  if (self.ability == "item_tango") then
     print("tree set? "..(self.tree and self.tree or "nope"));
-    print("target set? "..(self.target and self.target or "nope"));
+    print("target set? "..(self.target and self.target:GetUnitName() or "nope"));
     print("location set? "..(self.location and self.location or "nope"));
   end
-  BotInfo:SetAction(self);
 end
 
 function M:Run()
+  self:SetArgs();
   local bot = GetBot();
   local ability = self.ability;
   if (type(ability) == "string") then

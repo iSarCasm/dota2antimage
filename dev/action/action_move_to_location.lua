@@ -3,11 +3,17 @@ local BotInfo = require(GetScriptDirectory().."/dev/bot_info")
 M.name = "Move to Location";
 -------------------------------------------------
 function M:Call(location)
-  self.location = location;
-  BotInfo:SetAction(self);
+  local args = {location};
+  self.args = args;
+  BotInfo:SetAction(self, args);
+end
+
+function M:SetArgs()
+  self.location = self.args[1];
 end
 
 function M:Run()
+  self:SetArgs();
   local bot = GetBot();
   bot:Action_MoveToLocation(self.location);
 end

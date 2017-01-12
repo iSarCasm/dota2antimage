@@ -106,7 +106,19 @@ function M:GetPhysDamageToUnit(unit, target, isAlly, isCreep, hasMana)
       total = total + mana_break:GetSpecialValueFloat("damage_per_burn") * mana_break:GetSpecialValueFloat("mana_per_hit");
     end
   end
-  return target:GetActualDamage(total, DAMAGE_TYPE_PHYSICAL);
+  return target:GetActualDamage(50+total, DAMAGE_TYPE_PHYSICAL); -- until fixed
+end
+
+function M:NetWorth(unit)
+  local goldLeft = gold;
+  local worth = 0;
+  for i = 0, 5 do
+    local item = unit:GetItemInSlot(i);
+    if (item) then
+      worth = worth + GetItemCost(item:GetName());
+    end
+  end
+  return worth;
 end
 
 return M;

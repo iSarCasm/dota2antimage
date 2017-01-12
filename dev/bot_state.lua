@@ -10,12 +10,13 @@ local StateControlBountyRune = require(GetScriptDirectory().."/dev/state/state_c
 local StateLearningAbilities = require(GetScriptDirectory().."/dev/state/state_learning_abilities");
 local StateDeliverItems      = require(GetScriptDirectory().."/dev/state/state_deliver_items");
 local StateHealFountain      = require(GetScriptDirectory().."/dev/state/state_heal_fountain");
+local StateFight             = require(GetScriptDirectory().."/dev/state/state_fight");
 --------------------------------------------------------
 local STATE_ESCAPE                = "STATE_ESCAPE";
 local STATE_JUKE                  = "STATE_JUKE";
 local STATE_HIDING                = "STATE_HIDING";
 
-local STATE_ATTACK                = "STATE_ATTACK";
+local STATE_FIGHT                 = "STATE_FIGHT";
 
 local STATE_WAIT_FIGHT            = "STATE_WAIT_FIGHT";
 local STATE_WAIT_INITIATE         = "STATE_WAIT_INITIATE";
@@ -69,6 +70,7 @@ M.ScanStates = {
   STATE_FARM_JUNGLE,
   STATE_CONTROL_BOUNTYRUNE,
   STATE_HEAL_FOUNTAIN,
+  STATE_FIGHT,
   STATE_DELIVER_ITEMS,
   STATE_BUY_ITEMS,
   STATE_LEARNING_ABILITIES,
@@ -76,7 +78,7 @@ M.ScanStates = {
 }
 --------------------------------------------------------
 function M:SetState(State)
-  if (self.State ~= STATE_IDLE and self.State ~= State) then
+  if (self.State ~= STATE_IDLE and (self.State ~= State or self:ArgumentString() ~= self:StateArgument(State))) then
     -- print(State.." ~= "..self.State);
     self.StateMachine[self.State]:Reset();
   end
@@ -110,6 +112,7 @@ M.StateMachine.STATE_CONTROL_BOUNTYRUNE = StateControlBountyRune;
 M.StateMachine.STATE_LEARNING_ABILITIES = StateLearningAbilities;
 M.StateMachine.STATE_DELIVER_ITEMS      = StateDeliverItems;
 M.StateMachine.STATE_HEAL_FOUNTAIN      = StateHealFountain;
+M.StateMachine.STATE_FIGHT              = StateFight;
 --------------------------------------------------------
 --------------------------------------------------------
 M.PrevState = "none";
@@ -120,8 +123,11 @@ function M:DebugStateChange()
   end
 end
 function M:ArgumentString()
-  if (self.StateMachine[self.State].ArgumentString) then
-    return self.StateMachine[self.State]:ArgumentString();
+  return self:StateArgument(self.State);
+end
+function M:StateArgument(State)
+  if (self.StateMachine[State].ArgumentString) then
+    return self.StateMachine[State]:ArgumentString();
   end
   return "";
 end
@@ -132,7 +138,11 @@ function M:Update(Mode, Strategy)
 end
 
 function M:MiniState()
-  return self.StateMachine[self.State].StateMachine.State;
+  if (self.StateMachine[self.State].StateMachine) then
+    return self.StateMachine[self.State].StateMachine.State;
+  else
+    return "none";
+  end
 end
 
 return M;

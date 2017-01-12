@@ -29,12 +29,20 @@ function M:EvaluatePotential(BotInfo, Mode, Strategy)
   local bot = GetBot();
   local lanes = { LANE_TOP, LANE_MID, LANE_BOT };
   local highest = VERY_LOW_INT;
+  -- print("Lanes:");
   for i = 1, #lanes do
     local lane = lanes[i];
 
     local reward = RewardFarmCreepwave:Generic(lane, BotInfo, Mode);
     local lane_location = MapHelper:LaneFrontLocation(GetTeam(), lane, false);
     local effort = EffortWalk:ToLocation(lane_location) + EffortDanger:OfLocation(lane_location) + EffortWait:Creeps(lane) + EffortKillCreepwave:Generic();
+
+    -- print("Lane: .."..lane);
+    -- print("Kill: "..EffortKillCreepwave:Generic());
+    -- print("Wait: "..EffortWait:Creeps(lane));
+    -- print("Walk: "..EffortWalk:ToLocation(lane_location));
+    -- print("Danger: "..EffortDanger:OfLocation(lane_location));
+
     local potential = reward / effort;
     self.Potential[lane] = potential;
     if (potential > highest) then

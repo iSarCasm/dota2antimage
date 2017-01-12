@@ -14,7 +14,7 @@ local AbilityItems    = require(GetScriptDirectory().."/dev/abilities/ability_it
 local Game         		= require(GetScriptDirectory().."/dev/game")
 --------------------------------------------------------
 --------------------------------------------------------
-BotInfo:Init(LANE_TOP, ROLE_CARRY);
+BotInfo:Init(LANE_BOT, ROLE_CARRY);
 BotInfo:Me().projectileSpeed = 0;
 BotInfo:Me().abilities = {
 	"antimage_blink",

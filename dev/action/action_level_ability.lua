@@ -3,12 +3,18 @@ local BotInfo = require(GetScriptDirectory().."/dev/bot_info")
 M.name = "Level Ability";
 -------------------------------------------------
 function M:Call(ability, table)
-  self.ability = ability;
-  self.table = table;
-  BotInfo:SetAction(self);
+  local args = {ability, table};
+  self.args = args;
+  BotInfo:SetAction(self, args);
+end
+
+function M:SetArgs()
+  self.ability = self.args[1];
+  self.table = self.args[2];
 end
 
 function M:Run()
+  self:SetArgs();
   local bot = GetBot();
   if (self.ability == nil) then
     self.Finish();

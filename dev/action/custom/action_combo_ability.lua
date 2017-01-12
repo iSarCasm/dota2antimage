@@ -4,8 +4,15 @@ local InventoryHelper = require(GetScriptDirectory().."/dev/helper/inventory_hel
 M.name = "Use Combo Ability";
 -------------------------------------------------
 function M:Call(spells)
+  local args = {spells};
+  self.args = args
+  BotInfo:SetAction(self, args);
+end
+
+function M:SetArgs()
   self.combo = {};
   if (not self.state) then self.state = 1 end;
+  local spells = self.args[1];
   if (spells) then
     for i = 1, 10 do
       self.combo[i] = {};
@@ -24,10 +31,10 @@ function M:Call(spells)
       end
     end
   end
-  BotInfo:SetAction(self);
 end
 
 function M:Run()
+  self:SetArgs();
   local bot = GetBot();
   print("state is "..self.state);
   local ability = self.combo[self.state].ability;

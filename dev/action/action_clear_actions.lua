@@ -3,7 +3,7 @@ local BotInfo = require(GetScriptDirectory().."/dev/bot_info")
 M.name = "Clear Actions";
 -------------------------------------------------
 function M:Call()
-  BotInfo:SetAction(self);
+  BotInfo:SetAction(self, {});
 end
 
 function M:Run()

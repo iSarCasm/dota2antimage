@@ -54,10 +54,10 @@ function Game:TimeToJungle(jungle)
 end
 function Game:TimeToCreeps(lane)
   local distance = VectorHelper:Length(GetFront(GetTeam(), lane) - GetFront(GetEnemyTeam(), lane));
-  if (distance < 0.1) then
+  if (distance < 200) then
     return 0;
   else
-    return ((DotaTime() < 30) and -DotaTime()+30 or 30);
+    return ((DotaTime() < 30) and -DotaTime()+30 or distance/100);
   end
 end
 
@@ -77,7 +77,7 @@ function Game:UpdateRunes()
       self.RuneStates[rune] = status;
     end
 
-    DebugDrawText(25, 700 + i*20, "Rune "..rune.." status is: "..self.RuneStates[rune], 255, 255, 255);
+    DebugDrawText(25, 700 + i*20, "Rune "..rune.." status is: "..self.RuneStates[rune].."("..GetRuneStatus(rune)..")", 255, 255, 255);
   end
 end
 

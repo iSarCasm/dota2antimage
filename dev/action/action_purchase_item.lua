@@ -3,11 +3,17 @@ local BotInfo = require(GetScriptDirectory().."/dev/bot_info")
 M.name = "Purchase Item";
 -------------------------------------------------
 function M:Call(item)
-  self.item = item;
-  BotInfo:SetAction(self);
+  local args = {item};
+  self.args = args;
+  BotInfo:SetAction(self, args);
+end
+
+function M:SetArgs()
+  self.item = self.args[1];
 end
 
 function M:Run()
+  self:SetArgs();
   local bot = GetBot();
   local me = BotInfo:Me();
   local item =self.item;

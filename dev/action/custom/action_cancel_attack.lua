@@ -3,11 +3,17 @@ local BotInfo = require(GetScriptDirectory().."/dev/bot_info")
 M.name = "Cancel Attack";
 -------------------------------------------------
 function M:Call(target)
-  self.target = target;
-  BotInfo:SetAction(self);
+  local args = {target}
+  self.args = args;
+  BotInfo:SetAction(self, args);
+end
+
+function M:SetArgs()
+  self.target = self.args[1];
 end
 
 function M:Run()
+  self:SetArgs();
   local bot = GetBot();
   if (self.attackMoment == nil) then
     self.attackMoment = DotaTime();

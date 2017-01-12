@@ -4,28 +4,33 @@ local InventoryHelper = require(GetScriptDirectory().."/dev/helper/inventory_hel
 M.name = "PT Switch Ability";
 -------------------------------------------------
 function M:Call(ability, second)
+  local args = {ability, second};
+  self.args = args;
+  BotInfo:SetAction(self, {ability, second});
+end
+
+function M:SetArgs()
   self.combo = {};
   if (not self.state) then self.state = 1 end;
-  self.ability = ability;
-  self.second = second;
+  self.ability = self.args[1];
+  self.second = self.args[2];
   for i = 1, 4 do
     self.combo[i] = {};
     if (i == 2) then  -- if its STR -> INT
-      self.combo[i].ability = ability;
-      if (second) then
-        if (type(second) == "number") then
-          self.combo[i].tree = second;
-        elseif (second.GetUnitName) then
-          self.combo[i].target = second;
+      self.combo[i].ability = self.ability;
+      if (self.second) then
+        if (type(self.second) == "number") then
+          self.combo[i].tree = self.second;
+        elseif (self.second.GetUnitName) then
+          self.combo[i].target = self.second;
         else  -- this is vector, right?
-          self.combo[i].location = second;
+          self.combo[i].location = self.second;
         end
       end
     else
       self.combo[i].ability = "item_power_treads";
     end
   end
-  BotInfo:SetAction(self);
 end
 
 function M:UseAbility(ability)
@@ -53,6 +58,7 @@ function M:UseAbility(ability)
 end
 
 function M:Run()
+  self:SetArgs();
   local bot = GetBot();
   local ability = self.combo[self.state].ability;
   if (type(ability) == "string") then
