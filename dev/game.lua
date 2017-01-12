@@ -88,12 +88,16 @@ function Game:UpdateJungle()
   local bot = GetBot();
   for jungle = 1, JUNGLE_TOTAL do
     local jungle_location = JUNGLE_CAMP[jungle].Location;
-    if (GetUnitToLocationDistance(bot, jungle_location) < 200) then
+    if (GetUnitToLocationDistance(bot, jungle_location) < 400) then
       local creeps = bot:GetNearbyCreeps(400, true);
+      -- print("creeps "..#creeps);
       if (#creeps == 0) then
         self.JungleStates[jungle] = 0;
+      else
+        self.JungleStates[jungle] = 1; --bad, no stacks
       end
     end
+    -- print("jungle "..JUNGLE_CAMP[jungle].Name.." "..self.JungleStates[jungle]);
   end
 
   if (math.floor(DotaTime()) == 30 or math.floor((120 - math.mod(DotaTime()+60, 120))) == 0) then

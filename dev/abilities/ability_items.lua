@@ -10,6 +10,9 @@ AbilityItems.item = {}
 AbilityItems.item["item_courier"]   = require(GetScriptDirectory().."/dev/abilities/items/item_courier");
 AbilityItems.item["item_tango"]     = require(GetScriptDirectory().."/dev/abilities/items/item_tango");
 AbilityItems.item["item_flask"]     = require(GetScriptDirectory().."/dev/abilities/items/item_flask");
+AbilityItems.item["item_bfury"]     = require(GetScriptDirectory().."/dev/abilities/items/item_bfury");
+AbilityItems.item["item_quelling_blade"] = require(GetScriptDirectory().."/dev/abilities/items/item_quelling_blade");
+AbilityItems.item["item_iron_talon"]     = require(GetScriptDirectory().."/dev/abilities/items/item_iron_talon");
 -----------------------------------------------
 function AbilityItems:Think(Mode, Strategy)
   for i, ability in ipairs(BotInfo:Me().abilities) do

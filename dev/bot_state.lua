@@ -78,11 +78,12 @@ M.ScanStates = {
 }
 --------------------------------------------------------
 function M:SetState(State)
-  if (self.State ~= STATE_IDLE and (self.State ~= State or self:ArgumentString() ~= self:StateArgument(State))) then
+  if (self.State ~= STATE_IDLE and (self.State ~= State or self.Argument ~= self:StateArgument(State))) then
     -- print(State.." ~= "..self.State);
     self.StateMachine[self.State]:Reset();
   end
   self.State = State;
+  self.Argument = self:StateArgument(State);
 end
 
 function M:UpdateState(BotInfo, Mode, Strategy)

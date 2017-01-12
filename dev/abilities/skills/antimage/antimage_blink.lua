@@ -11,7 +11,7 @@ function AntimageBlink:Think(Mode, Strategy)
   if (ability:IsFullyCastable()) then
     if (BotInfo:Me().action == BotActions.ActionMoveToLocation) then
       local location = BotInfo:Me().action.location;
-      if (location and bot:GetMana() > 120 and GetUnitToLocationDistance(bot, location) > 900) then
+      if (location and bot:GetMana() > 120 and (GetUnitToLocationDistance(bot, location) > 900 or (not IsLocationPassable(bot:GetLocation())))) then
         if (InventoryHelper:Contains(bot, "item_power_treads", true)) then
           BotActions.ActionPtSwitchAbility:Call(self.name, location);
         else

@@ -23,15 +23,33 @@ function M:GetUnitLane(unit)
     return nil;
 end
 
+function M:IsFacingTree( hUnit, nTree, degAccuracy )
+  local degree = nil;
+  -- Do we have a target?
+  if(nTree) then
+    return self:IsFacing(hUnit, GetTreeLocation(nTree), degAccuracy);
+  end
+  return false;
+end
+
 function M:IsFacingEntity( hUnit, hTarget, degAccuracy )
   local degree = nil;
   -- Do we have a target?
   if(hTarget) then
+    return self:IsFacing(hUnit, hTarget:GetLocation(), degAccuracy);
+  end
+  return false;
+end
+
+function M:IsFacing( hUnit, tVector, degAccuracy )
+  local degree = nil;
+  -- Do we have a target?
+  if(tVector) then
     -- Get my hero and my heros target location
-    local unitX = hUnit:GetLocation()[1];
-    local unitY = hUnit:GetLocation()[2];
-    local targetX = hTarget:GetLocation()[1];
-    local targetY = hTarget:GetLocation()[2];
+    local unitX = hUnit:GetLocation().x;
+    local unitY = hUnit:GetLocation().y;
+    local targetX = tVector.x;
+    local targetY = tVector.y;
 
     local vX = (targetX-unitX);
     local vY = (targetY-unitY);
