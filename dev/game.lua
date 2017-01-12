@@ -59,7 +59,7 @@ function Game:TimeToCreeps(lane)
   if (distance < 200) then
     return 0;
   else
-    return ((DotaTime() < 30) and -DotaTime()+30 or distance/100);
+    return ((DotaTime() < 30) and -DotaTime()+30 or distance/325);
   end
 end
 
