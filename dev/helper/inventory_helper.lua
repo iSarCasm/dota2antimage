@@ -37,6 +37,61 @@ function InventoryHelper:WorthOfItemsCanBeBought(build)
   end
 end
 
+function InventoryHelper:HasSpareSlot(unit, hasToBeActiveSlot)
+  local slots = (hasToBeActiveSlot and 5 or 8);
+  for i = 0, slots do
+    local slot = unit:GetItemInSlot(i);
+    if (not slot) then
+      return true
+    end
+  end
+  return false;
+end
 
+function InventoryHelper:IsBackpackEmpty(unit)
+  for i = 6, 8 do
+    local slot = unit:GetItemInSlot(i);
+    if (slot) then
+      return false
+    end
+  end
+  return true;
+end
+
+function InventoryHelper:MostValuableItemSlot(unit, slot_from, slot_to)
+  local most_value = VERY_LOW_INT;
+  local most = nil;
+  for i = slot_from, slot_to do
+    local item = unit:GetItemInSlot(i);
+    if (item and self:Value(item:GetName()) > most_value) then
+      most_value = self:Value(item:GetName());
+      most = i;
+    end
+  end
+  local hash = {};
+  hash.slot = most;
+  hash.value = most_value
+  return hash;
+end
+
+function InventoryHelper:LeastValuableItemSlot(unit, slot_from, slot_to)
+  local least_value = VERY_HIGH_INT;
+  local least = nil;
+  for i = slot_from, slot_to do
+    local item = unit:GetItemInSlot(i);
+    if (item and self:Value(item:GetName()) < least_value) then
+      least_value = self:Value(item:GetName());
+      least = i;
+    end
+  end
+  local hash = {};
+  hash.slot = least;
+  hash.value = least_value
+  return hash;
+end
+
+function InventoryHelper:Value(item)
+  return GetItemCost(item);
+end
 
 return InventoryHelper;

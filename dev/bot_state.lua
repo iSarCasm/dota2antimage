@@ -12,6 +12,7 @@ local StateDeliverItems      = require(GetScriptDirectory().."/dev/state/state_d
 local StateHealFountain      = require(GetScriptDirectory().."/dev/state/state_heal_fountain");
 local StateAttackHero        = require(GetScriptDirectory().."/dev/state/state_attack_hero");
 local StateEscape            = require(GetScriptDirectory().."/dev/state/state_escape");
+local StateSwapItems         = require(GetScriptDirectory().."/dev/state/state_swap_items");
 --------------------------------------------------------
 local STATE_ESCAPE                = "STATE_ESCAPE";
 local STATE_JUKE                  = "STATE_JUKE";
@@ -60,7 +61,7 @@ local STATE_LH_TOWER              = "STATE_LH_TOWER";
 local STATE_D_TOWER               = "STATE_D_TOWER";
 
 local STATE_HELP_FARM             = "STATE_HELP_FARM";
-local STATE_BUY_TP                = "STATE_BUY_TP";
+local STATE_SWAP_ITEMS            = "STATE_SWAP_ITEMS";
 local STATE_BUYBACK               = "STATE_BUYBACK";
 
 local STATE_TP_BOTTLE             = "STATE_TP_BOTTLE";
@@ -73,6 +74,7 @@ M.ScanStates = {
   STATE_HEAL_FOUNTAIN,
   STATE_ATTACK_HERO,
   STATE_ESCAPE,
+  STATE_SWAP_ITEMS,
   STATE_DELIVER_ITEMS,
   STATE_BUY_ITEMS,
   STATE_LEARNING_ABILITIES,
@@ -117,6 +119,7 @@ M.StateMachine.STATE_DELIVER_ITEMS      = StateDeliverItems;
 M.StateMachine.STATE_HEAL_FOUNTAIN      = StateHealFountain;
 M.StateMachine.STATE_ATTACK_HERO        = StateAttackHero;
 M.StateMachine.STATE_ESCAPE             = StateEscape;
+M.StateMachine.STATE_SWAP_ITEMS         = StateSwapItems;
 --------------------------------------------------------
 --------------------------------------------------------
 M.PrevState = "none";

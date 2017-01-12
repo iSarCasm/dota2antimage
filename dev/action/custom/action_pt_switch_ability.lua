@@ -34,7 +34,7 @@ function M:SetArgs()
 end
 
 function M:UseAbility(ability)
-    local bot = GetBot();
+  local bot = GetBot();
   if (ability:IsFullyCastable()) then -- wtf
     if (self.combo[self.state].location) then
       print("Usinig ability ["..ability:GetName().."] at "..self.combo[self.state].location.x.." "..self.combo[self.state].location.y);
@@ -49,6 +49,7 @@ function M:UseAbility(ability)
       print("Usinig ability ["..ability:GetName().."]");
       bot:Action_UseAbility(ability);
       if (ability:IsItem()) then
+        print("stat is "..ability:GetPowerTreadsStat());
         self.state = self.state + 1;
       end
     end

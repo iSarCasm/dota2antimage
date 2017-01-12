@@ -24,6 +24,9 @@ BotInfo:Me().abilities = {
 }
 BotInfo:Me().itemBuild = {
 		"item_courier", -- wTF?????
+		"item_branches",
+		"item_branches",
+		"item_branches",
 
 		"item_tango",
 		"item_tango",
@@ -33,7 +36,6 @@ BotInfo:Me().itemBuild = {
 		"item_stout_shield",
 		"item_slippers",
 		"item_slippers",
-		-- "item_branches",
 
 		"item_ring_of_health",
 		-- "item_ring_of_regen",
