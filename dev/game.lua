@@ -7,6 +7,8 @@ Game.RuneStates[RUNE_BOUNTY_1] = RUNE_STATUS_MISSING;
 Game.RuneStates[RUNE_BOUNTY_2] = RUNE_STATUS_MISSING;
 Game.RuneStates[RUNE_BOUNTY_3] = RUNE_STATUS_MISSING;
 Game.RuneStates[RUNE_BOUNTY_4] = RUNE_STATUS_MISSING;
+Game.RuneStates[RUNE_POWERUP_1] = RUNE_STATUS_MISSING;
+Game.RuneStates[RUNE_POWERUP_2] = RUNE_STATUS_MISSING;
 
 Game.JungleStates = {}
 Game.JungleStates[JUNGLE_DIRE_MID_BIG] = 0;
@@ -64,11 +66,12 @@ end
 ----------------------------------------------
 ----------------------------------------------
 function Game:UpdateRunes()
-  local runes = { RUNE_BOUNTY_1, RUNE_BOUNTY_2, RUNE_BOUNTY_3, RUNE_BOUNTY_4 }
+  local runes = { RUNE_BOUNTY_1, RUNE_BOUNTY_2, RUNE_BOUNTY_3, RUNE_BOUNTY_4, RUNE_POWERUP_1, RUNE_POWERUP_2 }
   for i = 1, #runes do
     local rune = runes[i];
+    local isBounty =  (rune ~= RUNE_POWERUP_1 and rune ~= RUNE_POWERUP_2);
 
-    if (DotaTime() >=0 and (math.mod(math.floor(DotaTime()), 120) == 0)) then
+    if (((isBounty or DotaTime() >= 120) and DotaTime() >=0) and (math.mod(math.floor(DotaTime()), 120) == 0)) then
       self.RuneStates[rune] = RUNE_STATUS_UNKNOWN;
     end
 

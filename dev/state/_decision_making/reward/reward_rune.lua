@@ -1,9 +1,21 @@
-local RewardBountyRune = {}
-----------------------------------------------------
+local RewardRune = {}
+---------------------------------------------------
 local BotInfo = require(GetScriptDirectory().."/dev/bot_info")
 local Game    = require(GetScriptDirectory().."/dev/game");
 ----------------------------------------------------
-function RewardBountyRune:Generic(Rune, Mode)
+function RewardRune:Generic(Rune, Mode)
+  if (Rune ~= RUNE_POWERUP_1 and Rune ~= RUNE_POWERUP_2) then
+    return self:Bounty(Rune, Mode);
+  else
+    return self:Powerup(Rune, Mode);
+  end
+end
+
+function RewardRune:Powerup(Rune, Mode)
+  return 30; -- todo
+end
+
+function RewardRune:Bounty(Rune, Mode)
   local basic_reward = 60;
   if (DotaTime() < 1) then
     basic_reward = 100;
@@ -11,7 +23,7 @@ function RewardBountyRune:Generic(Rune, Mode)
   return basic_reward + self:LaningReward(Rune, Mode); -- bounty gives ~60 gold
 end
 
-function RewardBountyRune:LaningReward(Rune, Mode)
+function RewardRune:LaningReward(Rune, Mode)
   if (Mode == MODE_LANING) then
     if (GetTeam() == TEAM_RADIANT) then
       if (BotInfo:Me().LANE == LANE_TOP or BotInfo:Me().LANE == LANE_MID) then
@@ -31,4 +43,4 @@ function RewardBountyRune:LaningReward(Rune, Mode)
   end
 end
 ----------------------------------------------------
-return RewardBountyRune;
+return RewardRune;

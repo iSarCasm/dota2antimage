@@ -6,7 +6,7 @@ local StateWaitCreeps = require(GetScriptDirectory().."/dev/state/state_wait_cre
 local StateFarmingLane = require(GetScriptDirectory().."/dev/state/state_farming_lane");
 local StateFarmJungle = require(GetScriptDirectory().."/dev/state/state_farming_jungle");
 local StateBuyItems    = require(GetScriptDirectory().."/dev/state/state_buy_items");
-local StateControlBountyRune = require(GetScriptDirectory().."/dev/state/state_control_bounty_rune");
+local StateControlRune = require(GetScriptDirectory().."/dev/state/state_control_rune");
 local StateLearningAbilities = require(GetScriptDirectory().."/dev/state/state_learning_abilities");
 local StateDeliverItems      = require(GetScriptDirectory().."/dev/state/state_deliver_items");
 local StateHealFountain      = require(GetScriptDirectory().."/dev/state/state_heal_fountain");
@@ -47,7 +47,7 @@ local STATE_BODYBLOCK_ENEMY       = "STATE_BODYBLOCK_ENEMY";
 local STATE_LETTING_PASS          = "STATE_LETTING_PASS";
 
 local STATE_CONTROL_POWERRUNE     = "STATE_CONTROL_POWERRUNE";
-local STATE_CONTROL_BOUNTYRUNE    = "STATE_CONTROL_BOUNTYRUNE";
+local STATE_CONTROL_RUNE          = "STATE_CONTROL_RUNE";
 
 local STATE_HEAL_FOUNTAIN         = "STATE_HEAL_FOUNTAIN";
 local STATE_HEAL_SHRINE           = "STATE_HEAL_SHRINE";
@@ -68,7 +68,7 @@ local STATE_TP_BOTTLE_REFILL      = "STATE_TP_BOTTLE_REFILL";
 M.ScanStates = {
   STATE_FARMING_LANE,
   STATE_FARM_JUNGLE,
-  STATE_CONTROL_BOUNTYRUNE,
+  STATE_CONTROL_RUNE,
   STATE_HEAL_FOUNTAIN,
   STATE_ATTACK_HERO,
   STATE_DELIVER_ITEMS,
@@ -108,7 +108,7 @@ M.StateMachine.STATE_WAIT_CREEPS  = StateWaitCreeps;
 M.StateMachine.STATE_FARMING_LANE = StateFarmingLane;
 M.StateMachine.STATE_FARM_JUNGLE  = StateFarmJungle;
 M.StateMachine.STATE_BUY_ITEMS    = StateBuyItems;
-M.StateMachine.STATE_CONTROL_BOUNTYRUNE = StateControlBountyRune;
+M.StateMachine.STATE_CONTROL_RUNE = StateControlRune;
 M.StateMachine.STATE_LEARNING_ABILITIES = StateLearningAbilities;
 M.StateMachine.STATE_DELIVER_ITEMS      = StateDeliverItems;
 M.StateMachine.STATE_HEAL_FOUNTAIN      = StateHealFountain;
