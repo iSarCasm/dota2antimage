@@ -23,7 +23,7 @@ function M:Run()
   end
   print("item buy is "..item);
   if (bot:GetGold() >= GetItemCost(item)) then
-    bot:Action_PurchaseItem(item);
+    bot:ActionImmediate_PurchaseItem(item);
     table.remove( me.itemBuild, 1 );
   end
 end

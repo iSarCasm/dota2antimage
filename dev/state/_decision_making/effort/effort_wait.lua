@@ -2,7 +2,7 @@ local EffortWait = {}
 ----------------------------------------------------
 local Game    = require(GetScriptDirectory().."/dev/game");
 ----------------------------------------------------
-EffortWait.Multiplayer = 4;
+EffortWait.Multiplayer = 2;
 ----------------------------------------------------
 function EffortWait:Rune(Rune)
   return Game:TimeToRune(Rune) * self.Multiplayer;

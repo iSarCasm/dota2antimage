@@ -1,3 +1,0 @@
-function ItemPurchaseThink()
-  -- emprt
-end

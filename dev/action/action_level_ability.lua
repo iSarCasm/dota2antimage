@@ -24,7 +24,7 @@ function M:Run()
     local ability = bot:GetAbilityByName(self.ability);
     if(ability and ability:CanAbilityBeUpgraded()) then
       local was = ability:GetLevel();
-      bot:Action_LevelAbility(self.ability);
+      bot:ActionImmediate_LevelAbility(self.ability);
       if ((ability:GetLevel() - was) > 0) then
         print("Ability "..self.ability.." leveled from "..was.." to "..ability:GetLevel());
         if (self.table) then

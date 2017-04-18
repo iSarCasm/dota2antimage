@@ -80,7 +80,7 @@ function Game:UpdateRunes()
       self.RuneStates[rune] = status;
     end
 
-    DebugDrawText(25, 700 + i*20, "Rune "..rune.." status is: "..self.RuneStates[rune].."("..GetRuneStatus(rune)..")", 255, 255, 255);
+    -- DebugDrawText(25, 700 + i*20, "Rune "..rune.." status is: "..self.RuneStates[rune].."("..GetRuneStatus(rune)..")", 255, 255, 255);
   end
 end
 

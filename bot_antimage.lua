@@ -11,55 +11,55 @@ local BotMode         = require(GetScriptDirectory().."/dev/bot_mode");
 local BotState        = require(GetScriptDirectory().."/dev/bot_state");
 local BotInfo         = require(GetScriptDirectory().."/dev/bot_info")
 local AbilityItems    = require(GetScriptDirectory().."/dev/abilities/ability_items")
-local Game         		= require(GetScriptDirectory().."/dev/game")
+local Game            = require(GetScriptDirectory().."/dev/game")
 --------------------------------------------------------
 --------------------------------------------------------
 BotInfo:Init(LANE_TOP, ROLE_CARRY);
 BotInfo:Me().projectileSpeed = 0;
 BotInfo:Me().abilities = {
-	"antimage_blink",
-	"antimage_mana_break",
-	"antimage_spell_shield",
-	"antimage_mana_void"
+  "antimage_blink",
+  "antimage_mana_break",
+  "antimage_spell_shield",
+  "antimage_mana_void"
 }
 BotInfo:Me().itemBuild = {
-		"item_courier", -- wTF?????
-		"item_branches",
-		"item_branches",
-		"item_branches",
+    "item_courier", -- wTF?????
+    "item_branches",
+    "item_branches",
+    "item_branches",
 
-		"item_tango",
-		"item_tango",
-		"item_flask",
-		"item_quelling_blade",
+    "item_tango",
+    "item_tango",
+    "item_flask",
+    "item_quelling_blade",
 
-		"item_stout_shield",
-		"item_slippers",
-		"item_slippers",
+    "item_stout_shield",
+    "item_slippers",
+    "item_slippers",
 
-		"item_ring_of_health",
-		-- "item_ring_of_regen",
+    "item_ring_of_health",
+    -- "item_ring_of_regen",
 
-		"item_boots",
-		"item_belt_of_strength",
-		"item_gloves",
+    "item_boots",
+    "item_belt_of_strength",
+    "item_gloves",
 
-		"item_claymore",
-		"item_broadsword",
-		"item_void_stone",
+    "item_claymore",
+    "item_broadsword",
+    "item_void_stone",
 
     "item_quelling_blade",
-		--
-		-- "item_ring_of_protection",
-		-- "item_sobi_mask",
-		-- "item_recipe_headdress",
-		-- "item_lifesteal",
+    --
+    -- "item_ring_of_protection",
+    -- "item_sobi_mask",
+    -- "item_recipe_headdress",
+    -- "item_lifesteal",
 
-		"item_blade_of_alacrity",
-		"item_boots_of_elves",
-		"item_recipe_yasha",
-		"item_ultimate_orb",
-		"item_recipe_manta",
+    "item_blade_of_alacrity",
+    "item_boots_of_elves",
+    "item_recipe_yasha",
+    "item_ultimate_orb",
+    "item_recipe_manta",
 
     "item_belt_of_strength",
     "item_javelin",
@@ -82,25 +82,25 @@ BotInfo:Me().itemBuild = {
     "item_recipe_travel_boots"
 }
 BotInfo:Me().abilityBuild = {
-	"antimage_blink",
-	"antimage_mana_break",
-	"antimage_spell_shield",
-	"antimage_mana_break",
-	"antimage_mana_break",
-	"antimage_mana_void",
-	"antimage_mana_break",
-	"antimage_blink",
-	"antimage_blink",
-	"special_bonus_attack_damage_20",
-	"antimage_blink",
-	"antimage_mana_void",
-	"antimage_spell_shield",
-	"antimage_spell_shield",
-	"special_bonus_attack_speed_20",
-	"antimage_spell_shield",
-	"antimage_mana_void",
-	"special_bonus_all_stats_10",
-	"special_bonus_agility_25"
+  "antimage_blink",
+  "antimage_mana_break",
+  "antimage_spell_shield",
+  "antimage_mana_break",
+  "antimage_mana_break",
+  "antimage_mana_void",
+  "antimage_mana_break",
+  "antimage_blink",
+  "antimage_blink",
+  "special_bonus_attack_damage_20",
+  "antimage_blink",
+  "antimage_mana_void",
+  "antimage_spell_shield",
+  "antimage_spell_shield",
+  "special_bonus_attack_speed_20",
+  "antimage_spell_shield",
+  "antimage_mana_void",
+  "special_bonus_all_stats_10",
+  "special_bonus_agility_25"
 }
 --------------------------------------------------------
 --------------------------------------------------------
@@ -113,15 +113,15 @@ function DebugStatesFields()
 end
 --------------------------------------------------------
 function Think(  )
-	Game:Update();
+  Game:Update();
 
   TeamStrategy:Update();
   BotMode:Update(TeamStrategy.Strategy);
   BotState:Update(BotMode.Mode, TeamStrategy.Strategy);
-	AbilityItems:Think(BotMode.Mode, TeamStrategy.Strategy);
+  AbilityItems:Think(BotMode.Mode, TeamStrategy.Strategy);
 
-	DebugStatesFields();
+  DebugStatesFields();
 
-	BotInfo:Act();
+  BotInfo:Act();
   BotInfo:GatherData();
 end

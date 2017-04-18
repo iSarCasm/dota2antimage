@@ -178,7 +178,7 @@ function M.StateWalkToCreeps(self, BotInfo, Mode, Strategy)
       if (dist > 250) then
         BotActions.ActionMoveToLocation:Call(comfort_point);
       elseif (dist < 200) then
-        local weak = Creeping:WeakestCreep(1000, false);
+        local weak = Creeping:WeakestCreep(1000, false, true);
         if (weak) then
           if (not UnitHelper:IsFacingEntity(bot, weak, 10)) then
             BotActions.ActionCancelAttack:Call(weak);

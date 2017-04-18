@@ -7,11 +7,11 @@ function M:Call()
 end
 
 function M:Run()
-  local bot = GetBot();
-  bot:Action_CourierDeliver();
+  GetBot():ActionImmediate_Courier(GetCourier(0), 6 );
 end
 
 function M:Finish()
+  GetBot():ActionImmediate_Courier(GetCourier(0), COURIER_ACTION_BURST );
   BotInfo:ClearAction();
 end
 -------------------------------------------------

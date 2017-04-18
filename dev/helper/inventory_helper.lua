@@ -35,6 +35,7 @@ function InventoryHelper:WorthOfItemsCanBeBought(build)
       return worth;
     end
   end
+  return 0;
 end
 
 function InventoryHelper:HasSpareSlot(unit, hasToBeActiveSlot)

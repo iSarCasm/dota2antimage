@@ -1,7 +1,7 @@
 local RewardFarmCreepwave = {}
 ----------------------------------------------------
 function RewardFarmCreepwave:Generic(Lane, BotInfo, Mode)
-  return 170 + (self:LaningReward(Lane, BotInfo, Mode));
+  return 150 + (self:LaningReward(Lane, BotInfo, Mode));
 end
 
 function RewardFarmCreepwave:LaningReward(Lane, BotInfo, Mode)

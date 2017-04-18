@@ -6,7 +6,11 @@ M.StateMachine = {}
 -------------------------------------------------
 function M:EvaluatePotential(BotInfo, Mode, Strategy)
   local bot = GetBot();
-  return (((bot:GetStashValue() + bot:GetCourierValue()) > 0 and IsCourierAvailable()) and 100000 or -999);
+  return ((self:HasItemsToDeliver(bot) and GetCourierState(GetCourier(0)) == COURIER_STATE_AT_BASE) and 100000 or -999);
+end
+
+function M:HasItemsToDeliver(bot)
+  return (bot:GetStashValue() + bot:GetCourierValue()) > 0
 end
 -------------------------------------------------
 function M:Reset()

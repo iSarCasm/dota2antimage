@@ -16,11 +16,11 @@ function RewardRune:Powerup(Rune, Mode)
 end
 
 function RewardRune:Bounty(Rune, Mode)
-  local basic_reward = 60;
+  local basic_reward = 60 + DotaTime()/60;  -- bounty gives ~60 gold
   if (DotaTime() < 1) then
-    basic_reward = 100;
+    basic_reward = 100; -- first rune gives 100 gold
   end
-  return basic_reward + self:LaningReward(Rune, Mode); -- bounty gives ~60 gold
+  return basic_reward + self:LaningReward(Rune, Mode);
 end
 
 function RewardRune:LaningReward(Rune, Mode)

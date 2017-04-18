@@ -114,7 +114,7 @@ function M:TimeToGetInRange(unit, target)
 end
 
 function M:GetPhysDamageToUnit(unit, target, isAlly, isCreep, hasMana)
-  local total = unit:GetBaseDamage();
+  local total = unit:GetAttackDamage();
   if (isCreep and (not isAlly) and InventoryHelper:Contains(unit, "item_quelling_blade", true)) then
     total = total + 24;
   end
@@ -124,7 +124,7 @@ function M:GetPhysDamageToUnit(unit, target, isAlly, isCreep, hasMana)
       total = total + mana_break:GetSpecialValueFloat("damage_per_burn") * mana_break:GetSpecialValueFloat("mana_per_hit");
     end
   end
-  return target:GetActualDamage(total, DAMAGE_TYPE_PHYSICAL);
+  return target:GetActualIncomingDamage(total, DAMAGE_TYPE_PHYSICAL);
 end
 
 function M:NetWorth(unit)
@@ -137,6 +137,10 @@ function M:NetWorth(unit)
     end
   end
   return worth;
+end
+
+function M:UnitIsHigherToUnit(u1, u2)
+  return (u1:GetGroundHeight() - u2:GetGroundHeight()) > 100;
 end
 
 return M;

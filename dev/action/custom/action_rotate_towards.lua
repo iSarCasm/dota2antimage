@@ -1,27 +1,27 @@
 local M = {}
 local BotInfo = require(GetScriptDirectory().."/dev/bot_info")
-M.name = "Swap Items";
+local VectorHelper = require(GetScriptDirectory().."/dev/helper/vector_helper")
+M.name = "Rotate Towards";
 -------------------------------------------------
-function M:Call(slot_1, slot_2)
-  local args = {slot_1, slot_2};
+function M:Call(point)
+  local args = {point}
   self.args = args;
   BotInfo:SetAction(self, args);
 end
 
 function M:SetArgs()
-  self.slot_1 = self.args[1];
-  self.slot_2 = self.args[2];
+  self.point = self.args[1];
 end
 
 function M:Run()
   self:SetArgs();
   local bot = GetBot();
-  bot:ActionImmediate_SwapItems(self.slot_1, self.slot_2);
+  local towards_vector = VectorHelper:Normalize(self.point - bot:GetLocation());
+  bot:Action_MoveToLocation(bot:GetLocation() + towards_vector);
 end
 
 function M:Finish()
-  self.slot_1 = nil;
-  self.slot_2 = nil;
+  self.point = nil;
   BotInfo:ClearAction();
 end
 -------------------------------------------------

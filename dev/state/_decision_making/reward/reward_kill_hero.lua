@@ -6,7 +6,12 @@ function RewardKillHero:Hero(hero)
   local exp = 100;
   local space = 100;
   local him_being_dead = 100;
-  return gold + exp + space + him_being_dead;
+  local canKillHim = false;
+  if (canKillHim) then
+    return gold + exp + space + him_being_dead;
+  else
+    return 0;
+  end
 end
 -----------------------------------------
 return RewardKillHero;

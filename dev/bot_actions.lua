@@ -14,5 +14,6 @@ M.ActionSwapItems        = require(GetScriptDirectory().."/dev/action/action_swa
 M.ActionCancelAttack    = require(GetScriptDirectory().."/dev/action/custom/action_cancel_attack");
 M.ActionPtSwitchAbility = require(GetScriptDirectory().."/dev/action/custom/action_pt_switch_ability");
 M.ActionComboAbility    = require(GetScriptDirectory().."/dev/action/custom/action_combo_ability");
+M.ActionRotateTowards   = require(GetScriptDirectory().."/dev/action/custom/action_rotate_towards");
 
 return M;

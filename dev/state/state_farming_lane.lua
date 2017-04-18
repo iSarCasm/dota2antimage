@@ -10,16 +10,19 @@ local EffortKillCreepwave   = require(GetScriptDirectory().."/dev/state/_decisio
 local EffortDanger          = require(GetScriptDirectory().."/dev/state/_decision_making/effort/effort_danger");
 ----------------------------------------------
 local FarmingLhD = require(GetScriptDirectory().."/dev/state/state_farming_lane/farming_lh_d");
+local Laning = require(GetScriptDirectory().."/dev/state/state_farming_lane/laning");
 ----------------------------------------------
 M.STATE_WALK_TO_LANE = "STATE_WALK_TO_LANE";
 M.STATE_FARMING      = "STATE_FARMING";
 ----------------------------------------------
-M.FARMING_LH_D = "FARMING_LH_D";
+M.FARMING_LH_D  = "FARMING_LH_D";
+M.LANING        = "LANING";
 ----------------------------------------------
 M.Lane = LANE_TOP;
 M.Potential = {};
 M.FarmingType = {}
-M.FarmingType.FARMING_LH_D = FarmingLhD;
+M.FarmingType.FARMING_LH_D  = FarmingLhD;
+M.FarmingType.LANING        = Laning;
 ----------------------------------------------
 function M:ArgumentString()
   return "("..self.Lane..", "..self.FarmingType[self.FarmingType.Type].StateMachine.State..")";
@@ -56,7 +59,7 @@ end
 ----------------------------------------------
 function M.StateWalkToLane(self, BotInfo, Mode, Strategy)
   local lane_location = MapHelper:LaneFrontLocation(GetTeam(), self.Lane, false);
-  if (GetUnitToLocationDistance(GetBot(), lane_location) < 100) then
+  if (GetUnitToLocationDistance(GetBot(), lane_location) < 1000) then
     self.StateMachine.State = self.STATE_FARMING;
   else
     BotActions.ActionMoveToLocation:Call(lane_location);
@@ -74,7 +77,7 @@ M.StateMachine[M.STATE_FARMING]       = M.StateFarming;
 -------------------------------------------------
 function M:Reset()
   self.StateMachine.State = self.STATE_WALK_TO_LANE;
-  self.FarmingType.Type   = self.FARMING_LH_D;
+  self.FarmingType.Type   = self.LANING;
 end
 M:Reset();
 -------------------------------------------------
