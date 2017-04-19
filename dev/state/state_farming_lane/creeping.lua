@@ -159,7 +159,7 @@ function M:isAttackedByCreeps()
   return (GetBot():TimeSinceDamagedByTower() < 1 or GetBot():TimeSinceDamagedByCreep() < 0.5); -- ok
 end
 
-function M:WeakestCreep(range, ally, withoutDelta)
+function M:WeakestCreep(range, ally, withDelta)
   local bot = GetBot();
   local creeps = bot:GetNearbyCreeps(range, true);
   if (ally) then
@@ -170,7 +170,7 @@ function M:WeakestCreep(range, ally, withoutDelta)
   local weakest_creep = nil;
   for creep_k,creep in pairs(creeps)
   do
-      if(creep:IsAlive() and ((not withoutDelta) or (DotaBotUtility:GetCreepHealthDeltaPerSec(creep, 2) ~= 0))) then
+      if(creep:IsAlive() and ((not withDelta) or (DotaBotUtility:GetCreepHealthDeltaPerSec(creep, 2) > 0))) then
           local creep_hp = creep:GetHealth();
           if(lowest_hp > creep_hp) then
                lowest_hp = creep_hp;

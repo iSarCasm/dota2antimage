@@ -6,15 +6,20 @@ M.StateMachine = {}
 -------------------------------------------------
 function M:EvaluatePotential(BotInfo, Mode, Strategy)
   local bot = GetBot();
-  return ((self:HasItemsToDeliver(bot) and GetCourierState(GetCourier(0)) == COURIER_STATE_AT_BASE) and 100000 or -999);
+  local courier = GetCourier(0);
+  return (self:ShouldReturn(courier) and 100000 or -999);
 end
 
-function M:HasItemsToDeliver(bot)
-  return (bot:GetStashValue() + bot:GetCourierValue()) > 0
+function M:ShouldReturn(courier)
+  return (GetCourierState(courier) ~= COURIER_STATE_DELIVERING_ITEMS and GetCourierState(courier) ~= COURIER_STATE_RETURNING_TO_BASE and self:DistantFromFountain(courier));
+end
+
+function M:DistantFromFountain(courier)
+  return GetUnitToLocationDistance(courier, FOUNTAIN[GetTeam()]) > 500;
 end
 -------------------------------------------------
 function M:Run(BotInfo, Mode, Strategy)
-  GetBot():ActionImmediate_Courier(GetCourier(0), COURIER_ACTION_TAKE_AND_TRANSFER_ITEMS);
+  GetBot():ActionImmediate_Courier(GetCourier(0), COURIER_ACTION_RETURN);
 end
 -------------------------------------------------
 return M;

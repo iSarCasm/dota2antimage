@@ -101,12 +101,14 @@ end
 function Laning.EvaluateBackoff(self)
   if (GetBot():TimeSinceDamagedByTower() < 1) then
     return 10;
+  elseif (GetBot():TimeSinceDamagedByCreep() < 0.25) then
+    return 5;
   end
   return 0;
 end
 
 function Laning.EvaluateLastHit(self)
-  return 1;
+  return 1; -- default
 end
 
 function Laning.EvaluateAttackTower(self)
@@ -163,7 +165,7 @@ function Laning.LastHit(self)
   elseif (dist > 150) then
     print("get a bit closer");
     bot:Action_MoveToLocation(position + back_vector);
-  elseif (self.weak and self.weak:GetHealth() < 250 and DotaBotUtility:GetCreepHealthDeltaPerSec(self.weak, 2) ~= 0 and (not UnitHelper:IsFacingEntity(bot, self.weak, 10))) then
+  elseif (self.weak and self.weak:GetHealth() < 250 and DotaBotUtility:GetCreepHealthDeltaPerSec(self.weak, 2) > 0 and (not UnitHelper:IsFacingEntity(bot, self.weak, 10))) then
     print("rotate");
     BotActions.RotateTowards:Call(self.weak:GetLocation());
   end

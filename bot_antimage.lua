@@ -105,9 +105,6 @@ function DebugStatesFields()
   DebugDrawText(25, 100, "Strategy: "..TeamStrategy.Strategy, 255, 255, 255);
   DebugDrawText(25, 120, "Mode: "..BotMode.Mode, 255, 255, 255);
   DebugDrawText(25, 140, "State: "..BotState.State.." "..BotState:ArgumentString(), 255, 255, 255);
-  if (BotState:MiniState()) then
-    DebugDrawText(25, 160, "Mini-State: "..BotState:MiniState(), 255, 255, 255);
-  end
   DebugDrawText(25, 180, "Action: "..BotInfo:ActionName(), 255, 255, 255)
 end
 

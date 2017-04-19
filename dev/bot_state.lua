@@ -9,6 +9,7 @@ local StateBuyItems    = require(GetScriptDirectory().."/dev/state/state_buy_ite
 local StateControlRune = require(GetScriptDirectory().."/dev/state/state_control_rune");
 local StateLearningAbilities = require(GetScriptDirectory().."/dev/state/state_learning_abilities");
 local StateDeliverItems      = require(GetScriptDirectory().."/dev/state/state_deliver_items");
+local StateReturnCourier     = require(GetScriptDirectory().."/dev/state/state_return_courier");
 local StateHealFountain      = require(GetScriptDirectory().."/dev/state/state_heal_fountain");
 local StateAttackHero        = require(GetScriptDirectory().."/dev/state/state_attack_hero");
 local StateEscape            = require(GetScriptDirectory().."/dev/state/state_escape");
@@ -42,6 +43,7 @@ local STATE_ATTACK_FORT           = "STATE_ATTACK_FORT";
 
 local STATE_BUY_ITEMS             = "STATE_BUY_ITEMS";
 local STATE_DELIVER_ITEMS         = "STATE_DELIVER_ITEMS";
+local STATE_RETURN_COURIER        = "STATE_RETURN_COURIER";
 local STATE_LEARNING_ABILITIES    = "STATE_LEARNING_ABILITIES";
 
 local STATE_BODYBLOCK_CREEPS      = "STATE_BODYBLOCK_CREEPS";
@@ -76,6 +78,7 @@ M.ScanStates = {
   STATE_ESCAPE,
   STATE_SWAP_ITEMS,
   STATE_DELIVER_ITEMS,
+  STATE_RETURN_COURIER,
   STATE_BUY_ITEMS,
   STATE_LEARNING_ABILITIES,
   STATE_WAIT_CREEPS
@@ -118,6 +121,7 @@ M.StateMachine.STATE_BUY_ITEMS    = StateBuyItems;
 M.StateMachine.STATE_CONTROL_RUNE = StateControlRune;
 M.StateMachine.STATE_LEARNING_ABILITIES = StateLearningAbilities;
 M.StateMachine.STATE_DELIVER_ITEMS      = StateDeliverItems;
+M.StateMachine.STATE_RETURN_COURIER     = StateReturnCourier;
 M.StateMachine.STATE_HEAL_FOUNTAIN      = StateHealFountain;
 M.StateMachine.STATE_ATTACK_HERO        = StateAttackHero;
 M.StateMachine.STATE_ESCAPE             = StateEscape;

@@ -80,8 +80,13 @@ function InventoryHelper:LeastValuableItemSlot(unit, slot_from, slot_to)
   local least = nil;
   for i = slot_from, slot_to do
     local item = unit:GetItemInSlot(i);
-    if (item and self:Value(item:GetName()) < least_value) then
-      least_value = self:Value(item:GetName());
+    if (item) then
+      if (self:Value(item:GetName()) < least_value) then
+        least_value = self:Value(item:GetName());
+        least = i;
+      end
+    else
+      least_value = 0;
       least = i;
     end
   end

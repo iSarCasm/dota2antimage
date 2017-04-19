@@ -62,8 +62,11 @@ function DebugStatesFields()
   DebugDrawText(25, 100, "Strategy: "..TeamStrategy.Strategy, 255, 255, 255);
   DebugDrawText(25, 120, "Mode: "..BotMode.Mode, 255, 255, 255);
   DebugDrawText(25, 140, "State: "..BotState.State.." "..BotState:ArgumentString(), 255, 255, 255);
-  DebugDrawText(25, 160, "Mini-State: "..BotState:MiniState(), 255, 255, 255);
   DebugDrawText(25, 180, "Action: "..BotInfo:ActionName(), 255, 255, 255)
+end
+
+function DebugStats()
+  DebugDrawText(25, 50, "LH/D = "..GetBot():GetLastHits().."/"..GetBot():GetDenies(), 255, 255, 255);
 end
 --------------------------------------------------------
 function Think(  )
