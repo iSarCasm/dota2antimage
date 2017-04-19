@@ -24,9 +24,6 @@ BotInfo:Me().abilities = {
 }
 BotInfo:Me().itemBuild = {
     "item_courier", -- wTF?????
-    "item_branches",
-    "item_branches",
-    "item_branches",
 
     "item_tango",
     "item_tango",

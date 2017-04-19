@@ -22,7 +22,7 @@ end
 
 function FountainDanger:PowerDelta(team, unit, distance)
   local current_distance = GetUnitToLocationDistance(unit, self:Location(team));
-  return self:Power(current_distance - distance) - self:Power(current_distance);
+  return self:Power(Max(1, current_distance - distance)) - self:Power(current_distance);
 end
 
 function FountainDanger:Location(team)

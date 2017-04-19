@@ -9,7 +9,7 @@ local DANGER_TOWER_FAR  = 50;
 function TowerDanger:Power(distance)
   if (distance < 800) then -- below attack range (actual tower range is 700 + ~100 for bounding radius)
     return DANGER_TOWER / distance;
-  elseif (distance < 3000) then -- 3000 is random range from the tower which is `kinda safe`
+  elseif (distance < 14000) then -- 14000 is random range from the tower which is `kinda safe`
     return DANGER_TOWER_FAR / distance;
   else
     return 0;
@@ -23,7 +23,7 @@ function TowerDanger:PowerDelta(team, unit, distance)
   for i = 1, #all_towers do
     local tower = all_towers[i];
     local current_distance = GetUnitToLocationDistance(unit, tower:GetLocation());
-    local delta = self:Power(current_distance - distance) - self:Power(current_distance);
+    local delta = self:Power(Max(1, current_distance - distance)) - self:Power(current_distance);
     if (tower_max_delta < delta) then
       tower_max_delta = delta;
       self.Tower = tower;

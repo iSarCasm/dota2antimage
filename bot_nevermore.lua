@@ -72,12 +72,14 @@ function Think(  )
   TeamStrategy:Update();
   BotMode:Update(TeamStrategy.Strategy);
   BotState:Update(BotMode.Mode, TeamStrategy.Strategy);
-	AbilityItems:Think(BotMode.Mode, TeamStrategy.Strategy);
 
 	DebugDrawText(250, 350, "height is"..GetBot():GetGroundHeight(), 255, 255, 255);
 
 	DebugStatesFields();
+	DebugStats();
 
 	BotInfo:Act();
   BotInfo:GatherData();
+
+  AbilityItems:Think(BotMode.Mode, TeamStrategy.Strategy);
 end
