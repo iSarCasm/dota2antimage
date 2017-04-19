@@ -34,7 +34,6 @@ end
 
 function TowerDanger:Location(team)
   if (self.Tower) then    -- if any of team towers still present
-    print("tower returned");
     return self.Tower:GetLocation();
   end
   return Vector(0,0);

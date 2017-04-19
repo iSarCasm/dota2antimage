@@ -113,6 +113,10 @@ function DebugStatesFields()
   end
   DebugDrawText(25, 180, "Action: "..BotInfo:ActionName(), 255, 255, 255)
 end
+
+function DebugStats()
+  DebugDrawText(25, 50, "LH/D = "..GetBot():GetLastHits().."/"..GetBot():GetDenies(), 255, 255, 255);
+end
 --------------------------------------------------------
 Game:InitializeUnits();
 --------------------------------------------------------
@@ -124,6 +128,7 @@ function Think(  )
   BotState:Update(BotMode.Mode, TeamStrategy.Strategy);
 
   DebugStatesFields();
+  DebugStats();
 
   BotInfo:Act();
   BotInfo:GatherData();

@@ -113,7 +113,8 @@ function M:TimeToGetInRange(unit, target)
   end
 end
 
-function M:GetPhysDamageToUnit(unit, target, isAlly, isCreep, hasMana)
+function M:GetPhysDamageToUnit(unit, target, isCreep, hasMana)
+  local isAlly = (unit:GetTeam() == target:GetTeam());
   local total = unit:GetAttackDamage();
   if (isCreep and (not isAlly) and InventoryHelper:Contains(unit, "item_quelling_blade", true)) then
     total = total + 24;
@@ -137,10 +138,6 @@ function M:NetWorth(unit)
     end
   end
   return worth;
-end
-
-function M:UnitIsHigherToUnit(u1, u2)
-  return (u1:GetGroundHeight() - u2:GetGroundHeight()) > 100;
 end
 
 return M;

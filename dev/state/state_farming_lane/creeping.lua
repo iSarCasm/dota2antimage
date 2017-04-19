@@ -95,6 +95,11 @@ function M:ExtrapolatedDamage(creep, time)
   return Max(DotaBotUtility:GetCreepHealthDeltaPerSec(creep, time) * 0.5, 0);
 end
 
+function M:GetPhysDamageToCreep(bot, creep)
+  local isMelee = (string.find(creep:GetUnitName(), "melee") ~= nil);
+  return UnitHelper:GetPhysDamageToUnit(bot, creep, true, (not isMelee));
+end
+
 function M:CreepWithNHitsOfHealth(range, enemy, ally, hits)
   if ((enemy and ally) == false) then return nil end;
   local bot = GetBot();
@@ -103,8 +108,7 @@ function M:CreepWithNHitsOfHealth(range, enemy, ally, hits)
     for _,creep in pairs(enemy_creeps)
     do
       if (creep:IsAlive()) then
-        local isMelee = (string.find(creep:GetUnitName(), "melee") ~= nil);
-        local bot_damage = UnitHelper:GetPhysDamageToUnit(bot, creep, false, true, (not isMelee));
+        local bot_damage = self:GetPhysDamageToCreep(bot, creep);
         local time_to_damage = UnitHelper:TimeToGetInRange(bot, creep) + UnitHelper:TimeOnAttacks(bot, hits) + UnitHelper:ProjectileTimeTravel(bot, creep, BotInfo:Me().projectileSpeed) * hits;
         local extrapolated_damage = self:ExtrapolatedDamage(creep, time_to_damage);
         if (extrapolated_damage < bot_damage) then
@@ -127,8 +131,7 @@ function M:CreepWithNHitsOfHealth(range, enemy, ally, hits)
     for _,creep in pairs(ally_creeps)
     do
       if (creep:IsAlive()) then
-        local isMelee = (string.find(creep:GetUnitName(), "melee") ~= nil);
-        local bot_damage = UnitHelper:GetPhysDamageToUnit(bot, creep, true, true, (not isMelee));
+        local bot_damage = self:GetPhysDamageToCreep(bot, creep);
         local time_to_damage = UnitHelper:TimeToGetInRange(bot, creep) + UnitHelper:TimeOnAttacks(bot, hits) + 2.5 * UnitHelper:ProjectileTimeTravel(bot, creep, BotInfo:Me().projectileSpeed) * hits;
         local extrapolated_damage = self:ExtrapolatedDamage(creep, time_to_damage);
         if (extrapolated_damage < bot_damage) then
@@ -153,22 +156,21 @@ function M:AgroOffVec()
 end
 
 function M:isAttackedByCreeps()
-  -- DebugDrawText(250, 250, "damaged? "..((GetBot():TimeSinceDamagedByTower() < 1 or GetBot():TimeSinceDamagedByCreep() < 0.5) and "yes" or "no"), 255,255,255);
   return (GetBot():TimeSinceDamagedByTower() < 1 or GetBot():TimeSinceDamagedByCreep() < 0.5); -- ok
 end
 
-function M:WeakestCreep(range, ally, withDelta)
+function M:WeakestCreep(range, ally, withoutDelta)
   local bot = GetBot();
   local creeps = bot:GetNearbyCreeps(range, true);
   if (ally) then
     local ally_creeps = bot:GetNearbyCreeps(range, false);
     for k,v in pairs(ally_creeps) do creeps[k] = v end
   end
-  local lowest_hp = 100000;
+  local lowest_hp = VERY_HIGH_INT;
   local weakest_creep = nil;
   for creep_k,creep in pairs(creeps)
   do
-      if(creep:IsAlive() and ((not withDelta) or (DotaBotUtility:GetCreepHealthDeltaPerSec(creep, 2) ~= 0))) then
+      if(creep:IsAlive() and ((not withoutDelta) or (DotaBotUtility:GetCreepHealthDeltaPerSec(creep, 2) ~= 0))) then
           local creep_hp = creep:GetHealth();
           if(lowest_hp > creep_hp) then
                lowest_hp = creep_hp;
