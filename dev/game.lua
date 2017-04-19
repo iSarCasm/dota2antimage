@@ -29,6 +29,8 @@ Game.JungleStates[JUNGLE_RADIANT_BOT_ANCIENT] = 0;
 Game.JungleStates[JUNGLE_RADIANT_TOP_BIG] = 0;
 Game.JungleStates[JUNGLE_RADIANT_TOP_MID] = 0;
 Game.JungleStates[JUNGLE_RADIANT_TOP_ANCIENT] = 0;
+
+Game.Towers = {}
 ----------------------------------------------
 ----------------------------------------------
 function Game:TimeToRune(rune)
@@ -54,6 +56,7 @@ function Game:TimeToJungle(jungle)
     end
   end
 end
+
 function Game:TimeToCreeps(lane)
   local distance = VectorHelper:Length(GetFront(GetTeam(), lane) - GetFront(GetEnemyTeam(), lane));
   if (distance < 200) then
@@ -63,6 +66,16 @@ function Game:TimeToCreeps(lane)
   end
 end
 
+function Game:GetTowersForTeam(team)
+  local team_towers = {};
+  for i = 1, #self.Towers do
+    local tower = self.Towers[i];
+    if (tower:GetTeam() == team) then
+      table.insert(team_towers, tower);
+    end
+  end
+  return team_towers;
+end
 ----------------------------------------------
 ----------------------------------------------
 function Game:UpdateRunes()
@@ -103,6 +116,16 @@ function Game:UpdateJungle()
   if (math.floor(DotaTime()) == 30 or math.floor((120 - math.mod(DotaTime()+60, 120))) == 0) then
     for jungle = 1, JUNGLE_TOTAL do
       self.JungleStates[jungle] = 1; -- bad, no stacks
+    end
+  end
+end
+
+function Game:InitializeUnits()
+  local units = GetUnitList(UNIT_LIST_ALL);
+  for i = 1, #units do
+    local unit = units[i];
+    if (unit:IsTower()) then
+      table.insert(self.Towers, unit);
     end
   end
 end

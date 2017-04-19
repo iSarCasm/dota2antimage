@@ -1,12 +1,14 @@
 
 TODO:
   - make up-to date (no errors) - done!
+  - make up-to date action strategy *delete current*
   - use hash-table instances (for multiple bots)
     - test with 2 bots on the same team
   - optimization
     - should not be lagging
-  - make up-to date action strategy *delete current*
-  - make 'modules'
+  - make 'modules' & refactor
+
+  - return courier state
 
   - laning
       safety vector

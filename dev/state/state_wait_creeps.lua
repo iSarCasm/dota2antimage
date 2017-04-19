@@ -18,7 +18,7 @@ function M.StateWalkToWait(self, BotInfo, Mode, Strategy)
     local pos = tower:GetLocation();
     local distance = GetUnitToLocationDistance(bot, pos);
     if (distance > 200) then
-      BotActions.ActionMoveToLocation:Call(pos);
+      bot:Action_MoveToLocation(pos);
     else
       self.StateMachine.State = self.STATE_WAIT;
     end

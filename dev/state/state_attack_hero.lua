@@ -17,7 +17,7 @@ end
 function M:EvaluatePotential(BotInfo, Mode, Strategy)
   local bot = GetBot();
   local highest = VERY_LOW_INT;
-  local heroes = bot:GetNearbyHeroes(1500, true, BOT_MODE_NONE );
+  local heroes = bot:GetNearbyHeroes(1500, true, BOT_MODE_NONE);
   if (#heroes ~= 0) then
     for i = 1, #heroes do
       local hero = heroes[i];
@@ -39,14 +39,9 @@ end
 -------------------------------------------------
 -------------------------------------------------
 function M.Fight(self, BotInfo, Mode, Strategy)
-  BotActions.ActionAttackUnit:Call(self.Hero, false);
+  GetBot():Action_AttackUnit(self.Hero, false);
 end
 -------------------------------------------------
--------------------------------------------------
-function M:Reset()
-  -- wat?
-end
-M:Reset();
 -------------------------------------------------
 function M:Run(BotInfo, Mode, Strategy)
   self:Fight(self, BotInfo, Mode, Strategy);

@@ -62,7 +62,7 @@ function M.StateWalkToLane(self, BotInfo, Mode, Strategy)
   if (GetUnitToLocationDistance(GetBot(), lane_location) < 1000) then
     self.StateMachine.State = self.STATE_FARMING;
   else
-    BotActions.ActionMoveToLocation:Call(lane_location);
+    GetBot():Action_MoveToLocation(lane_location);
   end
 end
 

@@ -2,25 +2,27 @@ local FountainDanger = {};
 ------------------------------------------
 local VectorHelper = require(GetScriptDirectory().."/dev/helper/vector_helper")
 ------------------------------------------
-function FountainDanger:Estimate(team, location)
-  local bot = GetBot();
-  local dist = VectorHelper:Length(FOUNTAIN[team] - location);
-  return self:Power(dist);
-end
-
+local DANGER_FOUNTAIN       = 500;
+local DANGER_FOUNTAIN_FAR   = 50;
+local DANGER_FOUNTAIN_BASE  = 5;
+------------------------------------------
 function FountainDanger:Power(distance)
   if (distance < 1000) then
-    return distance / 50;
-  elseif (distance < 5000) then
-    return distance / 200;
+    return DANGER_FOUNTAIN / distance;
+  elseif (distance < 3000) then
+    return DANGER_FOUNTAIN_FAR / distance;
   else
-    return distance / 1000;
+    return DANGER_FOUNTAIN_BASE / distance; -- fountain is basic safety
   end
+end
+
+function FountainDanger:ResultVector(team, unit, distance)
+  return self:PowerDelta(team, unit, distance) * self:Location(team);
 end
 
 function FountainDanger:PowerDelta(team, unit, distance)
   local current_distance = GetUnitToLocationDistance(unit, self:Location(team));
-  return self:Power(current_distance) - self:Power(current_distance - distance);
+  return self:Power(current_distance - distance) - self:Power(current_distance);
 end
 
 function FountainDanger:Location(team)

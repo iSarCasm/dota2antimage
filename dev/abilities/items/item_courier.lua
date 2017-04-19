@@ -1,12 +1,17 @@
 local ItemCourier = {}
       ItemCourier.name = "item_courier";
 ------------------------------------
-local BotActions  = require(GetScriptDirectory().."/dev/bot_actions");
-local BotInfo     = require(GetScriptDirectory().."/dev/bot_info")
+local InventoryHelper = require(GetScriptDirectory().."/dev/helper/inventory_helper")
+local BotInfo         = require(GetScriptDirectory().."/dev/bot_info")
+------------------------------------
+function ItemCourier:Ability()
+  return InventoryHelper:GetItemByName(GetBot(), self.name, true);
+end
 ------------------------------------
 function ItemCourier:Think(Mode, Strategy)
   local bot = GetBot();
-  BotActions.ActionUseAbility:Call(self.name);
+  print('use courier');
+  bot:Action_UseAbility(self:Ability());
 end
 ------------------------------------
 return ItemCourier;

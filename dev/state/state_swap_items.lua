@@ -21,7 +21,7 @@ end
 -------------------------------------------------
 -------------------------------------------------
 function M.SwapItems(self, BotInfo, Mode, Strategy)
-  BotActions.ActionSwapItems:Call(self.swap_1, self.swap_2);
+  GetBot():ActionImmediate_SwapItems(self.swap_1, self.swap_2);
 end
 -------------------------------------------------
 -------------------------------------------------

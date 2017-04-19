@@ -58,12 +58,17 @@ function M.StateWalkToShop(self, BotInfo, Mode, Strategy)
   if (self:ShopDistance(self.Shop) < 10 or (self.Shop == GetShop())) then
     self.StateMachine.State = self.STATE_BUY;
   else
-    BotActions.ActionMoveToLocation:Call(loc);
+    bot:Action_MoveToLocation(loc);
   end
 end
 
 function M.StateBuy(self, BotInfo, Mode, Strategy)
-  BotActions.ActionPurchaseItem:Call(BotInfo.itemBuild[1]);
+  local bot = GetBot();
+  local item = BotInfo.itemBuild[1];
+  if (bot:GetGold() >= GetItemCost(item)) then
+    bot:ActionImmediate_PurchaseItem(item);
+    table.remove(BotInfo.itemBuild, 1 );
+  end
 end
 -------------------------------------------------
 function M:ShopDistance(shop)

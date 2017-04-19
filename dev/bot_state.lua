@@ -84,7 +84,9 @@ M.ScanStates = {
 function M:SetState(State)
   if (self.State ~= STATE_IDLE and (self.State ~= State or self.Argument ~= self:StateArgument(State))) then
     -- print(State.." ~= "..self.State);
-    self.StateMachine[self.State]:Reset();
+    if (self.StateMachine[self.State].Reset) then
+      self.StateMachine[self.State]:Reset();
+    end
   end
   self.State = State;
   self.Argument = self:StateArgument(State);

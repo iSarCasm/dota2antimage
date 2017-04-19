@@ -118,7 +118,7 @@ function Laning.EvaluateBackoff(self)
 end
 
 function Laning.EvaluateLastHit(self)
-  return 10;
+  return 1;
 end
 
 function Laning.EvaluateAttackTower(self)
@@ -145,16 +145,15 @@ function Laning.LastHit(self)
   local bot = GetBot();
   local position = self:GetComfortPoint();
   local back_vector = VectorHelper:Normalize(Danger:SafestLocation(bot) - bot:GetLocation()) * 25;
-  DebugDrawCircle(position, 10, 0, 255 ,0);
   local dist = GetUnitToLocationDistance(bot, position);
   self.very_low_creep = Creeping:CreepWithNHitsOfHealth(1000, true, true, 1);
-  local kinda_low_creep = Creeping:CreepWithNHitsOfHealth(1000, true, true, 3);
+  self.kinda_low_creep = Creeping:CreepWithNHitsOfHealth(1000, true, true, 3);
   self.weak = Creeping:WeakestCreep(1000, false, true);
   local no_heroes_near = true;
 
-  if (kinda_low_creep) then
-    -- print("kinda delta "..DotaBotUtility:GetCreepHealthDeltaPerSec(kinda_low_creep, 2));
-    DebugDrawCircle(kinda_low_creep:GetLocation(), 20, 255, 0, 0);
+  if (self.kinda_low_creep) then
+    -- print("kinda delta "..DotaBotUtility:GetCreepHealthDeltaPerSec(self.kinda_low_creep, 2));
+    DebugDrawCircle(self.kinda_low_creep:GetLocation(), 20, 255, 0, 0);
   end
 
   if (self.weak) then
@@ -162,17 +161,18 @@ function Laning.LastHit(self)
     DebugDrawCircle(self.weak:GetLocation(), 20, 255, 255, 0);
   end
 
+  DebugDrawCircle(position + back_vector, 10, 244, 244 ,244);
   if (dist > 400) then
-    BotActions.ActionMoveToLocation:Call(position + back_vector);
+    bot:Action_MoveToLocation(position + back_vector);
   elseif (self.very_low_creep) then
-    BotActions.ActionAttackUnit:Call(self.very_low_creep, false);
-  elseif (kinda_low_creep and DotaBotUtility:GetCreepHealthDeltaPerSec(kinda_low_creep, 2) == 0 and no_heroes_near) then
-    BotActions.ActionAttackUnit:Call(kinda_low_creep, false);
-    DebugDrawText(250, 250, "KINDA LOW", 255, 255, 255);
+    bot:Action_AttackUnit(self.very_low_creep, false);
+  elseif (self.kinda_low_creep and DotaBotUtility:GetCreepHealthDeltaPerSec(kinda_low_creep, 2) == 0 and no_heroes_near) then
+    bot:Action_AttackUnit(self.kinda_low_creep, false);
+    print("kinda low");
   elseif (dist > 150) then
-    BotActions.ActionMoveToLocation:Call(position + back_vector);
-  elseif (self.weak and self.weak:GetHealth() < 250 and DotaBotUtility:GetCreepHealthDeltaPerSec(self.weak, 2) ~= 0 and (not UnitHelper:IsFacingEntity(bot, self.weak, 10))) then
-    BotActions.ActionCancelAttack:Call(self.weak);
+    bot:Action_MoveToLocation(position + back_vector);
+  -- elseif (self.weak and self.weak:GetHealth() < 250 and DotaBotUtility:GetCreepHealthDeltaPerSec(self.weak, 2) ~= 0 and (not UnitHelper:IsFacingEntity(bot, self.weak, 10))) then
+  --   BotActions.ActionCancelAttack:Call(self.weak);
   end
 end
 
@@ -190,7 +190,7 @@ end
 
 function Laning.WalkToLane(self)
   local location = GetFront(GetTeam(), BotInfo:Me().LANE);
-  BotActions.ActionMoveToLocation:Call(location);
+  bot:Action_MoveToLocation(location);
 end
 ---------------------------------------------
 Laning.HARASSING    = "HARASSING";

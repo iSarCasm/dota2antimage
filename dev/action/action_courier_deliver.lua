@@ -7,7 +7,7 @@ function M:Call()
 end
 
 function M:Run()
-  GetBot():ActionImmediate_Courier(GetCourier(0), 6 );
+  GetBot():ActionImmediate_Courier(GetCourier(0), 6);
 end
 
 function M:Finish()

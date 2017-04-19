@@ -19,7 +19,7 @@ end
 M:Reset();
 -------------------------------------------------
 function M:Run(BotInfo, Mode, Strategy)
-  BotActions.ActionCourierDeliver:Call();
+  GetBot():ActionImmediate_Courier(GetCourier(0), 6);
 end
 -------------------------------------------------
 return M;

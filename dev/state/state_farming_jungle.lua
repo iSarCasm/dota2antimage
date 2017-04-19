@@ -44,7 +44,7 @@ end
 -------------------------------------------------
 -------------------------------------------------
 function M.StateWalkToCamp(self, BotInfo, Mode, Strategy)
-  print("walk!!");
+  -- print("walk!!");
   local bot = GetBot();
   local loc = JUNGLE_CAMP[self.Jungle].Location;
   if (GetUnitToLocationDistance(bot, loc) < 500) then
@@ -54,7 +54,7 @@ function M.StateWalkToCamp(self, BotInfo, Mode, Strategy)
       self.StateMachine.State = self.STATE_KILL_CAMP;
     end
   else
-    BotActions.ActionMoveToLocation:Call(loc);
+    bot:Action_MoveToLocation(loc);
   end
 end
 
@@ -68,11 +68,10 @@ function M.StateKillCamp(self, BotInfo, Mode, Strategy)
   local bot = GetBot();
   local creeps = bot:GetNearbyCreeps(700, true);
   if (#creeps > 0) then
-    BotActions.ActionAttackUnit:Call(creeps[1], false);
+    bot:Action_AttackUnit(creeps[1], false);
   else
     self.StateMachine.State = self.STATE_WALK_TO_CAMP;
   end
-  -- BotActions.ActionAttackMove:Call(JUNGLE_CAMP[self.Jungle].Location);
 end
 -------------------------------------------------
 -------------------------------------------------
@@ -82,7 +81,7 @@ M.StateMachine[M.STATE_WAIT_CAMP] = M.StateWaitCamp;
 M.StateMachine[M.STATE_KILL_CAMP] = M.StateKillCamp;
 -------------------------------------------------
 function M:Reset()
-  print("============== RESET ==========");
+  -- print("============== RESET ==========");
   self.StateMachine.State = self.STATE_WALK_TO_CAMP;
 end
 M:Reset();

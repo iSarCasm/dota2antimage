@@ -176,14 +176,14 @@ function M.StateWalkToCreeps(self, BotInfo, Mode, Strategy)
     else
       local dist = GetUnitToLocationDistance(bot, comfort_point);
       if (dist > 250) then
-        BotActions.ActionMoveToLocation:Call(comfort_point);
-      elseif (dist < 200) then
-        local weak = Creeping:WeakestCreep(1000, false, true);
-        if (weak) then
-          if (not UnitHelper:IsFacingEntity(bot, weak, 10)) then
-            BotActions.ActionCancelAttack:Call(weak);
-          end
-        end
+        bot:Action_MoveToLocation(comfort_point);
+      -- elseif (dist < 200) then
+      --   local weak = Creeping:WeakestCreep(1000, false, true);
+      --   if (weak) then
+      --     if (not UnitHelper:IsFacingEntity(bot, weak, 10)) then
+      --       BotActions.ActionCancelAttack:Call(weak);
+      --     end
+      --   end
       end
       -- Debug
       DebugDrawCircle(Vector(comfort_point[1], comfort_point[2], bot:GetGroundHeight()), 20, 0, 255, 0);
@@ -196,7 +196,7 @@ function M.StateAttackCreep(self, BotInfo, Mode, Strategy)
   local bot = GetBot();
   target = Creeping:CreepWithNHitsOfHealth(1000, true, true, 1)
   if (target and (not self.DangerUnderTower())) then
-    BotActions.ActionAttackUnit:Call(target, false);
+    bot:Action_AttackUnit(target, false);
   else
     self.StateMachine.State = self.STATE_WALK_TO_CREEPS;
   end
@@ -215,7 +215,7 @@ function M.StateAgroOff(self, BotInfo, Mode, Strategy)
   end
 
   if (comfort_point) then
-    BotActions.ActionMoveToLocation:Call(comfort_point);
+    bot:Action_MoveToLocation(comfort_point);
   end
   if (not Creeping:isAttackedByCreeps() or GetUnitToUnitDistance(bot, tower) < 700) then
     self.StateMachine.State = self.STATE_WALK_TO_CREEPS;

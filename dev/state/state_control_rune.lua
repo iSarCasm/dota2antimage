@@ -44,7 +44,7 @@ function M.StateWalkToRune(self, BotInfo, Mode, Strategy)
   if (GetUnitToLocationDistance(bot, loc) < 200) then
     self.StateMachine.State = self.STATE_WAIT_RUNE;
   else
-    BotActions.ActionMoveToLocation:Call(loc);
+    bot:Action_MoveToLocation(loc);
   end
 end
 
@@ -55,7 +55,7 @@ function M.StateWaitRune(self, BotInfo, Mode, Strategy)
 end
 
 function M.StatePickRune(self, BotInfo, Mode, Strategy)
-  BotActions.ActionPickUpRune:Call(self.Rune);
+  GetBot():Action_PickUpRune(self.Rune);
 end
 -------------------------------------------------
 -------------------------------------------------

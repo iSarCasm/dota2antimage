@@ -1,8 +1,12 @@
 local ItemTango = {}
       ItemTango.name = "item_tango";
 ------------------------------------
-local BotActions  = require(GetScriptDirectory().."/dev/bot_actions");
-local BotInfo     = require(GetScriptDirectory().."/dev/bot_info")
+local InventoryHelper = require(GetScriptDirectory().."/dev/helper/inventory_helper")
+local BotInfo         = require(GetScriptDirectory().."/dev/bot_info")
+------------------------------------
+function ItemTango:Ability()
+  return InventoryHelper:GetItemByName(GetBot(), self.name, true);
+end
 ------------------------------------
 function ItemTango:Think(Mode, Strategy)
   local bot = GetBot();
@@ -23,9 +27,8 @@ function ItemTango:Think(Mode, Strategy)
           end
         end
         if (closest) then
-          print("please it tree "..closest);
-          BotActions.ActionUseAbility:Call(self.name, closest);
-          return;
+          print("please eat tree "..closest);
+          bot:Action_UseAbilityOnTree(self:Ability(), closest);
         end
       end
     end
