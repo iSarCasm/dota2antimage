@@ -83,7 +83,7 @@ function Laning:GetComfortPoint()
   elseif (Creeping.allyVector) then     -- follow allies!
     return Creeping.allyVector;
   else
-    return GetFront(GetTeam(), BotInfo:Me().LANE);  -- go to lane's front
+    return GetFront(GetTeam(), BotInfo.LANE);  -- go to lane's front
   end
 end
 
@@ -184,7 +184,7 @@ function Laning.AgroCreeps(self)
 end
 
 function Laning.WalkToLane(self)
-  local location = GetFront(GetTeam(), BotInfo:Me().LANE);
+  local location = GetFront(GetTeam(), BotInfo.LANE);
   bot:Action_MoveToLocation(location);
 end
 ---------------------------------------------
@@ -234,7 +234,7 @@ function Laning:Run(bInfo, Mode, Strategy)
   -- if (Creeping.allyVector) then DebugDrawCircle(Creeping.allyVector, 15, 0, 255, 0) end;
   -- DebugDrawLine(GetBot():GetLocation(), Danger:SafestLocation(GetBot()), 0, 0, 255);
   -- DebugDrawCircle(Danger:SafestLocation(GetBot()), 15, 0, 0 ,255);
-  -- DebugDrawCircle(GetFront(GetTeam(), BotInfo:Me().LANE), 15, 255, 255 ,255);
+  -- DebugDrawCircle(GetFront(GetTeam(), BotInfo.LANE), 15, 255, 255 ,255);
 end
 ---------------------------------------------
 return Laning;

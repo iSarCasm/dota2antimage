@@ -15,14 +15,14 @@ local Game         		= require(GetScriptDirectory().."/dev/game")
 --------------------------------------------------------
 --------------------------------------------------------
 BotInfo:Init(LANE_MID, ROLE_CARRY);
-BotInfo:Me().projectileSpeed = 1500;
-BotInfo:Me().abilities = {
+BotInfo.projectileSpeed = 1500;
+BotInfo.abilities = {
 	"queenofpain_shadow_strike",
 	"queenofpain_blink",
 	"queenofpain_scream_of_pain",
 	"queenofpain_sonic_wave"
 }
-BotInfo:Me().itemBuild = {
+BotInfo.itemBuild = {
 		"item_courier", -- wTF?????
 		"item_tango",
 		"item_mantle",
@@ -33,7 +33,7 @@ BotInfo:Me().itemBuild = {
 		"item_belt_of_strength",
 		"item_gloves"
 }
-BotInfo:Me().abilityBuild = {
+BotInfo.abilityBuild = {
 	"queenofpain_shadow_strike",
 	"queenofpain_blink",
 	"queenofpain_shadow_strike",
@@ -61,7 +61,6 @@ function DebugStatesFields()
   DebugDrawText(25, 120, "Mode: "..BotMode.Mode, 255, 255, 255);
   DebugDrawText(25, 140, "State: "..BotState.State.." "..BotState:ArgumentString(), 255, 255, 255);
   DebugDrawText(25, 160, "Mini-State: "..BotState:MiniState(), 255, 255, 255);
-  DebugDrawText(25, 180, "Action: "..BotInfo:ActionName(), 255, 255, 255)
 end
 --------------------------------------------------------
 function Think(  )
@@ -74,6 +73,5 @@ function Think(  )
 
 	DebugStatesFields();
 
-	BotInfo:Act();
   BotInfo:GatherData();
 end

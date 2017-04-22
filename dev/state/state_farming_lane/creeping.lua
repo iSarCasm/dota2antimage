@@ -109,7 +109,7 @@ function M:CreepWithNHitsOfHealth(range, enemy, ally, hits)
     do
       if (creep:IsAlive()) then
         local bot_damage = self:GetPhysDamageToCreep(bot, creep);
-        local time_to_damage = UnitHelper:TimeToGetInRange(bot, creep) + UnitHelper:TimeOnAttacks(bot, hits) + UnitHelper:ProjectileTimeTravel(bot, creep, BotInfo:Me().projectileSpeed) * hits;
+        local time_to_damage = UnitHelper:TimeToGetInRange(bot, creep) + UnitHelper:TimeOnAttacks(bot, hits) + UnitHelper:ProjectileTimeTravel(bot, creep, BotInfo.projectileSpeed) * hits;
         local extrapolated_damage = self:ExtrapolatedDamage(creep, time_to_damage);
         if (extrapolated_damage < bot_damage) then
           extrapolated_damage = 0;
@@ -132,7 +132,7 @@ function M:CreepWithNHitsOfHealth(range, enemy, ally, hits)
     do
       if (creep:IsAlive()) then
         local bot_damage = self:GetPhysDamageToCreep(bot, creep);
-        local time_to_damage = UnitHelper:TimeToGetInRange(bot, creep) + UnitHelper:TimeOnAttacks(bot, hits) + 2.5 * UnitHelper:ProjectileTimeTravel(bot, creep, BotInfo:Me().projectileSpeed) * hits;
+        local time_to_damage = UnitHelper:TimeToGetInRange(bot, creep) + UnitHelper:TimeOnAttacks(bot, hits) + 2.5 * UnitHelper:ProjectileTimeTravel(bot, creep, BotInfo.projectileSpeed) * hits;
         local extrapolated_damage = self:ExtrapolatedDamage(creep, time_to_damage);
         if (extrapolated_damage < bot_damage) then
           extrapolated_damage = 0;

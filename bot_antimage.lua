@@ -15,14 +15,14 @@ local Game            = require(GetScriptDirectory().."/dev/game")
 --------------------------------------------------------
 --------------------------------------------------------
 BotInfo:Init(LANE_TOP, ROLE_CARRY);
-BotInfo:Me().projectileSpeed = 0;
-BotInfo:Me().abilities = {
+BotInfo.projectileSpeed = 0;
+BotInfo.abilities = {
   "antimage_blink",
   "antimage_mana_break",
   "antimage_spell_shield",
   "antimage_mana_void"
 }
-BotInfo:Me().itemBuild = {
+BotInfo.itemBuild = {
     "item_courier", -- wTF?????
 
     "item_tango",
@@ -78,7 +78,7 @@ BotInfo:Me().itemBuild = {
 
     "item_recipe_travel_boots"
 }
-BotInfo:Me().abilityBuild = {
+BotInfo.abilityBuild = {
   "antimage_blink",
   "antimage_mana_break",
   "antimage_spell_shield",
@@ -105,7 +105,6 @@ function DebugStatesFields()
   DebugDrawText(25, 100, "Strategy: "..TeamStrategy.Strategy, 255, 255, 255);
   DebugDrawText(25, 120, "Mode: "..BotMode.Mode, 255, 255, 255);
   DebugDrawText(25, 140, "State: "..BotState.State.." "..BotState:ArgumentString(), 255, 255, 255);
-  DebugDrawText(25, 180, "Action: "..BotInfo:ActionName(), 255, 255, 255)
 end
 
 function DebugStats()
@@ -124,7 +123,6 @@ function Think(  )
   DebugStatesFields();
   DebugStats();
 
-  BotInfo:Act();
   BotInfo:GatherData();
 
   AbilityItems:Think(BotMode.Mode, TeamStrategy.Strategy);

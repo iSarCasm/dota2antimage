@@ -146,8 +146,8 @@ function M:StateArgument(State)
 end
 --------------------------------------------------------
 function M:Update(Mode, Strategy)
-  self:UpdateState(BotInfo:Me(), Mode, Strategy);
-  self.StateMachine[self.State]:Run(BotInfo:Me(), Mode, Strategy);
+  self:UpdateState(BotInfo, Mode, Strategy);
+  self.StateMachine[self.State]:Run(BotInfo, Mode, Strategy);
 end
 
 function M:MiniState()

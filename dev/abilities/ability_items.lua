@@ -15,7 +15,7 @@ AbilityItems.item["item_quelling_blade"] = require(GetScriptDirectory().."/dev/a
 AbilityItems.item["item_iron_talon"]     = require(GetScriptDirectory().."/dev/abilities/items/item_iron_talon");
 -----------------------------------------------
 function AbilityItems:Think(Mode, Strategy)
-  for i, ability in ipairs(BotInfo:Me().abilities) do
+  for i, ability in ipairs(BotInfo.abilities) do
     if (self.ability[ability]) then
       self.ability[ability]:Think(Mode, Strategy);
     end

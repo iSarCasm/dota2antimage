@@ -15,14 +15,14 @@ local Game         		= require(GetScriptDirectory().."/dev/game")
 --------------------------------------------------------
 --------------------------------------------------------
 BotInfo:Init(LANE_MID, ROLE_CARRY);
-BotInfo:Me().projectileSpeed = 1200;
-BotInfo:Me().abilities = {
+BotInfo.projectileSpeed = 1200;
+BotInfo.abilities = {
 	"nevermore_shadowraze1",
 	"nevermore_shadowraze2",
 	"nevermore_shadowraze3",
 	"nevermore_requiem"
 }
-BotInfo:Me().itemBuild = {
+BotInfo.itemBuild = {
 		"item_courier", -- wTF?????
 		"item_tango",
 		"item_slippers",
@@ -35,7 +35,7 @@ BotInfo:Me().itemBuild = {
 
 		"item_branches"
 }
-BotInfo:Me().abilityBuild = {
+BotInfo.abilityBuild = {
 	"nevermore_necromastery",
 	"nevermore_shadowraze1",
 	"nevermore_shadowraze1",
@@ -62,7 +62,6 @@ function DebugStatesFields()
   DebugDrawText(25, 100, "Strategy: "..TeamStrategy.Strategy, 255, 255, 255);
   DebugDrawText(25, 120, "Mode: "..BotMode.Mode, 255, 255, 255);
   DebugDrawText(25, 140, "State: "..BotState.State.." "..BotState:ArgumentString(), 255, 255, 255);
-  DebugDrawText(25, 180, "Action: "..BotInfo:ActionName(), 255, 255, 255)
 end
 
 function DebugStats()
@@ -81,7 +80,6 @@ function Think(  )
 	DebugStatesFields();
 	DebugStats();
 
-	BotInfo:Act();
   BotInfo:GatherData();
 
   AbilityItems:Think(BotMode.Mode, TeamStrategy.Strategy);

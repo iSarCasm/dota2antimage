@@ -1,3 +1,3 @@
 function ItemPurchaseThink()
-  -- emprt
+  -- empry
 end

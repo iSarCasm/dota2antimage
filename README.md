@@ -1,47 +1,29 @@
 
 TODO:
   - make up-to date (no errors) - done!
-  - make up-to date action strategy *delete current*
+  - make up-to date action strategy *delete current* 
+    - add BotInfo action TryToTravel which queries each ability, if found calls IsItWorth( all bot info )
+    - fix blink
   - use hash-table instances (for multiple bots)
     - test with 2 bots on the same team
   - optimization
     - should not be lagging
   - make 'modules' & refactor
 
-  - return courier state
-
   - laning
-      safety vector
-      danger vector
-      reward vector
-      harass vector
+      - harassin enemies when no low creeps
+      - reasanable distances
+      - attacking towers
+      - pushing lane
+      - use skills when pushing lane (shadow fiend)
+      - use skills to both push and harass
 
-      -lh and d
-        - last hits and deny
-        - lane balance
-        - kill non targeted creeps (3 or less hits) if no heroes close
-        - escape harassing (positioning)
-        - harassing
-        - attacking towers
-        - agro off creeps
-        - agro off tower
-        - retarget tower
-      - d
-        - deny
-        - lane balance
-        - escape harassing
-        - harassing
-        - attacking towers
-        - agro off creeps
-        - agro off tower
-        - retarget tower
-      - psh and lh
-        - attack healthy creeps
-        - lh low hp creeps
-      - psh
-        - attack enemy creeps
-
-  - item builder (buy tp\salve\raindrop)
+  - item builder (buy tp\raindrop)
   - TP usage
+  
+  - good jungling
+    - resonable spawn selection
+    - using skills
+    
   - using mana void
   - chasing enemy heroes
