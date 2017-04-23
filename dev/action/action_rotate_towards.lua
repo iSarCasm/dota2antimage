@@ -1,5 +1,4 @@
 local RotateTowards = {}
-local BotInfo = require(GetScriptDirectory().."/dev/bot_info")
 local VectorHelper = require(GetScriptDirectory().."/dev/helper/vector_helper")
 RotateTowards.name = "Rotate Towards";
 -------------------------------------------------

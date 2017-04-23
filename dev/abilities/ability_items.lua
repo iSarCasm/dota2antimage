@@ -1,7 +1,5 @@
 local AbilityItems = {};
 -----------------------------------------------
-local BotInfo = require(GetScriptDirectory().."/dev/bot_info")
------------------------------------------------
 AbilityItems.ability = {};
 -- Antimage
 AbilityItems.ability["antimage_blink"] = require(GetScriptDirectory().."/dev/abilities/skills/antimage/antimage_blink");
@@ -14,7 +12,7 @@ AbilityItems.item["item_bfury"]     = require(GetScriptDirectory().."/dev/abilit
 AbilityItems.item["item_quelling_blade"] = require(GetScriptDirectory().."/dev/abilities/items/item_quelling_blade");
 AbilityItems.item["item_iron_talon"]     = require(GetScriptDirectory().."/dev/abilities/items/item_iron_talon");
 -----------------------------------------------
-function AbilityItems:Think(Mode, Strategy)
+function AbilityItems:Think(Mode, Strategy, BotInfo)
   for i, ability in ipairs(BotInfo.abilities) do
     if (self.ability[ability]) then
       self.ability[ability]:Think(Mode, Strategy);
@@ -29,6 +27,10 @@ function AbilityItems:Think(Mode, Strategy)
       end
     end
   end
+end
+
+function AbilityItems:TryTravel( vLocation )
+
 end
 -----------------------------------------------
 return AbilityItems;

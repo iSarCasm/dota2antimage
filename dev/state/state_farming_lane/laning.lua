@@ -2,13 +2,19 @@ local Laning = {};
 ---------------------------------------------
 local Creeping        = require(GetScriptDirectory().."/dev/state/state_farming_lane/creeping");
 local BotActions      = require(GetScriptDirectory().."/dev/bot_actions");
-local BotInfo         = require(GetScriptDirectory().."/dev/bot_info");
 local Danger         	= require(GetScriptDirectory().."/dev/danger/danger");
 local VectorHelper    = require(GetScriptDirectory().."/dev/helper/vector_helper");
 local HeroHelper      = require(GetScriptDirectory().."/dev/helper/hero_helper");
 local UnitHelper      = require(GetScriptDirectory().."/dev/helper/unit_helper");
 local DotaBotUtility  = require(GetScriptDirectory().."/dev/utility");
 ---------------------------------------------
+function Laning:new(o)
+    o = o or {}
+    setmetatable(o, self)
+    self.__index = self
+    return o
+end
+--------------------------------------------------------
 -- float 0..1 where 0 is closest to creeps to get best LH and 1 is EXP-only range
 function Laning:GetHeroBalance()
   local myself = GetBot();
@@ -53,7 +59,7 @@ function Laning:ClosestAllyToVector(vec)
   return closest;
 end
 
-function Laning:GetComfortPoint()
+function Laning:GetComfortPoint(BotInfo)
   local bot = GetBot();
   -- DebugDrawText(500, 100, "Balance is "..hero_balance, 255, 255, 255);
   if (Creeping.allyVector and self.weak and self.weak:IsAlive() and self.weak:GetHealth() < self:PrepareForLhHealth(bot, self.weak)) then -- time to get really close and wait for that juicy lash hit
@@ -83,7 +89,7 @@ function Laning:GetComfortPoint()
   elseif (Creeping.allyVector) then     -- follow allies!
     return Creeping.allyVector;
   else
-    return GetFront(GetTeam(), BotInfo.LANE);  -- go to lane's front
+    return GetFront(GetTeam(), self.Lane);  -- go to lane's front
   end
 end
 
@@ -132,9 +138,9 @@ function Laning.Backoff(self)
   bot:Action_MoveToLocation(Danger:SafestLocation(bot));
 end
 
-function Laning.LastHit(self)
+function Laning.LastHit(self, BotInfo)
   local bot = GetBot();
-  local position = self:GetComfortPoint();
+  local position = self:GetComfortPoint(BotInfo);
   local back_vector = VectorHelper:Normalize(Danger:SafestLocation(bot) - bot:GetLocation()) * 25;
   local dist = GetUnitToLocationDistance(bot, position);
   self.very_low_creep = Creeping:CreepWithNHitsOfHealth(1000, true, true, 1);
@@ -182,11 +188,6 @@ end
 function Laning.AgroCreeps(self)
 
 end
-
-function Laning.WalkToLane(self)
-  local location = GetFront(GetTeam(), BotInfo.LANE);
-  bot:Action_MoveToLocation(location);
-end
 ---------------------------------------------
 Laning.HARASSING    = "HARASSING";
 Laning.BACKOFF      = "BACKOFF";
@@ -225,10 +226,11 @@ function Laning:UpdateState()
   self.StateMachine.State = highest;
 end
 ---------------------------------------------
-function Laning:Run(bInfo, Mode, Strategy)
+function Laning:Run(Farming, BotInfo, Mode, Strategy)
+  self.Lane = Farming.Lane;
   Creeping:UpdateLaningState();
   self:UpdateState();
-  self.StateMachine[self.StateMachine.State](self, bInfo, Mode, Strategy);
+  self.StateMachine[self.StateMachine.State](self, BotInfo, Mode, Strategy);
 
   -- if (Creeping.enemyVector) then DebugDrawCircle(Creeping.enemyVector, 15, 255, 0, 0) end;
   -- if (Creeping.allyVector) then DebugDrawCircle(Creeping.allyVector, 15, 0, 255, 0) end;

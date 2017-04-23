@@ -1,6 +1,4 @@
-local M = {}
-local BotInfo         = require(GetScriptDirectory().."/dev/bot_info")
-local DotaBotUtility  = require(GetScriptDirectory().."/dev/utility");
+local BotState = {}
 --------------------------------------------------------
 local StateWaitCreeps = require(GetScriptDirectory().."/dev/state/state_wait_creeps");
 local StateFarmingLane = require(GetScriptDirectory().."/dev/state/state_farming_lane");
@@ -69,7 +67,28 @@ local STATE_BUYBACK               = "STATE_BUYBACK";
 local STATE_TP_BOTTLE             = "STATE_TP_BOTTLE";
 local STATE_TP_BOTTLE_REFILL      = "STATE_TP_BOTTLE_REFILL";
 --------------------------------------------------------
-M.ScanStates = {
+function BotState:new(o)
+    o = o or {}
+    setmetatable(o, self)
+    self.__index = self
+    o.State = STATE_IDLE;
+    o.StateMachine = {};
+    o.StateMachine.STATE_WAIT_CREEPS  = StateWaitCreeps:new();
+    o.StateMachine.STATE_FARMING_LANE = StateFarmingLane:new();
+    o.StateMachine.STATE_FARM_JUNGLE  = StateFarmJungle:new();
+    o.StateMachine.STATE_BUY_ITEMS    = StateBuyItems:new();
+    o.StateMachine.STATE_CONTROL_RUNE = StateControlRune:new();
+    o.StateMachine.STATE_LEARNING_ABILITIES = StateLearningAbilities:new();
+    o.StateMachine.STATE_DELIVER_ITEMS      = StateDeliverItems:new();
+    o.StateMachine.STATE_RETURN_COURIER     = StateReturnCourier:new();
+    o.StateMachine.STATE_HEAL_FOUNTAIN      = StateHealFountain:new();
+    o.StateMachine.STATE_ATTACK_HERO        = StateAttackHero:new();
+    o.StateMachine.STATE_ESCAPE             = StateEscape:new();
+    o.StateMachine.STATE_SWAP_ITEMS         = StateSwapItems:new();
+    return o
+end
+--------------------------------------------------------
+BotState.ScanStates = {
   STATE_FARMING_LANE,
   STATE_FARM_JUNGLE,
   STATE_CONTROL_RUNE,
@@ -84,10 +103,12 @@ M.ScanStates = {
   STATE_WAIT_CREEPS
 }
 --------------------------------------------------------
-function M:SetState(State)
+function BotState:SetState(State)
   if (self.State ~= STATE_IDLE and (self.State ~= State or self.Argument ~= self:StateArgument(State))) then
-    -- print(State.." ~= "..self.State);
+    print("state "..self.State.." ~= "..State);
+    print("or args "..self.Argument.." ~= "..self:StateArgument(State));
     if (self.StateMachine[self.State].Reset) then
+      print("reset");
       self.StateMachine[self.State]:Reset();
     end
   end
@@ -95,14 +116,15 @@ function M:SetState(State)
   self.Argument = self:StateArgument(State);
 end
 
-function M:UpdateState(BotInfo, Mode, Strategy)
+function BotState:UpdateState(BotInfo, Mode, Strategy)
   local highestPotential = VERY_LOW_INT;
   local highestState = self.State;
+  -- print(GetBot():GetUnitName().." states");
   for i = 1, #self.ScanStates do
     local state = self.ScanStates[i];
     local potential = self.StateMachine[state]:EvaluatePotential(BotInfo, Mode, Strategy);
     -- print("Evaluate "..state.." as "..potential);
-    DebugDrawText(25, 500 + i * 20, "Evaluate "..state.." as "..potential, 255, 255, 255);
+    -- DebugDrawText(25, 500 + i * 20, "Evaluate "..state.." as "..potential);
     if (potential > highestPotential) then
       highestPotential = potential;
       highestState = state;
@@ -112,50 +134,28 @@ function M:UpdateState(BotInfo, Mode, Strategy)
   self:DebugStateChange();
 end
 --------------------------------------------------------
-M.State = STATE_IDLE;
-M.StateMachine = {};
-M.StateMachine.STATE_WAIT_CREEPS  = StateWaitCreeps;
-M.StateMachine.STATE_FARMING_LANE = StateFarmingLane;
-M.StateMachine.STATE_FARM_JUNGLE  = StateFarmJungle;
-M.StateMachine.STATE_BUY_ITEMS    = StateBuyItems;
-M.StateMachine.STATE_CONTROL_RUNE = StateControlRune;
-M.StateMachine.STATE_LEARNING_ABILITIES = StateLearningAbilities;
-M.StateMachine.STATE_DELIVER_ITEMS      = StateDeliverItems;
-M.StateMachine.STATE_RETURN_COURIER     = StateReturnCourier;
-M.StateMachine.STATE_HEAL_FOUNTAIN      = StateHealFountain;
-M.StateMachine.STATE_ATTACK_HERO        = StateAttackHero;
-M.StateMachine.STATE_ESCAPE             = StateEscape;
-M.StateMachine.STATE_SWAP_ITEMS         = StateSwapItems;
 --------------------------------------------------------
---------------------------------------------------------
-M.PrevState = "none";
-function M:DebugStateChange()
+BotState.PrevState = "none";
+function BotState:DebugStateChange()
   if(self.PrevState ~= self.State) then
-      print(GetBot():GetUnitName().." bot CURRENT STATE: "..self.State.." <- "..self.PrevState);
+      -- print(GetBot():GetUnitName().." bot CURRENT STATE: "..self.State.." <- "..self.PrevState);
       self.PrevState = self.State;
   end
 end
-function M:ArgumentString()
+function BotState:ArgumentString()
   return self:StateArgument(self.State);
 end
-function M:StateArgument(State)
+function BotState:StateArgument(State)
   if (self.StateMachine[State].ArgumentString) then
     return self.StateMachine[State]:ArgumentString();
   end
   return "";
 end
 --------------------------------------------------------
-function M:Update(Mode, Strategy)
+function BotState:Update(BotInfo, Mode, Strategy)
   self:UpdateState(BotInfo, Mode, Strategy);
+  print(GetBot():GetUnitName().." state is "..self.State);
   self.StateMachine[self.State]:Run(BotInfo, Mode, Strategy);
 end
-
-function M:MiniState()
-  if (self.StateMachine[self.State].StateMachine) then
-    return self.StateMachine[self.State].StateMachine.State;
-  else
-    return "none";
-  end
-end
-
-return M;
+--------------------------------------------------------
+return BotState;

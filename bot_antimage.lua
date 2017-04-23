@@ -6,24 +6,23 @@ require(GetScriptDirectory().."/dev/constants/shops");
 require(GetScriptDirectory().."/dev/constants/fountains");
 require(GetScriptDirectory().."/dev/constants/jungle");
 require(GetScriptDirectory().."/dev/helper/global_helper");
+local Game            = require(GetScriptDirectory().."/dev/game");
+local BotInfo         = require(GetScriptDirectory().."/dev/bot_info");
 local TeamStrategy    = require(GetScriptDirectory().."/dev/team_strategy");
-local BotMode         = require(GetScriptDirectory().."/dev/bot_mode");
-local BotState        = require(GetScriptDirectory().."/dev/bot_state");
-local BotInfo         = require(GetScriptDirectory().."/dev/bot_info")
-local AbilityItems    = require(GetScriptDirectory().."/dev/abilities/ability_items")
-local Game            = require(GetScriptDirectory().."/dev/game")
+local FlexBot         = require(GetScriptDirectory().."/dev/flex_bot");
 --------------------------------------------------------
 --------------------------------------------------------
-BotInfo:Init(LANE_TOP, ROLE_CARRY);
-BotInfo.projectileSpeed = 0;
-BotInfo.abilities = {
+botInfo = BotInfo:new();
+botInfo:Init(LANE_TOP, ROLE_CARRY);
+botInfo.projectileSpeed = 0;
+botInfo.abilities = {
   "antimage_blink",
   "antimage_mana_break",
   "antimage_spell_shield",
   "antimage_mana_void"
 }
-BotInfo.itemBuild = {
-    "item_courier", -- wTF?????
+botInfo.itemBuild = {
+    -- "item_courier", -- wTF?????
 
     "item_tango",
     "item_tango",
@@ -78,7 +77,7 @@ BotInfo.itemBuild = {
 
     "item_recipe_travel_boots"
 }
-BotInfo.abilityBuild = {
+botInfo.abilityBuild = {
   "antimage_blink",
   "antimage_mana_break",
   "antimage_spell_shield",
@@ -100,30 +99,12 @@ BotInfo.abilityBuild = {
   "special_bonus_agility_25"
 }
 --------------------------------------------------------
---------------------------------------------------------
-function DebugStatesFields()
-  DebugDrawText(25, 100, "Strategy: "..TeamStrategy.Strategy, 255, 255, 255);
-  DebugDrawText(25, 120, "Mode: "..BotMode.Mode, 255, 255, 255);
-  DebugDrawText(25, 140, "State: "..BotState.State.." "..BotState:ArgumentString(), 255, 255, 255);
-end
-
-function DebugStats()
-  DebugDrawText(25, 50, "LH/D = "..GetBot():GetLastHits().."/"..GetBot():GetDenies(), 255, 255, 255);
-end
---------------------------------------------------------
+flexBot = FlexBot:new(botInfo);
 Game:InitializeUnits();
 --------------------------------------------------------
 function Think(  )
   Game:Update();
-
   TeamStrategy:Update();
-  BotMode:Update(TeamStrategy.Strategy);
-  BotState:Update(BotMode.Mode, TeamStrategy.Strategy);
-
-  DebugStatesFields();
-  DebugStats();
-
-  BotInfo:GatherData();
-
-  AbilityItems:Think(BotMode.Mode, TeamStrategy.Strategy);
+  flexBot:Think();
+  botInfo:GatherData();
 end

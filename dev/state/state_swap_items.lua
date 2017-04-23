@@ -1,10 +1,16 @@
 local M = {}
 local InventoryHelper = require(GetScriptDirectory().."/dev/helper/inventory_helper")
 local BotActions      = require(GetScriptDirectory().."/dev/bot_actions");
-
 -------------------------------------------------
 M.Potential = {};
 -------------------------------------------------
+function M:new(o)
+    o = o or {}
+    setmetatable(o, self)
+    self.__index = self
+    return o
+end
+--------------------------------------------------------
 function M:EvaluatePotential(BotInfo, Mode, Strategy)
   local bot = GetBot();
   if (not InventoryHelper:IsBackpackEmpty(bot)) then
@@ -24,12 +30,7 @@ function M.SwapItems(self, BotInfo, Mode, Strategy)
   GetBot():ActionImmediate_SwapItems(self.swap_1, self.swap_2);
 end
 -------------------------------------------------
--------------------------------------------------
-function M:Reset()
-  -- wat?
-end
-M:Reset();
--------------------------------------------------
+------------------------------------
 function M:Run(BotInfo, Mode, Strategy)
   self:SwapItems(self, BotInfo, Mode, Strategy);
 end

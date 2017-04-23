@@ -5,6 +5,14 @@ local BotActions      = require(GetScriptDirectory().."/dev/bot_actions");
 M.STATE_WALK_TO_WAIT = "STATE_WALK_TO_WAIT";
 M.STATE_WAIT = "STATE_WAIT"
 -------------------------------------------------
+function M:new(o)
+    o = o or {}
+    setmetatable(o, self)
+    self.__index = self
+    o:Reset();
+    return o
+end
+--------------------------------------------------------
 -------------------------------------------------
 function M:EvaluatePotential(BotInfo, Mode, Strategy)
   return 0;
@@ -45,7 +53,6 @@ M.StateMachine[M.STATE_WAIT] = M.StateWait;
 function M:Reset()
   self.StateMachine.State = self.STATE_WALK_TO_WAIT;
 end
-M:Reset();
 -------------------------------------------------
 function M:Run(BotInfo, Mode, Strategy)
   self.StateMachine[self.StateMachine.State](self, BotInfo, Mode, Strategy);

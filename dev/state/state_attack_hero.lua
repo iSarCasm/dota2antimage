@@ -7,6 +7,13 @@ local EffortWait        = require(GetScriptDirectory().."/dev/state/_decision_ma
 local EffortDanger      = require(GetScriptDirectory().."/dev/state/_decision_making/effort/effort_danger");
 local EffortKillHero    = require(GetScriptDirectory().."/dev/state/_decision_making/effort/effort_kill_hero");
 -------------------------------------------------
+function M:new(o)
+    o = o or {}
+    setmetatable(o, self)
+    self.__index = self
+    return o
+end
+--------------------------------------------------------
 M.Potential = {};
 M.Hero = nil;
 -------------------------------------------------

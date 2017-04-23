@@ -4,6 +4,14 @@ local RewardBuyItems  = require(GetScriptDirectory().."/dev/state/_decision_maki
 local EffortWalk      = require(GetScriptDirectory().."/dev/state/_decision_making/effort/effort_walk");
 local EffortDanger    = require(GetScriptDirectory().."/dev/state/_decision_making/effort/effort_danger");
 -------------------------------------------------
+function M:new(o)
+    o = o or {}
+    setmetatable(o, self)
+    self.__index = self
+    o:Reset();
+    return o
+end
+--------------------------------------------------------
 M.STATE_WALK_TO_SHOP  = "STATE_WALK_TO_SHOP";
 M.STATE_BUY           = "STATE_BUY"
 -------------------------------------------------
@@ -55,9 +63,12 @@ end
 function M.StateWalkToShop(self, BotInfo, Mode, Strategy)
   local bot = GetBot();
   local loc = SHOP[self.Shop];
+  print("go to shop");
   if (self:ShopDistance(self.Shop) < 10 or (self.Shop == GetShop())) then
     self.StateMachine.State = self.STATE_BUY;
+    print(GetBot():GetUnitName().."buy update state "..self.StateMachine.State);  
   else
+    print("go!");
     bot:Action_MoveToLocation(loc);
   end
 end
@@ -66,6 +77,7 @@ function M.StateBuy(self, BotInfo, Mode, Strategy)
   local bot = GetBot();
   local item = BotInfo.itemBuild[1];
   if (bot:GetGold() >= GetItemCost(item)) then
+    print("buy item "..item);
     bot:ActionImmediate_PurchaseItem(item);
     table.remove(BotInfo.itemBuild, 1 );
   end
@@ -87,11 +99,12 @@ M.StateMachine[M.STATE_WALK_TO_SHOP] = M.StateWalkToShop;
 M.StateMachine[M.STATE_BUY]          = M.StateBuy;
 -------------------------------------------------
 function M:Reset()
+  print("reset called");
   self.StateMachine.State = self.STATE_WALK_TO_SHOP;
 end
-M:Reset();
 -------------------------------------------------
 function M:Run(BotInfo, Mode, Strategy)
+  print(GetBot():GetUnitName().."buy state "..self.StateMachine.State);
   self.StateMachine[self.StateMachine.State](self, BotInfo, Mode, Strategy);
 end
 -------------------------------------------------

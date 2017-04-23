@@ -1,6 +1,5 @@
 local RewardBuyItems = {}
 ----------------------------------------------------
-local BotInfo = require(GetScriptDirectory().."/dev/bot_info")
 local InventoryHelper = require(GetScriptDirectory().."/dev/helper/inventory_helper")
 ----------------------------------------------------
 function RewardBuyItems:Items(items)

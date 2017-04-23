@@ -9,6 +9,14 @@ M.STATE_WALK_TO_RUNE = "STATE_WALK_TO_RUNE";
 M.STATE_WAIT_RUNE = "STATE_WAIT_RUNE"
 M.STATE_PICK_RUNE = "STATE_PICK_RUNE"
 -------------------------------------------------
+function M:new(o)
+    o = o or {}
+    setmetatable(o, self)
+    self.__index = self
+    o:Reset();
+    return o
+end
+--------------------------------------------------------
 M.Potential = {};
 M.Rune = nil;
 -------------------------------------------------
@@ -23,7 +31,7 @@ function M:EvaluatePotential(BotInfo, Mode, Strategy)
   for i = 1, #runes do
     local rune = runes[i];
 
-    local reward = RewardRune:Generic(rune, Mode);
+    local reward = RewardRune:Generic(rune, Mode, BotInfo);
     local rune_location = GetRuneSpawnLocation(rune);
     local effort = EffortWait:Rune(rune) + EffortWalk:ToLocation(rune_location) + EffortDanger:OfLocation(rune_location);
     local potential = reward / effort;
@@ -41,20 +49,24 @@ end
 function M.StateWalkToRune(self, BotInfo, Mode, Strategy)
   local bot = GetBot();
   local loc = GetRuneSpawnLocation(self.Rune);
+  print(GetBot():GetUnitName().." walk rune"..GetUnitToLocationDistance(bot, loc));
   if (GetUnitToLocationDistance(bot, loc) < 200) then
     self.StateMachine.State = self.STATE_WAIT_RUNE;
+    print("new state "..self.StateMachine.State);
   else
     bot:Action_MoveToLocation(loc);
   end
 end
 
 function M.StateWaitRune(self, BotInfo, Mode, Strategy)
+  print(GetBot():GetUnitName().." wait rune");
   if (GetRuneStatus(self.Rune) == 1) then
     self.StateMachine.State = self.STATE_PICK_RUNE;
   end
 end
 
 function M.StatePickRune(self, BotInfo, Mode, Strategy)
+  print(GetBot():GetUnitName().." pick up rune "..self.Rune);
   GetBot():Action_PickUpRune(self.Rune);
 end
 -------------------------------------------------
@@ -67,7 +79,6 @@ M.StateMachine[M.STATE_PICK_RUNE]    = M.StatePickRune;
 function M:Reset()
   self.StateMachine.State = self.STATE_WALK_TO_RUNE;
 end
-M:Reset();
 -------------------------------------------------
 function M:Run(BotInfo, Mode, Strategy)
   self.StateMachine[self.StateMachine.State](self, BotInfo, Mode, Strategy);

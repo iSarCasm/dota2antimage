@@ -14,6 +14,14 @@ M.STATE_KILL_CAMP = "STATE_KILL_CAMP"
 M.Potential = {};
 M.Jungle = nil;
 -------------------------------------------------
+function M:new(o)
+    o = o or {}
+    setmetatable(o, self)
+    self.__index = self
+    o:Reset();
+    return o
+end
+--------------------------------------------------------
 function M:ArgumentString()
   return "("..JUNGLE_CAMP[self.Jungle].Name..")";
 end
@@ -84,7 +92,6 @@ function M:Reset()
   -- print("============== RESET ==========");
   self.StateMachine.State = self.STATE_WALK_TO_CAMP;
 end
-M:Reset();
 -------------------------------------------------
 function M:Run(BotInfo, Mode, Strategy)
   self.StateMachine[self.StateMachine.State](self, BotInfo, Mode, Strategy);

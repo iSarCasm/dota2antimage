@@ -6,6 +6,13 @@ local Danger         	  = require(GetScriptDirectory().."/dev/danger/danger")
 -------------------------------------------------
 M.Potential = {};
 -------------------------------------------------
+function M:new(o)
+    o = o or {}
+    setmetatable(o, self)
+    self.__index = self
+    return o
+end
+--------------------------------------------------------
 function M:EvaluatePotential(BotInfo, Mode, Strategy)
   local bot = GetBot();
   if (HeroHelper:TooDangerous(bot)) then
@@ -22,11 +29,6 @@ function M.Escape(self, BotInfo, Mode, Strategy)
   bot:Action_MoveToLocation(location);
 end
 -------------------------------------------------
--------------------------------------------------
-function M:Reset()
-  -- wat?
-end
-M:Reset();
 -------------------------------------------------
 function M:Run(BotInfo, Mode, Strategy)
   self:Escape(self, BotInfo, Mode, Strategy);

@@ -3,7 +3,7 @@ TODO:
   - make up-to date (no errors) - done!
   - make up-to date action strategy *delete current* 
     - add BotInfo action TryToTravel which queries each ability, if found calls IsItWorth( all bot info )
-    - fix blink
+    - fix blink, tango, flask, courier
   - use hash-table instances (for multiple bots)
     - test with 2 bots on the same team
   - optimization

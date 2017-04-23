@@ -3,6 +3,13 @@ local BotActions = require(GetScriptDirectory().."/dev/bot_actions");
 -------------------------------------------------
 M.StateMachine = {}
 -------------------------------------------------
+function M:new(o)
+    o = o or {}
+    setmetatable(o, self)
+    self.__index = self
+    return o
+end
+--------------------------------------------------------
 -------------------------------------------------
 function M:EvaluatePotential(BotInfo, Mode, Strategy)
   local bot = GetBot();

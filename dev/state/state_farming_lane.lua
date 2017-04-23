@@ -20,12 +20,21 @@ M.LANING        = "LANING";
 ----------------------------------------------
 M.Lane = LANE_TOP;
 M.Potential = {};
-M.FarmingType = {}
-M.FarmingType.FARMING_LH_D  = FarmingLhD;
-M.FarmingType.LANING        = Laning;
 ----------------------------------------------
+function M:new(o)
+    o = o or {}
+    setmetatable(o, self)
+    self.__index = self
+    o.FarmingType = {}
+    o.FarmingType.FARMING_LH_D  = FarmingLhD;
+    o.FarmingType.LANING        = Laning:new();
+    o:Reset();
+    print("NEW FARMING LANE STATRE CREATED "..GetBot():GetUnitName());
+    return o
+end
+--------------------------------------------------------
 function M:ArgumentString()
-  return "("..self.Lane..", "..self.FarmingType[self.FarmingType.Type].StateMachine.State..")";
+  return "("..self.Lane..")";
 end
 -------------------------------------------------
 function M:EvaluatePotential(BotInfo, Mode, Strategy)
@@ -39,14 +48,16 @@ function M:EvaluatePotential(BotInfo, Mode, Strategy)
     local reward = RewardFarmCreepwave:Generic(lane, BotInfo, Mode);
     local lane_location = MapHelper:LaneFrontLocation(GetTeam(), lane, false);
     local effort = EffortWalk:ToLocation(lane_location) + EffortDanger:OfLocation(lane_location) + EffortWait:Creeps(lane) + EffortKillCreepwave:Generic();
+    local potential = reward / effort;
 
     -- print("Lane: .."..lane);
+    -- print("Reward: "..reward);
     -- print("Kill: "..EffortKillCreepwave:Generic());
     -- print("Wait: "..EffortWait:Creeps(lane));
     -- print("Walk: "..EffortWalk:ToLocation(lane_location));
     -- print("Danger: "..EffortDanger:OfLocation(lane_location));
+    -- print("P: "..potential);
 
-    local potential = reward / effort;
     self.Potential[lane] = potential;
     if (potential > highest) then
       self.Lane = lane;
@@ -79,7 +90,6 @@ function M:Reset()
   self.StateMachine.State = self.STATE_WALK_TO_LANE;
   self.FarmingType.Type   = self.LANING;
 end
-M:Reset();
 -------------------------------------------------
 function M:Run(BotInfo, Mode, Strategy)
   self.StateMachine[self.StateMachine.State](self, BotInfo, Mode, Strategy);

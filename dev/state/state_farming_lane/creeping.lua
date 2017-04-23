@@ -1,6 +1,5 @@
 local M = {};
 ----------------------------------------------
-local BotInfo         = require(GetScriptDirectory().."/dev/bot_info")
 local DotaBotUtility  = require(GetScriptDirectory().."/dev/utility");
 local UnitHelper      = require(GetScriptDirectory().."/dev/helper/unit_helper");
 local VectorHelper    = require(GetScriptDirectory().."/dev/helper/vector_helper");
@@ -103,6 +102,7 @@ end
 function M:CreepWithNHitsOfHealth(range, enemy, ally, hits)
   if ((enemy and ally) == false) then return nil end;
   local bot = GetBot();
+  local BotInfo = bot.flexBot.botInfo;
   if (enemy) then
     local enemy_creeps = bot:GetNearbyCreeps(range, true);
     for _,creep in pairs(enemy_creeps)

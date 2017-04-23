@@ -1,6 +1,13 @@
-local M = {}
+local BotInfo = {}
+--------------------------------------------------------
+function BotInfo:new(o)
+    o = o or {}
+    setmetatable(o, self)
+    self.__index = self
+    return o
+end
 
-function M:Init(lane, role)
+function BotInfo:Init(lane, role)
   self.LANE = lane;
   self.ROLE = role;
 
@@ -9,12 +16,16 @@ function M:Init(lane, role)
   self.lastHealthCapture = DotaTime();
   self.healthDelta = 0;
 end
-
-function M:CanBuyNextItem()
+--------------------------------------------------------
+function BotInfo:TryTravel( vLocation )
+  
+end
+--------------------------------------------------------
+function BotInfo:CanBuyNextItem()
   return (GetBot():GetGold() >= GetItemCost(self.itemBuild[1]));
 end
-
-function M:GatherData()
+--------------------------------------------------------
+function BotInfo:GatherData()
   local bot = GetBot();
   if ((DotaTime() - self.lastHealthCapture) > 0.35) then
     self.lastHealthCapture = DotaTime();
@@ -23,5 +34,5 @@ function M:GatherData()
     self.healthDelta = self.health - self.lastHealth;
   end
 end
-
-return M;
+--------------------------------------------------------
+return BotInfo;
