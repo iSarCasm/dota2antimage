@@ -10,7 +10,6 @@ end
 ------------------------------------
 function ItemCourier:Think(Mode, Strategy)
   local bot = GetBot();
-  print('use courier');
   bot:Action_UseAbility(self:Ability());
 end
 ------------------------------------

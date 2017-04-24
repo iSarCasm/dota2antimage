@@ -49,24 +49,21 @@ end
 function M.StateWalkToRune(self, BotInfo, Mode, Strategy)
   local bot = GetBot();
   local loc = GetRuneSpawnLocation(self.Rune);
-  print(GetBot():GetUnitName().." walk rune"..GetUnitToLocationDistance(bot, loc));
   if (GetUnitToLocationDistance(bot, loc) < 200) then
     self.StateMachine.State = self.STATE_WAIT_RUNE;
     print("new state "..self.StateMachine.State);
   else
-    bot:Action_MoveToLocation(loc);
+    BotActions.MoveToLocation:Call(loc);
   end
 end
 
 function M.StateWaitRune(self, BotInfo, Mode, Strategy)
-  print(GetBot():GetUnitName().." wait rune");
   if (GetRuneStatus(self.Rune) == 1) then
     self.StateMachine.State = self.STATE_PICK_RUNE;
   end
 end
 
 function M.StatePickRune(self, BotInfo, Mode, Strategy)
-  print(GetBot():GetUnitName().." pick up rune "..self.Rune);
   GetBot():Action_PickUpRune(self.Rune);
 end
 -------------------------------------------------

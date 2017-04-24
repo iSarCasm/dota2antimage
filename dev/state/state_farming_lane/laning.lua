@@ -135,7 +135,7 @@ end
 
 function Laning.Backoff(self)
   local bot = GetBot();
-  bot:Action_MoveToLocation(Danger:SafestLocation(bot));
+  BotActions.MoveToLocation:Call(Danger:SafestLocation(bot));
 end
 
 function Laning.LastHit(self, BotInfo)
@@ -161,7 +161,7 @@ function Laning.LastHit(self, BotInfo)
   DebugDrawCircle(position + back_vector, 10, 244, 244 ,244);
   if (dist > 800) then
     print("really far from comfort");
-    bot:Action_MoveToLocation(position + back_vector);
+    BotActions.MoveToLocation:Call(position + back_vector);
   elseif (self.very_low_creep) then
     print("last hit!");
     bot:Action_AttackUnit(self.very_low_creep, false);
@@ -170,7 +170,7 @@ function Laning.LastHit(self, BotInfo)
     bot:Action_AttackUnit(self.kinda_low_creep, false);
   elseif (dist > 150) then
     print("get a bit closer");
-    bot:Action_MoveToLocation(position + back_vector);
+    BotActions.MoveToLocation:Call(position + back_vector);
   elseif (self.weak and self.weak:GetHealth() < 250 and DotaBotUtility:GetCreepHealthDeltaPerSec(self.weak, 2) > 0 and (not UnitHelper:IsFacingEntity(bot, self.weak, 10))) then
     print("rotate");
     BotActions.RotateTowards:Call(self.weak:GetLocation());

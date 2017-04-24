@@ -62,7 +62,7 @@ function M.StateWalkToCamp(self, BotInfo, Mode, Strategy)
       self.StateMachine.State = self.STATE_KILL_CAMP;
     end
   else
-    bot:Action_MoveToLocation(loc);
+    BotActions.MoveToLocation:Call(loc);
   end
 end
 

@@ -29,7 +29,7 @@ function M.StateWalkToFountain(self, BotInfo, Mode, Strategy)
   if (bot:DistanceFromFountain() == 0) then
     self.StateMachine.State = self.STATE_HEAL;
   else
-    bot:Action_MoveToLocation(loc);
+    BotActions.MoveToLocation:Call(loc);
   end
 end
 

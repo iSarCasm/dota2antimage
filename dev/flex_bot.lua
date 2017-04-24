@@ -13,14 +13,20 @@ function FlexBot:new(BotInfo)
     flex_bot.botInfo = BotInfo;
     flex_bot.botMode = BotMode:new();
     flex_bot.botState = BotState:new();
-    GetBot().flexBot = flex_bot; -- make flexBot accessible from any part of code via GetBot().flexBot
+    GetBot().flex_bot = flex_bot; -- make flexBot accessible from any part of code via GetBot().flexBot
     return flex_bot;
 end
 --------------------------------------------------------
+function FlexBot:ResetTempVars()
+  self.moving_location = nil;
+end
+--------------------------------------------------------
 function FlexBot:Think()
+  self:ResetTempVars();
   TeamStrategy:Update();
   self.botMode:Update(TeamStrategy.Strategy);
   self.botState:Update(self.botInfo, self.botMode.Mode, TeamStrategy.Strategy);
+  AbilityItems:Think(self.botInfo, self.botMode.Mode, TeamStrategy.Strategy);
 end
 --------------------------------------------------------
 --------------------------------------------------------

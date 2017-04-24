@@ -27,7 +27,6 @@ function ItemTango:Think(Mode, Strategy)
           end
         end
         if (closest) then
-          print("please eat tree "..closest);
           bot:Action_UseAbilityOnTree(self:Ability(), closest);
         end
       end

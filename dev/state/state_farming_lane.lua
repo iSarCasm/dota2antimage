@@ -29,7 +29,6 @@ function M:new(o)
     o.FarmingType.FARMING_LH_D  = FarmingLhD;
     o.FarmingType.LANING        = Laning:new();
     o:Reset();
-    print("NEW FARMING LANE STATRE CREATED "..GetBot():GetUnitName());
     return o
 end
 --------------------------------------------------------
@@ -73,7 +72,7 @@ function M.StateWalkToLane(self, BotInfo, Mode, Strategy)
   if (GetUnitToLocationDistance(GetBot(), lane_location) < 1000) then
     self.StateMachine.State = self.STATE_FARMING;
   else
-    GetBot():Action_MoveToLocation(lane_location);
+    BotActions.MoveToLocation:Call(lane_location);
   end
 end
 

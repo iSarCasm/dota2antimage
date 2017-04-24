@@ -26,12 +26,10 @@ function M.StateWalkToWait(self, BotInfo, Mode, Strategy)
     local pos = tower:GetLocation();
     local distance = GetUnitToLocationDistance(bot, pos);
     if (distance > 200) then
-      bot:Action_MoveToLocation(pos);
+      BotActions.MoveToLocation:Call(pos);
     else
       self.StateMachine.State = self.STATE_WAIT;
     end
-  else
-    print("error state_wait_creeps (lane: "..BotInfo.LANE..")");
   end
 end
 

@@ -102,7 +102,7 @@ end
 function M:CreepWithNHitsOfHealth(range, enemy, ally, hits)
   if ((enemy and ally) == false) then return nil end;
   local bot = GetBot();
-  local BotInfo = bot.flexBot.botInfo;
+  local BotInfo = bot.flex_bot.botInfo;
   if (enemy) then
     local enemy_creeps = bot:GetNearbyCreeps(range, true);
     for _,creep in pairs(enemy_creeps)

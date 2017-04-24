@@ -10,16 +10,20 @@ function AntimageBlink:Ability()
 end
 -----------------------------------
 function AntimageBlink:Think(Mode, Strategy)
-  -- local bot = GetBot();
-  -- local ability = bot:GetAbilityByName(self.name);
-  -- if (ability:IsFullyCastable()) then
-  --   if (BotInfo:Me().action == BotActions.ActionMoveToLocation) then
-  --     local location = BotInfo:Me().action.location;
-  --     if (location and bot:GetMana() > 120 and (GetUnitToLocationDistance(bot, location) > 900)) then
-  --       bot:Action_UseAbilityOnLocation(self.name, location);
-  --     end
-  --   end
-  -- end
+  local bot = GetBot();
+  local ability = bot:GetAbilityByName(self.name);
+  if (ability:IsFullyCastable()) then
+    local move_location = bot.flex_bot.moving_location;
+    print("blink!");
+    if (move_location and self:IsWorthUsing(move_location)) then
+      bot:Action_UseAbilityOnLocation(ability, move_location);
+    end
+  end
+end
+
+function AntimageBlink:IsWorthUsing( vLocation )
+  local bot = GetBot();
+  return bot:GetMana() > 120 and (GetUnitToLocationDistance(bot, vLocation) > 900)
 end
 ------------------------------------
 return AntimageBlink;
