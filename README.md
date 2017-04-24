@@ -13,7 +13,10 @@ TODO:
       - pushing lane
       - use skills when pushing lane (shadow fiend)
       - use skills to both push and harass
+
   - lane supporting state
+    - harassing
+    - denying
 
   - item builder (buy tp\raindrop)
   - TP usage

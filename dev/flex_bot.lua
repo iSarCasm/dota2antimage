@@ -27,6 +27,7 @@ function FlexBot:Think()
   self.botMode:Update(TeamStrategy.Strategy);
   self.botState:Update(self.botInfo, self.botMode.Mode, TeamStrategy.Strategy);
   AbilityItems:Think(self.botInfo, self.botMode.Mode, TeamStrategy.Strategy);
+  self.botInfo:GatherData();
 end
 --------------------------------------------------------
 --------------------------------------------------------
