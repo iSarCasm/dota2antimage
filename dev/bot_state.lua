@@ -12,12 +12,16 @@ local StateHealFountain      = require(GetScriptDirectory().."/dev/state/state_h
 local StateAttackHero        = require(GetScriptDirectory().."/dev/state/state_attack_hero");
 local StateEscape            = require(GetScriptDirectory().."/dev/state/state_escape");
 local StateSwapItems         = require(GetScriptDirectory().."/dev/state/state_swap_items");
+local StateHarassHero        = require(GetScriptDirectory().."/dev/state/state_harass_hero");
+local StateBackoff           = require(GetScriptDirectory().."/dev/state/state_backoff");
 --------------------------------------------------------
 local STATE_ESCAPE                = "STATE_ESCAPE";
 local STATE_JUKE                  = "STATE_JUKE";
 local STATE_HIDING                = "STATE_HIDING";
 
 local STATE_ATTACK_HERO           = "STATE_ATTACK_HERO";
+local STATE_HARASS_HERO           = "STATE_HARASS_HERO";
+local STATE_BACKOFF               = "STATE_BACKOFF";
 
 local STATE_WAIT_FIGHT            = "STATE_WAIT_FIGHT";
 local STATE_WAIT_INITIATE         = "STATE_WAIT_INITIATE";
@@ -83,8 +87,10 @@ function BotState:new(o)
     o.StateMachine.STATE_RETURN_COURIER     = StateReturnCourier:new();
     o.StateMachine.STATE_HEAL_FOUNTAIN      = StateHealFountain:new();
     o.StateMachine.STATE_ATTACK_HERO        = StateAttackHero:new();
+    o.StateMachine.STATE_HARASS_HERO        = StateHarassHero:new();
     o.StateMachine.STATE_ESCAPE             = StateEscape:new();
     o.StateMachine.STATE_SWAP_ITEMS         = StateSwapItems:new();
+    o.StateMachine.STATE_BACKOFF            = StateBackoff:new();
     return o
 end
 --------------------------------------------------------
@@ -94,13 +100,15 @@ BotState.ScanStates = {
   STATE_CONTROL_RUNE,
   STATE_HEAL_FOUNTAIN,
   STATE_ATTACK_HERO,
+  STATE_HARASS_HERO,
   STATE_ESCAPE,
   STATE_SWAP_ITEMS,
   STATE_DELIVER_ITEMS,
   STATE_RETURN_COURIER,
   STATE_BUY_ITEMS,
   STATE_LEARNING_ABILITIES,
-  STATE_WAIT_CREEPS
+  STATE_WAIT_CREEPS,
+  STATE_BACKOFF
 }
 --------------------------------------------------------
 function BotState:SetState(State)
@@ -124,7 +132,9 @@ function BotState:UpdateState(BotInfo, Mode, Strategy)
     local state = self.ScanStates[i];
     local potential = self.StateMachine[state]:EvaluatePotential(BotInfo, Mode, Strategy);
     -- print("Evaluate "..state.." as "..potential);
-    -- DebugDrawText(25, 500 + i * 20, "Evaluate "..state.." as "..potential);
+    if (GetBot():GetUnitName() == "npc_dota_hero_nevermore") then
+      DebugDrawText(25, 500 + i * 20, "Evaluate "..state.." as "..potential, 255, 255, 255);
+    end
     if (potential > highestPotential) then
       highestPotential = potential;
       highestState = state;
@@ -154,7 +164,6 @@ end
 --------------------------------------------------------
 function BotState:Update(BotInfo, Mode, Strategy)
   self:UpdateState(BotInfo, Mode, Strategy);
-  print(GetBot():GetUnitName().." state is "..self.State);
   self.StateMachine[self.State]:Run(BotInfo, Mode, Strategy);
 end
 --------------------------------------------------------

@@ -100,4 +100,19 @@ function InventoryHelper:Value(item)
   return GetItemCost(item);
 end
 
+function InventoryHelper:HealthConsumables( hHero )
+  local health = 0;
+  for i = 0, 5 do
+    local item = hHero:GetItemInSlot(i);
+    if (item) then
+      if (item:GetName() == "item_tango") then
+        health = health + 115 * item:GetCurrentCharges();
+      elseif(item:GetName() == "item_flask") then
+        health = health + 400 * item:GetCurrentCharges();
+      end
+    end
+  end
+  return health;
+end
+
 return InventoryHelper;

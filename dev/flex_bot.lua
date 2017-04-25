@@ -2,6 +2,7 @@ local TeamStrategy    = require(GetScriptDirectory().."/dev/team_strategy");
 local BotMode         = require(GetScriptDirectory().."/dev/bot_mode");
 local BotState        = require(GetScriptDirectory().."/dev/bot_state");
 local AbilityItems    = require(GetScriptDirectory().."/dev/abilities/ability_items")
+local Creeping        = require(GetScriptDirectory().."/dev/state/state_farming_lane/creeping");
 --------------------------------------------------------
 local FlexBot = {};
 --------------------------------------------------------
@@ -22,6 +23,7 @@ function FlexBot:ResetTempVars()
 end
 --------------------------------------------------------
 function FlexBot:Think()
+  Creeping:UpdateLaningState();
   self:ResetTempVars();
   TeamStrategy:Update();
   self.botMode:Update(TeamStrategy.Strategy);

@@ -8,6 +8,12 @@ function EffortDanger:OfLocation(Location)
   return dist / 1000;
 end
 
+function EffortDanger:OfLocationForRange( vLocation, iRange )
+  local bot = GetBot();
+  local dist = VectorHelper:Length(FOUNTAIN[GetTeam()] - Location);
+  return dist / 1000;
+end
+
 function EffortDanger:Delta(Location)
   return Max(self:OfLocation(Location) - self:OfLocation(GetBot():GetLocation()), 0);
 end

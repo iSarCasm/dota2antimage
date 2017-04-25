@@ -12,6 +12,12 @@ function HeroHelper:TooDangerous(unit)
   return unit:GetHealth() < burst_damage;
 end
 
+function HeroHelper:HeroHarassDamage(me, target)
+  local phys_damage = UnitHelper:GetPhysDamageToUnit(target, me, false, false, true);
+  local phys_dps = phys_damage / target:GetSecondsPerAttack();
+  return phys_dps;
+end
+
 function HeroHelper:HeroBurstDamage(me, target, time)
   local phys_damage = UnitHelper:GetPhysDamageToUnit(target, me, false, false, true);
   local phys_dps = phys_damage / target:GetSecondsPerAttack();

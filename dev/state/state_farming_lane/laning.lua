@@ -100,19 +100,6 @@ function Laning:PrepareForLhHealth(bot, creep)
   return single_hit_damage * 2 + (time_to_get_in_range + 1) * creep_health_delta; -- we want to get close 1 SECOND + 1 hit earlier it requires for last hit
 end
 ---------------------------------------------
-function Laning.EvaluateHarassing(self)
-  return 0;
-end
-
-function Laning.EvaluateBackoff(self)
-  if (GetBot():TimeSinceDamagedByTower() < 1) then
-    return 10;
-  elseif (GetBot():TimeSinceDamagedByCreep() < 0.25) then
-    return 5;
-  end
-  return 0;
-end
-
 function Laning.EvaluateLastHit(self)
   return 1; -- default
 end
@@ -129,50 +116,36 @@ function Laning.EvaluateAgroCreeps(self)
   return 0;
 end
 ---------------------------------------------
-function Laning.Harassing(self)
-
-end
-
-function Laning.Backoff(self)
-  local bot = GetBot();
-  BotActions.MoveToLocation:Call(Danger:SafestLocation(bot));
-end
-
 function Laning.LastHit(self, BotInfo)
   local bot = GetBot();
   local position = self:GetComfortPoint(BotInfo);
   local back_vector = VectorHelper:Normalize(Danger:SafestLocation(bot) - bot:GetLocation()) * 25;
   local dist = GetUnitToLocationDistance(bot, position);
-  self.very_low_creep = Creeping:CreepWithNHitsOfHealth(1000, true, true, 1);
-  self.kinda_low_creep = Creeping:CreepWithNHitsOfHealth(1000, true, true, 3);
-  self.weak = Creeping:WeakestCreep(1000, false, true);
   local no_heroes_near = true; -- TODO
 
   if (self.kinda_low_creep) then
-    -- print("kinda delta "..DotaBotUtility:GetCreepHealthDeltaPerSec(self.kinda_low_creep, 2));
     DebugDrawCircle(self.kinda_low_creep:GetLocation(), 20, 255, 0, 0);
   end
 
   if (self.weak) then
-    -- print("self.weak delta "..DotaBotUtility:GetCreepHealthDeltaPerSec(self.weak, 2));
     DebugDrawCircle(self.weak:GetLocation(), 20, 255, 255, 0);
   end
 
   DebugDrawCircle(position + back_vector, 10, 244, 244 ,244);
   if (dist > 800) then
-    print("really far from comfort");
+    -- print("really far from comfort");
     BotActions.MoveToLocation:Call(position + back_vector);
   elseif (self.very_low_creep) then
-    print("last hit!");
+    -- print("last hit!");
     bot:Action_AttackUnit(self.very_low_creep, false);
   elseif (self.kinda_low_creep and DotaBotUtility:GetCreepHealthDeltaPerSec(kinda_low_creep, 2) == 0 and no_heroes_near) then
-    print("kinda low");
+    -- print("kinda low");
     bot:Action_AttackUnit(self.kinda_low_creep, false);
   elseif (dist > 150) then
-    print("get a bit closer");
+    -- print("get a bit closer");
     BotActions.MoveToLocation:Call(position + back_vector);
   elseif (self.weak and self.weak:GetHealth() < 250 and DotaBotUtility:GetCreepHealthDeltaPerSec(self.weak, 2) > 0 and (not UnitHelper:IsFacingEntity(bot, self.weak, 10))) then
-    print("rotate");
+    -- print("rotate");
     BotActions.RotateTowards:Call(self.weak:GetLocation());
   end
 end
@@ -196,20 +169,22 @@ Laning.ATTACK_TOWER = "ATTACK_TOWER";
 Laning.LANE_BALANCE = "LANE_BALANCE";
 Laning.AGRO_CREEPS  = "AGRO_CREEPS";
 Laning.StateMachine = {}
-Laning.StateMachine[Laning.HARASSING]     = Laning.Harassing;
-Laning.StateMachine[Laning.BACKOFF]       = Laning.Backoff;
 Laning.StateMachine[Laning.LASTHIT]       = Laning.LastHit;
 Laning.StateMachine[Laning.ATTACK_TOWER]  = Laning.AttackTower;
 Laning.StateMachine[Laning.LANE_BALANCE]  = Laning.LaneBalance;
 Laning.StateMachine[Laning.AGRO_CREEPS]   = Laning.AgroCreeps;
 Laning.StateMachine.State = Laning.LASTHIT;
 ---------------------------------------------
+function Laning:UpdateLaningState()
+  self.very_low_creep = Creeping:CreepWithNHitsOfHealth(1000, true, true, 1);
+  self.kinda_low_creep = Creeping:CreepWithNHitsOfHealth(1000, true, true, 3);
+  self.weak = Creeping:WeakestCreep(1000, false, true);
+end
+
 function Laning:UpdateState()
   local bot = GetBot();
   local evals = {};
-  local table = { self.HARASSING, self.BACKOFF, self.LASTHIT, self.ATTACK_TOWER, self.LANE_BALANCE, self.AGRO_CREEPS };
-  evals[self.HARASSING] = self.EvaluateHarassing(self);
-  evals[self.BACKOFF] = self.EvaluateBackoff(self);
+  local table = { self.LASTHIT, self.ATTACK_TOWER, self.LANE_BALANCE, self.AGRO_CREEPS };
   evals[self.LASTHIT] = self.EvaluateLastHit(self);
   evals[self.ATTACK_TOWER] = self.EvaluateAttackTower(self);
   evals[self.LANE_BALANCE] = self.EvaluateLaneBalance(self);
@@ -228,15 +203,9 @@ end
 ---------------------------------------------
 function Laning:Run(Farming, BotInfo, Mode, Strategy)
   self.Lane = Farming.Lane;
-  Creeping:UpdateLaningState();
+  self:UpdateLaningState();
   self:UpdateState();
   self.StateMachine[self.StateMachine.State](self, BotInfo, Mode, Strategy);
-
-  -- if (Creeping.enemyVector) then DebugDrawCircle(Creeping.enemyVector, 15, 255, 0, 0) end;
-  -- if (Creeping.allyVector) then DebugDrawCircle(Creeping.allyVector, 15, 0, 255, 0) end;
-  -- DebugDrawLine(GetBot():GetLocation(), Danger:SafestLocation(GetBot()), 0, 0, 255);
-  -- DebugDrawCircle(Danger:SafestLocation(GetBot()), 15, 0, 0 ,255);
-  -- DebugDrawCircle(GetFront(GetTeam(), BotInfo.LANE), 15, 255, 255 ,255);
 end
 ---------------------------------------------
 return Laning;

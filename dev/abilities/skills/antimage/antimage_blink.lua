@@ -14,7 +14,6 @@ function AntimageBlink:Think(Mode, Strategy)
   local ability = bot:GetAbilityByName(self.name);
   if (ability:IsFullyCastable()) then
     local move_location = bot.flex_bot.moving_location;
-    print("blink!");
     if (move_location and self:IsWorthUsing(move_location)) then
       bot:Action_UseAbilityOnLocation(ability, move_location);
     end

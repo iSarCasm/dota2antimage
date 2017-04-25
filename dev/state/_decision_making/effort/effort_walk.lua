@@ -7,6 +7,13 @@ function EffortWalk:ToLocation(location)
   return walkDistance / walkSpeed;
 end
 
+function EffortWalk:IntoRange( vLocation, iRange )
+  local bot = GetBot();
+  local walkSpeed = bot:GetCurrentMovementSpeed();
+  local walkDistance = Max(0, GetUnitToLocationDistance(bot, vLocation) - iRange);
+  return walkDistance / walkSpeed;
+end
+
 function EffortWalk:ToShop(shop)
   local walkSpeed = GetBot():GetCurrentMovementSpeed();
   local walkDistance = GetUnitToLocationDistance(GetBot(), SHOP[shop]);
