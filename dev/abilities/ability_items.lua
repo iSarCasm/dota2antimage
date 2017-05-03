@@ -29,9 +29,5 @@ function AbilityItems:Think(BotInfo, Mode, Strategy)
     end
   end
 end
-
-function AbilityItems:TryTravel( vLocation )
-
-end
 -----------------------------------------------
 return AbilityItems;

@@ -8,7 +8,12 @@ TODO:
 
   - laning
       - harassin enemies when no low creeps
+        - harass range 1500
+        - backoff dependens on nearby creeps, their damage to me
+        - harassing rules under tower
+        - dancing
       - reasanable distances
+        - depends on health
       - attacking towers
       - pushing lane
       - use skills when pushing lane (shadow fiend)
@@ -29,3 +34,8 @@ TODO:
   - chasing enemy heroes
 
   - make 'modules' & refactor
+
+heroes:
+  antimage, ogre magi, warlock, shadow fiend, magnus
+  juggernaut, vengeful spirit, crystal maiden, dragon knight, centaur
+  spectre, axe, lich, invoker, nyx

@@ -9,14 +9,12 @@ local EffortWait            = require(GetScriptDirectory().."/dev/state/_decisio
 local EffortKillCreepwave   = require(GetScriptDirectory().."/dev/state/_decision_making/effort/effort_kill_creepwave");
 local EffortDanger          = require(GetScriptDirectory().."/dev/state/_decision_making/effort/effort_danger");
 ----------------------------------------------
-local FarmingLhD = require(GetScriptDirectory().."/dev/state/state_farming_lane/farming_lh_d");
 local Laning = require(GetScriptDirectory().."/dev/state/state_farming_lane/laning");
 ----------------------------------------------
 M.STATE_WALK_TO_LANE = "STATE_WALK_TO_LANE";
 M.STATE_FARMING      = "STATE_FARMING";
 ----------------------------------------------
-M.FARMING_LH_D  = "FARMING_LH_D";
-M.LANING        = "LANING";
+M.LANING = "LANING";
 ----------------------------------------------
 M.Lane = LANE_TOP;
 M.Potential = {};
@@ -26,8 +24,7 @@ function M:new(o)
     setmetatable(o, self)
     self.__index = self
     o.FarmingType = {}
-    o.FarmingType.FARMING_LH_D  = FarmingLhD;
-    o.FarmingType.LANING        = Laning:new();
+    o.FarmingType.LANING = Laning:new();
     o:Reset();
     return o
 end
@@ -41,12 +38,23 @@ function M:EvaluatePotential(BotInfo, Mode, Strategy)
   local lanes = { LANE_TOP, LANE_MID, LANE_BOT };
   local highest = VERY_LOW_INT;
   -- print("Lanes:");
+  -- local t = RealTime();
   for i = 1, #lanes do
     local lane = lanes[i];
 
     local reward = RewardFarmCreepwave:Generic(lane, BotInfo, Mode);
+    -- print("          time spent in RewardFarmCreepwave:Generic "..(RealTime() - t)*1000); t = RealTime();
     local lane_location = MapHelper:LaneFrontLocation(GetTeam(), lane, false);
-    local effort = EffortWalk:ToLocation(lane_location) + EffortDanger:OfLocation(lane_location) + EffortWait:Creeps(lane) + EffortKillCreepwave:Generic();
+    -- print("          time spent in MapHelper:LaneFrontLocation "..(RealTime() - t)*1000); t = RealTime();
+    local effort_walk = EffortWalk:ToLocation(lane_location);
+    -- print("          time spent in EffortWalk:ToLocation "..(RealTime() - t)*1000); t = RealTime();
+    local effort_danger = EffortDanger:OfLocation(lane_location);
+    -- print("          time spent in EffortDanger:OfLocation "..(RealTime() - t)*1000); t = RealTime();
+    local effort_wait = EffortWait:Creeps(lane);
+    -- print("          time spent in EffortWait:Creeps "..(RealTime() - t)*1000); t = RealTime();
+    local effort_kill_creeps = EffortKillCreepwave:Generic();
+    -- print("          time spent in EffortKillCreepwave:Generic "..(RealTime() - t)*1000); t = RealTime();
+    local effort = effort_walk + effort_danger + effort_wait + effort_kill_creeps;
     local potential = reward / effort;
 
     -- print("Lane: .."..lane);

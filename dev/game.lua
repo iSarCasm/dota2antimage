@@ -121,6 +121,7 @@ function Game:UpdateJungle()
 end
 
 function Game:InitializeUnits()
+  self.Towers = {};
   local units = GetUnitList(UNIT_LIST_ALL);
   for i = 1, #units do
     local unit = units[i];

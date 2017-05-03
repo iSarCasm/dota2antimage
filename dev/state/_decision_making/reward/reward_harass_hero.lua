@@ -4,6 +4,9 @@ local InventoryHelper = require(GetScriptDirectory().."/dev/helper/inventory_hel
 local HeroHelper      = require(GetScriptDirectory().."/dev/helper/hero_helper")
 -----------------------------------------
 local HARASS_COFACTOR = 25;
+local FLASK_ADD = 14;
+local CLARITY_ADD = 10;
+local BOTTLE_ADD = 8;
 -----------------------------------------
 function RewardHarassHero:Hero( hHero )
   local bot = GetBot();
@@ -19,14 +22,16 @@ function RewardHarassHero:Hero( hHero )
   local enemy_health_regeneration = hHero:GetHealthRegen();
   local enemy_health_in_stock = InventoryHelper:HealthConsumables(hHero);
 
+  local enemy_has_flask   = ( hHero:HasModifier("modifier_flask_healing") and FLASK_ADD or 0);
+  local enemy_has_clarity = ( hHero:HasModifier("modifier_greater_clarity") and CLARITY_ADD or 0);
+  local enemy_has_bottle  = ( hHero:HasModifier("modifier_bottle_regeneration") and BOTTLE_ADD or 0);
+
   local harass_him_p = ((my_dps - enemy_health_regeneration) / (enemy_health_in_stock + enemy_health)) * HARASS_COFACTOR;
   local harass_me_p = 0;
   if ((GetUnitToUnitDistance(bot, hHero) - 150) < enemy_harass_range) then -- in enemy harass range
     harass_me_p = ((enemy_dps - my_health_regeneration) / (my_health_in_stock + my_health)) * HARASS_COFACTOR;
   end
-  print("harass_him_p "..harass_him_p);
-  print("harass_me_p "..harass_me_p);
-  return 3.75 + harass_him_p - harass_me_p ; 
+  return 10 + (harass_him_p - harass_me_p) + enemy_has_flask + enemy_has_clarity + enemy_has_bottle; 
 end
 -----------------------------------------
 return RewardHarassHero;

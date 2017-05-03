@@ -14,7 +14,7 @@ function FlexBot:new(BotInfo)
     flex_bot.botInfo = BotInfo;
     flex_bot.botMode = BotMode:new();
     flex_bot.botState = BotState:new();
-    GetBot().flex_bot = flex_bot; -- make flexBot accessible from any part of code via GetBot().flexBot
+    GetBot().flex_bot = flex_bot; -- make flexBot accessible from any part of code via GetBot().flex_bot
     return flex_bot;
 end
 --------------------------------------------------------
@@ -25,9 +25,12 @@ end
 function FlexBot:Think()
   Creeping:UpdateLaningState();
   self:ResetTempVars();
-  TeamStrategy:Update();
   self.botMode:Update(TeamStrategy.Strategy);
+
+  local t = RealTime();
   self.botState:Update(self.botInfo, self.botMode.Mode, TeamStrategy.Strategy);
+  print("    time spent in self.botState:Update "..(RealTime() - t)*1000); t = RealTime();
+
   AbilityItems:Think(self.botInfo, self.botMode.Mode, TeamStrategy.Strategy);
   self.botInfo:GatherData();
 end

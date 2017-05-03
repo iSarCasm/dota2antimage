@@ -6,7 +6,6 @@ local Danger         	= require(GetScriptDirectory().."/dev/danger/danger");
 local VectorHelper    = require(GetScriptDirectory().."/dev/helper/vector_helper");
 local HeroHelper      = require(GetScriptDirectory().."/dev/helper/hero_helper");
 local UnitHelper      = require(GetScriptDirectory().."/dev/helper/unit_helper");
-local DotaBotUtility  = require(GetScriptDirectory().."/dev/utility");
 ---------------------------------------------
 function Laning:new(o)
     o = o or {}
@@ -63,7 +62,7 @@ function Laning:GetComfortPoint(BotInfo)
   local bot = GetBot();
   -- DebugDrawText(500, 100, "Balance is "..hero_balance, 255, 255, 255);
   if (Creeping.allyVector and self.weak and self.weak:IsAlive() and self.weak:GetHealth() < self:PrepareForLhHealth(bot, self.weak)) then -- time to get really close and wait for that juicy lash hit
-    print("really low! "..self:PrepareForLhHealth(bot, self.weak));
+    -- print("really low! "..self:PrepareForLhHealth(bot, self.weak));
     local prepare_for_lh_vec = self:PrepareForLhVector(); 
     if (prepare_for_lh_vec) then
       DebugDrawCircle(prepare_for_lh_vec, 25, 0, 0 ,255);
@@ -95,17 +94,13 @@ end
 
 function Laning:PrepareForLhHealth(bot, creep)
   local time_to_get_in_range = UnitHelper:TimeToGetInRange(bot, creep)
-  local creep_health_delta = DotaBotUtility:GetCreepHealthDeltaPerSec(creep, 2);
+  local creep_health_delta = Creeping:ExtrapolatedDamage(creep, 2);
   local single_hit_damage = Creeping:GetPhysDamageToCreep(bot, creep);
-  return single_hit_damage * 2 + (time_to_get_in_range + 1) * creep_health_delta; -- we want to get close 1 SECOND + 1 hit earlier it requires for last hit
+  return single_hit_damage * 2 + (time_to_get_in_range + 1) * creep_health_delta; -- we want to get close 1 SECOND + 2 hit earlier it requires for last hit
 end
 ---------------------------------------------
 function Laning.EvaluateLastHit(self)
   return 1; -- default
-end
-
-function Laning.EvaluateAttackTower(self)
-  return 0;
 end
 
 function Laning.EvaluateLaneBalance(self)
@@ -138,20 +133,20 @@ function Laning.LastHit(self, BotInfo)
   elseif (self.very_low_creep) then
     -- print("last hit!");
     bot:Action_AttackUnit(self.very_low_creep, false);
-  elseif (self.kinda_low_creep and DotaBotUtility:GetCreepHealthDeltaPerSec(kinda_low_creep, 2) == 0 and no_heroes_near) then
+  elseif (self.kinda_low_creep and Creeping:ExtrapolatedDamage(kinda_low_creep, 2) <= 0 and no_heroes_near) then
     -- print("kinda low");
     bot:Action_AttackUnit(self.kinda_low_creep, false);
   elseif (dist > 150) then
     -- print("get a bit closer");
     BotActions.MoveToLocation:Call(position + back_vector);
-  elseif (self.weak and self.weak:GetHealth() < 250 and DotaBotUtility:GetCreepHealthDeltaPerSec(self.weak, 2) > 0 and (not UnitHelper:IsFacingEntity(bot, self.weak, 10))) then
+    DebugDrawCircle(position + back_vector, 25, 0, 0 ,0);
+    DebugDrawLine(bot:GetLocation(), position + back_vector, 0, 0 ,0);
+  elseif (self.weak and self.weak:GetHealth() < 250 and Creeping:ExtrapolatedDamage(self.weak, 2) > 0 and (not UnitHelper:IsFacingEntity(bot, self.weak, 10))) then
     -- print("rotate");
     BotActions.RotateTowards:Call(self.weak:GetLocation());
+  else
+    BotActions.Dance:Call(position + back_vector, 200, 1);
   end
-end
-
-function Laning.AttackTower(self)
-
 end
 
 function Laning.LaneBalance(self)
@@ -162,15 +157,11 @@ function Laning.AgroCreeps(self)
 
 end
 ---------------------------------------------
-Laning.HARASSING    = "HARASSING";
-Laning.BACKOFF      = "BACKOFF";
 Laning.LASTHIT      = "LASTHIT";
-Laning.ATTACK_TOWER = "ATTACK_TOWER";
 Laning.LANE_BALANCE = "LANE_BALANCE";
 Laning.AGRO_CREEPS  = "AGRO_CREEPS";
 Laning.StateMachine = {}
 Laning.StateMachine[Laning.LASTHIT]       = Laning.LastHit;
-Laning.StateMachine[Laning.ATTACK_TOWER]  = Laning.AttackTower;
 Laning.StateMachine[Laning.LANE_BALANCE]  = Laning.LaneBalance;
 Laning.StateMachine[Laning.AGRO_CREEPS]   = Laning.AgroCreeps;
 Laning.StateMachine.State = Laning.LASTHIT;
@@ -184,9 +175,8 @@ end
 function Laning:UpdateState()
   local bot = GetBot();
   local evals = {};
-  local table = { self.LASTHIT, self.ATTACK_TOWER, self.LANE_BALANCE, self.AGRO_CREEPS };
+  local table = { self.LASTHIT, self.LANE_BALANCE, self.AGRO_CREEPS };
   evals[self.LASTHIT] = self.EvaluateLastHit(self);
-  evals[self.ATTACK_TOWER] = self.EvaluateAttackTower(self);
   evals[self.LANE_BALANCE] = self.EvaluateLaneBalance(self);
   evals[self.AGRO_CREEPS] = self.EvaluateAgroCreeps(self);
   local highest_eval = VERY_LOW_INT;

@@ -14,14 +14,18 @@ end
 function M:EvaluatePotential(BotInfo, Mode, Strategy)
   local bot = GetBot();
   if (bot.flex_bot.backoff and bot.flex_bot.backoff > DotaTime()) then
-    return 10;
+    return 18;
   else
-    if (GetBot():TimeSinceDamagedByTower() < 0.5) then
-      return 20;
-    elseif (GetBot():TimeSinceDamagedByTower() < 1) then
-      return 15;
+    if (GetBot():TimeSinceDamagedByTower() < 1) then
+      return 29;
+    elseif (GetBot():TimeSinceDamagedByTower() < 2) then
+      return 24;
     elseif (GetBot():TimeSinceDamagedByCreep() < 0.5) then
+      return 19;
+    elseif (GetBot():WasRecentlyDamagedByAnyHero(0.25)) then
       return 14;
+    elseif (GetBot():TimeSinceDamagedByCreep() < 1) then
+      return 12;
     end
   end
   return 0;
@@ -31,6 +35,7 @@ end
 function M.Escape(self, BotInfo, Mode, Strategy)
   local bot = GetBot();
   local location = Danger:SafestLocation(bot);
+  DebugDrawCircle(location, 55, 0, 0 ,255);
   BotActions.MoveToLocation:Call(location);
 end
 -------------------------------------------------

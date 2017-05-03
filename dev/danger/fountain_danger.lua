@@ -8,11 +8,11 @@ local DANGER_FOUNTAIN_BASE  = 5;
 ------------------------------------------
 function FountainDanger:Power(distance)
   if (distance < 1000) then
-    return DANGER_FOUNTAIN / distance;
+    return DANGER_FOUNTAIN / (distance*distance);
   elseif (distance < 3000) then
-    return DANGER_FOUNTAIN_FAR / distance;
+    return DANGER_FOUNTAIN_FAR / (distance*distance);
   else
-    return DANGER_FOUNTAIN_BASE / distance; -- fountain is basic safety
+    return DANGER_FOUNTAIN_BASE / (distance*distance); -- fountain is basic safety
   end
 end
 
@@ -22,7 +22,8 @@ end
 
 function FountainDanger:PowerDelta(team, unit, distance)
   local current_distance = GetUnitToLocationDistance(unit, self:Location(team));
-  return self:Power(Max(1, current_distance - distance)) - self:Power(current_distance);
+  local delta = ((team == GetTeam()) and -distance or distance);
+  return math.abs(self:Power(Max(1, current_distance + delta)) - self:Power(current_distance));
 end
 
 function FountainDanger:Location(team)

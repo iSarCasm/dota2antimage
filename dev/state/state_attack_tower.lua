@@ -1,43 +1,43 @@
 local M = {}
 local BotActions        = require(GetScriptDirectory().."/dev/bot_actions");
 local Game              = require(GetScriptDirectory().."/dev/game")
-local RewardHarassHero  = require(GetScriptDirectory().."/dev/state/_decision_making/reward/reward_harass_hero");
+local RewardKillTower   = require(GetScriptDirectory().."/dev/state/_decision_making/reward/reward_kill_tower");
 local EffortWalk        = require(GetScriptDirectory().."/dev/state/_decision_making/effort/effort_walk");
-local EffortWait        = require(GetScriptDirectory().."/dev/state/_decision_making/effort/effort_wait");
 local EffortDanger      = require(GetScriptDirectory().."/dev/state/_decision_making/effort/effort_danger");
+local EffortKillTower   = require(GetScriptDirectory().."/dev/state/_decision_making/effort/effort_kill_tower");
 -------------------------------------------------
 function M:new(o)
-  o = o or {}
-  setmetatable(o, self)
-  self.__index = self
-  return o
+    o = o or {}
+    setmetatable(o, self)
+    self.__index = self
+    return o
 end
--------------------------------------------------
+--------------------------------------------------------
 M.Potential = {};
-M.Hero = nil;
+M.Tower = nil;
 -------------------------------------------------
 function M:ArgumentString()
-  return "("..self.Hero:GetUnitName()..")";
+  return "("..self.Tower:GetUnitName()..")";
 end
 -------------------------------------------------
 function M:EvaluatePotential(BotInfo, Mode, Strategy)
   local bot = GetBot();
   local highest = VERY_LOW_INT;
-  local heroes = bot:GetNearbyHeroes(1500, true, BOT_MODE_NONE);
-  if (#heroes ~= 0) then
-    for i = 1, #heroes do
-      local hero = heroes[i];
-      local reward = RewardHarassHero:Hero(hero);
-      local effort = EffortWalk:IntoRange(hero:GetLocation(), bot:GetAttackRange()) + 1;
+  local towers = bot:GetNearbyTowers(1500, true);
+  if (#towers ~= 0) then
+    for i = 1, #towers do
+      local tower = towers[i];
+      local reward = RewardKillTower:Tower(tower);
+      local effort = EffortWalk:ToLocation(tower:GetLocation()) + EffortDanger:OfLocation(tower:GetLocation()) + EffortKillTower:Tower(tower);
       local potential = reward / effort;
 
-      self.Potential[hero] = potential;
+      self.Potential[tower] = potential;
       if (potential > highest) then
-        self.Hero = hero;
+        self.Tower = tower;
         highest = potential;
       end
     end
-    return self.Potential[self.Hero];
+    return self.Potential[self.Tower];
   else
     return -999;
   end
@@ -45,10 +45,7 @@ end
 -------------------------------------------------
 -------------------------------------------------
 function M.Fight(self, BotInfo, Mode, Strategy)
-  GetBot():Action_AttackUnit(self.Hero, false);
-  if ((GameTime() - GetBot():GetLastAttackTime()) < 0.1) then
-    GetBot().flex_bot.backoff = DotaTime() + 0.5;
-  end 
+  GetBot():Action_AttackUnit(self.Tower, false);
 end
 -------------------------------------------------
 -------------------------------------------------

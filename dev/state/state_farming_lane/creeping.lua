@@ -1,6 +1,6 @@
 local M = {};
 ----------------------------------------------
-local DotaBotUtility  = require(GetScriptDirectory().."/dev/utility");
+local MapHelper       = require(GetScriptDirectory().."/dev/helper/map_helper");
 local UnitHelper      = require(GetScriptDirectory().."/dev/helper/unit_helper");
 local VectorHelper    = require(GetScriptDirectory().."/dev/helper/vector_helper");
 ----------------------------------------------
@@ -11,10 +11,10 @@ function M:UpdateLaningState()
   local bot = GetBot();
   local pos = bot:GetLocation();
 
-  self.enemy_creeps = bot:GetNearbyCreeps(1500, true);
-  self.ally_creeps = bot:GetNearbyCreeps(1500, false);
-  self.tower = DotaBotUtility:GetFrontTowerAt(UnitHelper:GetUnitLane(bot));
-  self.enemy_tower = DotaBotUtility:GetEnemyFrontTowerAt(UnitHelper:GetUnitLane(bot));
+  self.enemy_creeps = bot:GetNearbyCreeps(1599, true);
+  self.ally_creeps = bot:GetNearbyCreeps(1599, false);
+  self.tower = MapHelper:GetFrontTowerAt(UnitHelper:GetUnitLane(bot));
+  self.enemy_tower = MapHelper:GetEnemyFrontTowerAt(UnitHelper:GetUnitLane(bot));
 
   local power_balance = 0;
   local enemy_power = 0;
@@ -30,7 +30,6 @@ function M:UpdateLaningState()
   do
     if (creep:IsAlive()) then
       allNil = false;
-      DotaBotUtility:UpdateCreepHealth(creep);
       local creep_pos = creep:GetLocation();
       local isMelee = (string.find(creep:GetUnitName(), "melee") ~= nil);
       local power = isMelee and self.MELEE_POWER or self.RANGE_POWER;
@@ -59,7 +58,6 @@ function M:UpdateLaningState()
   do
     if (creep:IsAlive()) then
       allNil = false;
-      DotaBotUtility:UpdateCreepHealth(creep);
       local creep_pos = creep:GetLocation();
       local isMelee = (string.find(creep:GetUnitName(), "melee") ~= nil);
       local power = isMelee and self.MELEE_POWER or self.RANGE_POWER;
@@ -91,7 +89,7 @@ function M:UpdateLaningState()
 end
 
 function M:ExtrapolatedDamage(creep, time)
-  return Max(DotaBotUtility:GetCreepHealthDeltaPerSec(creep, time) * 0.5, 0);
+  return 0;
 end
 
 function M:GetPhysDamageToCreep(bot, creep)
@@ -99,48 +97,65 @@ function M:GetPhysDamageToCreep(bot, creep)
   return UnitHelper:GetPhysDamageToUnit(bot, creep, true, (not isMelee));
 end
 
+function M:GetNearbyCreeps(bot, range, bEnemy)
+  if (range > 1599) then
+    print("extra bot:GetNearbyCreeps called!")
+    return bot:GetNearbyCreeps(range, bEnemy);
+  else
+    if (bEnemy) then
+      local creeps = self.enemy_creeps;
+      local result_creeps = {};
+      for i = 1, #creeps do
+        if (GetUnitToUnitDistance(bot, creeps[i]) < range) then
+          table.insert(result_creeps, creeps[i]);
+        end
+      end
+      return result_creeps;
+    else
+      local creeps = self.ally_creeps;
+      local result_creeps = {};
+      for i = 1, #creeps do
+        if (GetUnitToUnitDistance(bot, creeps[i]) < range) then
+          table.insert(result_creeps, creeps[i]);
+        end
+      end
+      return result_creeps;
+    end
+  end
+ end
+
+function M:CreepHasLessHealthThanNHits(bot, creep, hits)
+  local BotInfo = bot.flex_bot.botInfo;
+  if (creep:IsAlive()) then
+    local bot_damage = self:GetPhysDamageToCreep(bot, creep);
+    local time_to_damage = UnitHelper:TimeToGetInRange(bot, creep) + UnitHelper:TimeOnAttacks(bot, hits) + UnitHelper:ProjectileTimeTravel(bot, creep, BotInfo.projectileSpeed) * hits;
+    local extrapolated_damage = self:ExtrapolatedDamage(creep, time_to_damage);
+    if (extrapolated_damage < bot_damage) then
+      extrapolated_damage = 0;
+    end
+    local total_damage = bot_damage + creep:GetActualIncomingDamage(extrapolated_damage, DAMAGE_TYPE_PHYSICAL);
+    return creep:GetHealth() < total_damage
+  end
+  return false;
+end
+
 function M:CreepWithNHitsOfHealth(range, enemy, ally, hits)
   if ((enemy and ally) == false) then return nil end;
   local bot = GetBot();
-  local BotInfo = bot.flex_bot.botInfo;
   if (enemy) then
-    local enemy_creeps = bot:GetNearbyCreeps(range, true);
-    for _,creep in pairs(enemy_creeps)
-    do
-      if (creep:IsAlive()) then
-        local bot_damage = self:GetPhysDamageToCreep(bot, creep);
-        local time_to_damage = UnitHelper:TimeToGetInRange(bot, creep) + UnitHelper:TimeOnAttacks(bot, hits) + UnitHelper:ProjectileTimeTravel(bot, creep, BotInfo.projectileSpeed) * hits;
-        local extrapolated_damage = self:ExtrapolatedDamage(creep, time_to_damage);
-        if (extrapolated_damage < bot_damage) then
-          extrapolated_damage = 0;
-        end
-        local total_damage = bot_damage + creep:GetActualIncomingDamage(extrapolated_damage, DAMAGE_TYPE_PHYSICAL);
-        if (creep:GetHealth() < total_damage) then
-          -- print("My  Damage: "..bot_damage);
-          -- print("Ext Damage: "..extrapolated_damage);
-          -- print("Sum Damage: "..total_damage);
-          -- print("Time: "..time_to_damage);
-          return creep;
-        end
+    local enemy_creeps = self:GetNearbyCreeps(bot, range, true);
+    for _,creep in pairs(enemy_creeps) do
+      if (self:CreepHasLessHealthThanNHits(bot, creep, hits)) then
+        return creep;
       end
     end
   end
 
   if (ally) then
-    local ally_creeps = bot:GetNearbyCreeps(range, false);
-    for _,creep in pairs(ally_creeps)
-    do
-      if (creep:IsAlive()) then
-        local bot_damage = self:GetPhysDamageToCreep(bot, creep);
-        local time_to_damage = UnitHelper:TimeToGetInRange(bot, creep) + UnitHelper:TimeOnAttacks(bot, hits) + 2.5 * UnitHelper:ProjectileTimeTravel(bot, creep, BotInfo.projectileSpeed) * hits;
-        local extrapolated_damage = self:ExtrapolatedDamage(creep, time_to_damage);
-        if (extrapolated_damage < bot_damage) then
-          extrapolated_damage = 0;
-        end
-        local total_damage = bot_damage + creep:GetActualIncomingDamage(extrapolated_damage, DAMAGE_TYPE_PHYSICAL);
-        if (creep:GetHealth() < total_damage) then
-          return creep;
-        end
+    local ally_creeps = self:GetNearbyCreeps(bot, range, false);
+    for _,creep in pairs(ally_creeps) do
+      if (self:CreepHasLessHealthThanNHits(bot, creep, hits)) then
+        return creep;
       end
     end
   end
@@ -151,7 +166,7 @@ end
 function M:AgroOffVec()
   local bot = GetBot();
   local lane = UnitHelper:GetUnitLane(bot);
-  local tower = DotaBotUtility:GetFrontTowerAt(lane);
+  local tower = MapHelper:GetFrontTowerAt(lane);
   return bot:GetLocation() + (VectorHelper:Normalize(tower:GetLocation() - bot:GetLocation()) * 400); -- walk back range
 end
 
@@ -170,7 +185,7 @@ function M:WeakestCreep(range, ally, withDelta)
   local weakest_creep = nil;
   for creep_k,creep in pairs(creeps)
   do
-      if(creep:IsAlive() and ((not withDelta) or (DotaBotUtility:GetCreepHealthDeltaPerSec(creep, 2) > 0))) then
+      if(creep:IsAlive() and ((not withDelta) or self:ExtrapolatedDamage(creep, 2) > 0)) then
           local creep_hp = creep:GetHealth();
           if(lowest_hp > creep_hp) then
                lowest_hp = creep_hp;

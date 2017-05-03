@@ -1,5 +1,5 @@
 local M = {}
-local DotaBotUtility  = require(GetScriptDirectory().."/dev/utility");
+local MapHelper       = require(GetScriptDirectory().."/dev/helper/map_helper");
 local BotActions      = require(GetScriptDirectory().."/dev/bot_actions");
 -------------------------------------------------
 M.STATE_WALK_TO_WAIT = "STATE_WALK_TO_WAIT";
@@ -21,7 +21,7 @@ end
 -------------------------------------------------
 function M.StateWalkToWait(self, BotInfo, Mode, Strategy)
   local bot = GetBot();
-  local tower = DotaBotUtility:GetFrontTowerAt(BotInfo.LANE);
+  local tower = MapHelper:GetFrontTowerAt(BotInfo.LANE);
   if (tower ~= nil) then
     local pos = tower:GetLocation();
     local distance = GetUnitToLocationDistance(bot, pos);
@@ -35,7 +35,7 @@ end
 
 function M.StateWait(self, BotInfo, Mode, Strategy)
   local bot = GetBot();
-  local tower = DotaBotUtility:GetFrontTowerAt(BotInfo.LANE);
+  local tower = MapHelper:GetFrontTowerAt(BotInfo.LANE);
   local pos = tower:GetLocation();
   local distance = GetUnitToLocationDistance(bot, pos);
   if (distance > 200) then
