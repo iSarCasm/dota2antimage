@@ -15,7 +15,10 @@ local StateSwapItems         = require(GetScriptDirectory().."/dev/state/state_s
 local StateHarassHero        = require(GetScriptDirectory().."/dev/state/state_harass_hero");
 local StateBackoff           = require(GetScriptDirectory().."/dev/state/state_backoff");
 local StateAttackTower       = require(GetScriptDirectory().."/dev/state/state_attack_tower");
+local StateUseAbility        = require(GetScriptDirectory().."/dev/state/state_use_ability");
 --------------------------------------------------------
+local STATE_USE_ABILITY           = "STATE_USE_ABILITY";
+
 local STATE_ESCAPE                = "STATE_ESCAPE";
 local STATE_JUKE                  = "STATE_JUKE";
 local STATE_HIDING                = "STATE_HIDING";
@@ -94,6 +97,7 @@ function BotState:new(o)
     o.StateMachine.STATE_SWAP_ITEMS         = StateSwapItems:new();
     o.StateMachine.STATE_BACKOFF            = StateBackoff:new();
     o.StateMachine.STATE_ATTACK_TOWER       = StateAttackTower:new();
+    o.StateMachine.STATE_USE_ABILITY        = StateUseAbility:new();
     return o
 end
 --------------------------------------------------------
@@ -104,6 +108,7 @@ BotState.ScanStates = {
   STATE_HEAL_FOUNTAIN,
   STATE_ATTACK_HERO,
   STATE_HARASS_HERO,
+  STATE_USE_ABILITY,
   STATE_ESCAPE,
   STATE_SWAP_ITEMS,
   STATE_DELIVER_ITEMS,

@@ -4,11 +4,18 @@ local ItemTango = {}
 local InventoryHelper = require(GetScriptDirectory().."/dev/helper/inventory_helper")
 local BotInfo         = require(GetScriptDirectory().."/dev/bot_info")
 ------------------------------------
+function ItemTango:new(o)
+    o = o or {}
+    setmetatable(o, self)
+    self.__index = self
+    return o
+end
+
 function ItemTango:Ability()
   return InventoryHelper:GetItemByName(GetBot(), self.name, true);
 end
 ------------------------------------
-function ItemTango:Think(Mode, Strategy)
+function ItemTango:InstaUse(Mode, Strategy)
   local bot = GetBot();
   if (not bot:HasModifier("modifier_tango_heal")) then
     if ((bot:GetMaxHealth()-bot:GetHealth()) > 150) then

@@ -66,6 +66,7 @@ function Laning:GetComfortPoint(BotInfo)
     local prepare_for_lh_vec = self:PrepareForLhVector(); 
     if (prepare_for_lh_vec) then
       DebugDrawCircle(prepare_for_lh_vec, 25, 0, 0 ,255);
+      print("prepare for lh "..self:PrepareForLhHealth(bot, self.weak));
       return prepare_for_lh_vec;
     end
   end
@@ -77,8 +78,8 @@ function Laning:GetComfortPoint(BotInfo)
     local exp_only_range = 1200;
     local delta_range = exp_only_range - closest_range;
     local middle_to_safest_vec = VectorHelper:Normalize(Danger:SafestLocation(bot) - closest_to_middle_ally_vector);
-    -- print("m is "..(closest_range + delta_range * hero_balance));
     local hero_balance = self:GetHeroBalance();
+    print("m is "..(closest_range + delta_range * hero_balance));
     local result_vector = closest_to_middle_ally_vector + middle_to_safest_vec * (closest_range + delta_range * hero_balance);
     DebugDrawCircle(closest_to_middle_ally_vector, 25, 0, 255 ,255);
     DebugDrawLine(closest_to_middle_ally_vector, result_vector, 0, 255 ,255);
@@ -94,9 +95,8 @@ end
 
 function Laning:PrepareForLhHealth(bot, creep)
   local time_to_get_in_range = UnitHelper:TimeToGetInRange(bot, creep)
-  local creep_health_delta = Creeping:ExtrapolatedDamage(creep, 2);
   local single_hit_damage = Creeping:GetPhysDamageToCreep(bot, creep);
-  return single_hit_damage * 2 + (time_to_get_in_range + 1) * creep_health_delta; -- we want to get close 1 SECOND + 2 hit earlier it requires for last hit
+  return single_hit_damage * 4; -- we want to get close 4 hit earlier it requires for last hit
 end
 ---------------------------------------------
 function Laning.EvaluateLastHit(self)
@@ -114,7 +114,6 @@ end
 function Laning.LastHit(self, BotInfo)
   local bot = GetBot();
   local position = self:GetComfortPoint(BotInfo);
-  local back_vector = VectorHelper:Normalize(Danger:SafestLocation(bot) - bot:GetLocation()) * 25;
   local dist = GetUnitToLocationDistance(bot, position);
   local no_heroes_near = true; -- TODO
 
@@ -126,26 +125,26 @@ function Laning.LastHit(self, BotInfo)
     DebugDrawCircle(self.weak:GetLocation(), 20, 255, 255, 0);
   end
 
-  DebugDrawCircle(position + back_vector, 10, 244, 244 ,244);
+  DebugDrawCircle(position, 20, 0, 255 ,255);
   if (dist > 800) then
-    -- print("really far from comfort");
-    BotActions.MoveToLocation:Call(position + back_vector);
+    print("really far from comfort");
+    BotActions.MoveToLocation:Call(position);
   elseif (self.very_low_creep) then
-    -- print("last hit!");
+    print("last hit!");
     bot:Action_AttackUnit(self.very_low_creep, false);
-  elseif (self.kinda_low_creep and Creeping:ExtrapolatedDamage(kinda_low_creep, 2) <= 0 and no_heroes_near) then
-    -- print("kinda low");
+  elseif (self.kinda_low_creep and no_heroes_near) then
+    print("kinda low");
     bot:Action_AttackUnit(self.kinda_low_creep, false);
-  elseif (dist > 150) then
-    -- print("get a bit closer");
-    BotActions.MoveToLocation:Call(position + back_vector);
-    DebugDrawCircle(position + back_vector, 25, 0, 0 ,0);
-    DebugDrawLine(bot:GetLocation(), position + back_vector, 0, 0 ,0);
-  elseif (self.weak and self.weak:GetHealth() < 250 and Creeping:ExtrapolatedDamage(self.weak, 2) > 0 and (not UnitHelper:IsFacingEntity(bot, self.weak, 10))) then
-    -- print("rotate");
-    BotActions.RotateTowards:Call(self.weak:GetLocation());
+  elseif (dist > 250) then
+    print("get a bit closer");
+    BotActions.MoveToLocation:Call(position);
+  elseif (self.weak and self.weak:GetHealth() < 250) then
+    print("rotate");
+    if (not UnitHelper:IsFacingEntity(bot, self.weak, 10)) then
+      BotActions.RotateTowards:Call(self.weak:GetLocation());
+    end
   else
-    BotActions.Dance:Call(position + back_vector, 200, 1);
+    BotActions.Dance:Call(position, 200, 1);
   end
 end
 
@@ -169,7 +168,7 @@ Laning.StateMachine.State = Laning.LASTHIT;
 function Laning:UpdateLaningState()
   self.very_low_creep = Creeping:CreepWithNHitsOfHealth(1000, true, true, 1);
   self.kinda_low_creep = Creeping:CreepWithNHitsOfHealth(1000, true, true, 3);
-  self.weak = Creeping:WeakestCreep(1000, false, true);
+  self.weak = Creeping:WeakestCreep(1000, false);
 end
 
 function Laning:UpdateState()

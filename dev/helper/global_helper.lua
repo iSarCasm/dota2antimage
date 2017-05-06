@@ -17,3 +17,7 @@ end
 function GetFront(Team, Lane)
   return GetLaneFrontLocation(Team, Lane, GetLaneFrontAmount(Team, Lane, true));
 end
+
+function Lerp(a, b, t)
+  return a + (b - a) * t;
+end

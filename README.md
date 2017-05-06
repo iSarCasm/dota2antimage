@@ -6,6 +6,12 @@ TODO:
   - use hash-table instances (for multiple bots) - done!
     - test with 2 bots on the same team - done!
 
+  - snipe courier
+  - use shrines
+  - go heal at fountain
+  - fix backoff
+  - use bottle \ flask \ tango \ branch+tango \ fierly
+
   - laning
       - harassin enemies when no low creeps
         - harass range 1500

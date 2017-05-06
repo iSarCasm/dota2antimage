@@ -5,11 +5,18 @@ local BotActions  = require(GetScriptDirectory().."/dev/bot_actions");
 local BotInfo     = require(GetScriptDirectory().."/dev/bot_info")
 local InventoryHelper = require(GetScriptDirectory().."/dev/helper/inventory_helper")
 -------------------------------------
+function AntimageBlink:new(o)
+    o = o or {}
+    setmetatable(o, self)
+    self.__index = self
+    return o
+end
+
 function AntimageBlink:Ability()
   return GetBot():GetAbilityByName(self.name);
 end
 -----------------------------------
-function AntimageBlink:Think(Mode, Strategy)
+function AntimageBlink:InstaUse(Mode, Strategy)
   local bot = GetBot();
   local ability = bot:GetAbilityByName(self.name);
   if (ability:IsFullyCastable()) then

@@ -20,9 +20,7 @@ Hero.itemBuild = {
     "item_bottle",
     "item_boots",
     "item_belt_of_strength",
-    "item_gloves",
-
-    "item_branches"
+    "item_gloves"
 }
 Hero.abilityBuild = {
   "nevermore_necromastery",

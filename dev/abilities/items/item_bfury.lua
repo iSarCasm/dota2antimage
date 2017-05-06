@@ -5,11 +5,18 @@ local InventoryHelper = require(GetScriptDirectory().."/dev/helper/inventory_hel
 local UnitHelper      = require(GetScriptDirectory().."/dev/helper/unit_helper");
 local BotInfo         = require(GetScriptDirectory().."/dev/bot_info");
 ------------------------------------
+function ItemBattlefury:new(o)
+    o = o or {}
+    setmetatable(o, self)
+    self.__index = self
+    return o
+end
+
 function ItemBattlefury:Ability()
   return InventoryHelper:GetItemByName(GetBot(), self.name, true);
 end
 ------------------------------------
-function ItemBattlefury:Think(Mode, Strategy)
+function ItemBattlefury:InstaUse(Mode, Strategy)
   local bot = GetBot();
   local trees = bot:GetNearbyTrees(300);
   if (trees) then

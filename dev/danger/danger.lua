@@ -22,13 +22,12 @@ function Danger:SafestLocation(unit)
     local safety_delta = self:SafetyDelta(source, unit);
     local safety_vector = self:SafetyVector(source, unit);
     local danger_delta = self:DangerDelta(source, unit);
-    local danger_vector = unit:GetLocation() + VectorHelper:Normalize(unit:GetLocation() - self:DangerVector(source, unit)) * 250;
+    local danger_location = self:DangerVector(source, unit);
+    local danger_vector = unit:GetLocation() + VectorHelper:Normalize(unit:GetLocation() - danger_location) * 250;
     total_delta = total_delta + safety_delta + danger_delta;
     result_vector = result_vector + safety_vector * safety_delta + danger_vector * danger_delta;
-    DebugDrawCircle(safety_vector, 25, 0, 255 ,0);
-    DebugDrawLine(unit:GetLocation(), safety_vector, 0, 255 ,0);
-    DebugDrawCircle(self:DangerVector(source, unit), 25, 255, 0 ,0);
-    DebugDrawLine(unit:GetLocation(), self:DangerVector(source, unit), 255, 0 ,0);
+    self:Debug(unit, safety_vector, 0, 255);
+    self:Debug(unit, danger_location, 255, 0);
   end
   return result_vector / total_delta;
 end
@@ -47,6 +46,13 @@ end
 
 function Danger:DangerVector(source, unit)
   return source:Location(GetEnemyTeam());
+end
+
+function Danger:Debug(unit, vector, cr, cg)
+  if (not(vector.x == 0 and vector.y == 0)) then
+    DebugDrawCircle(vector, 25, cr, cg ,0);
+    DebugDrawLine(unit:GetLocation(), vector, cr, cg ,0);
+  end
 end
 -----------------------------------------
 return Danger;

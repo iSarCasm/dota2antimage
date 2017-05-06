@@ -22,12 +22,12 @@ flexBot = FlexBot:new(Heroes:GetHero());
 Game:InitializeUnits();
 --------------------------------------------------------
 function Think(  )
-  print(GetBot():GetUnitName());
+  -- print(GetBot():GetUnitName());
   local t = RealTime();
-  Game:Update();
-  print("  time spent in Game:Update "..(RealTime() - t)*1000); t = RealTime();
-  TeamStrategy:Update();
-  print("  time spent in TeamStrategy:Update "..(RealTime() - t)*1000); t = RealTime();
-  flexBot:Think();
-  print("  time spent in flexBot:Think "..(RealTime() - t)*1000); t = RealTime();
+  -- Game:Update();
+  -- print("  time spent in Game:Update "..(RealTime() - t)*1000); t = RealTime();
+  -- TeamStrategy:Update();
+  -- print("  time spent in TeamStrategy:Update "..(RealTime() - t)*1000); t = RealTime();
+  -- flexBot:Think();
+  -- print("  time spent in flexBot:Think "..(RealTime() - t)*1000); t = RealTime();
 end
