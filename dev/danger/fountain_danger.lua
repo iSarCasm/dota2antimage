@@ -16,6 +16,10 @@ function FountainDanger:Power(distance)
   end
 end
 
+function FountainDanger:OfLocation( vLocation, team )
+  return self:Power(VectorHelper:Length(vLocation, FOUNTAIN[team]));
+end
+
 function FountainDanger:ResultVector(team, unit, distance)
   return self:PowerDelta(team, unit, distance) * self:Location(team);
 end

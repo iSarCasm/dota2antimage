@@ -25,14 +25,14 @@ end
 M.PrevStrategy = "none";
 function M:DebugStateChange()
   if(self.PrevStrategy ~= self.Strategy) then
-      print("Team "..GetTeam().." STRATEGY: "..self.Strategy.." <- "..self.PrevStrategy);
+      fprint("Team "..GetTeam().." STRATEGY: "..self.Strategy.." <- "..self.PrevStrategy);
       self.PrevStrategy = self.Strategy;
   end
 end
 
 function M:DebugCallTimes()
-  print("Team State Machine Called at "..DotaTime());
-  print("Team is "..GetTeam());
+  fprint("Team State Machine Called at "..DotaTime());
+  fprint("Team is "..GetTeam());
 end
 --------------------------------------------------------
 function M:Update()

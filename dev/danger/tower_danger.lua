@@ -3,12 +3,25 @@ local TowerDanger = {};
 local VectorHelper = require(GetScriptDirectory().."/dev/helper/vector_helper");
 local Game         = require(GetScriptDirectory().."/dev/game");
 -----------------------------------------
-local DANGER_TOWER      = 150;
+local DANGER_TOWER      = 15;
 local DANGER_TOWER_FAR  = 100;
 ------------------------------------------
+function TowerDanger:OfLocation( vLocation, team )
+  local all_towers = Game:GetTowersForTeam(team);
+  if (#all_towers == 0) then
+    return 0;
+  end
+  local total_danger = 0;
+  for i = 1, #all_towers do
+    local tower = all_towers[i];
+    total_danger = total_danger + self:Power(GetUnitToLocationDistance(tower, vLocation));
+  end
+  return total_danger;
+end 
+
 function TowerDanger:Power(distance)
   if (distance < 800) then -- below attack range (actual tower range is 700 + ~100 for bounding radius)
-    return DANGER_TOWER / (distance*distance);
+    return DANGER_TOWER;
   elseif (distance < 5000) then -- 14000 is random range from the tower which is `kinda safe`
     return DANGER_TOWER_FAR / (distance*distance);
   else
@@ -20,7 +33,7 @@ function TowerDanger:PowerDelta(team, unit, distance)
   self.TowerVector = Vector(0, 0);
 
   local total_delta = 0;
-  local all_towers = self:Towers(team, unit);
+  local all_towers = Game:GetTowersForTeam(team);
 
   if (#all_towers == 0) then
     return 0;
@@ -40,14 +53,6 @@ end
 
 function TowerDanger:Location(team)
   return self.TowerVector;
-end
-
-function TowerDanger:Towers(team, unit)
- if (team == GetTeam()) then
-  return Game:GetTowersForTeam(team);
- else
-  return unit:GetNearbyTowers(1500, true);
- end
 end
 ------------------------------------------
 return TowerDanger;

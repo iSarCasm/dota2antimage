@@ -3,7 +3,7 @@ local HeroHelper = {};
 local UnitHelper = require(GetScriptDirectory().."/dev/helper/unit_helper")
 ----------------------------------------------
 function HeroHelper:TooDangerous(unit)
-  local heroes = unit:GetNearbyHeroes(700, true, BOT_MODE_NONE);
+  local heroes = unit.flex_bot.botInfo:GetNearbyHeroes(700, true, BOT_MODE_NONE);
   local burst_damage = 0;
   for i = 1, #heroes do
     local hero = heroes[i];

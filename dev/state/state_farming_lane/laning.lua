@@ -19,7 +19,7 @@ function Laning:GetHeroBalance()
   local myself = GetBot();
   local my_power = HeroHelper:LaningDefensivePower(myself);
   local enemy_power = 0;
-  local enemy_heroes = myself:GetNearbyHeroes(1500, true, BOT_MODE_NONE);
+  local enemy_heroes = myself.flex_bot.botInfo:GetNearbyHeroes(1500, true, BOT_MODE_NONE);
   for _, hero in pairs(enemy_heroes) do
     enemy_power = enemy_power +  HeroHelper:LaningOffensivePower(hero, myself);
   end
@@ -27,7 +27,7 @@ function Laning:GetHeroBalance()
   return 1 - (my_power / (enemy_power + my_power));
 end
 
-function Laning:WorthWaitingForLhThere(vec)
+function Laning:WorthWaitingForLhThere(vec, range)
   return true;
 end
 
@@ -35,12 +35,14 @@ function Laning:PrepareForLhVector()
   local bot = GetBot();
   local start_range = 200;                        -- 200 -> 200, 700 -> 200
   local end_range = bot:GetAttackRange() + 400;   -- 200 -> 600, 700 -> 1100
+  local reward_vec = nil;
   for try_range = start_range, end_range, 100 do
-    local reward_vec = self.weak:GetLocation() + VectorHelper:Normalize(Danger:SafestLocation(bot) - self.weak:GetLocation()) * try_range;
-    if (self:WorthWaitingForLhThere(reward_vec)) then
+    reward_vec = self.weak:GetLocation() + VectorHelper:Normalize(Danger:SafestLocation(bot) - self.weak:GetLocation()) * try_range;
+    if (self:WorthWaitingForLhThere(reward_vec, range)) then
       return reward_vec;
     end
   end
+  return reward_vec;
   return nil;
 end
 
@@ -62,11 +64,11 @@ function Laning:GetComfortPoint(BotInfo)
   local bot = GetBot();
   -- DebugDrawText(500, 100, "Balance is "..hero_balance, 255, 255, 255);
   if (Creeping.allyVector and self.weak and self.weak:IsAlive() and self.weak:GetHealth() < self:PrepareForLhHealth(bot, self.weak)) then -- time to get really close and wait for that juicy lash hit
-    -- print("really low! "..self:PrepareForLhHealth(bot, self.weak));
+    -- fprint("really low! "..self:PrepareForLhHealth(bot, self.weak));
     local prepare_for_lh_vec = self:PrepareForLhVector(); 
     if (prepare_for_lh_vec) then
       DebugDrawCircle(prepare_for_lh_vec, 25, 0, 0 ,255);
-      print("prepare for lh "..self:PrepareForLhHealth(bot, self.weak));
+      -- fprint("prepare for lh "..self:PrepareForLhHealth(bot, self.weak));
       return prepare_for_lh_vec;
     end
   end
@@ -79,7 +81,7 @@ function Laning:GetComfortPoint(BotInfo)
     local delta_range = exp_only_range - closest_range;
     local middle_to_safest_vec = VectorHelper:Normalize(Danger:SafestLocation(bot) - closest_to_middle_ally_vector);
     local hero_balance = self:GetHeroBalance();
-    print("m is "..(closest_range + delta_range * hero_balance));
+    -- fprint("m is "..(closest_range + delta_range * hero_balance));
     local result_vector = closest_to_middle_ally_vector + middle_to_safest_vec * (closest_range + delta_range * hero_balance);
     DebugDrawCircle(closest_to_middle_ally_vector, 25, 0, 255 ,255);
     DebugDrawLine(closest_to_middle_ally_vector, result_vector, 0, 255 ,255);
@@ -127,19 +129,19 @@ function Laning.LastHit(self, BotInfo)
 
   DebugDrawCircle(position, 20, 0, 255 ,255);
   if (dist > 800) then
-    print("really far from comfort");
+    -- fprint("really far from comfort");
     BotActions.MoveToLocation:Call(position);
   elseif (self.very_low_creep) then
-    print("last hit!");
+    -- fprint("last hit!");
     bot:Action_AttackUnit(self.very_low_creep, false);
   elseif (self.kinda_low_creep and no_heroes_near) then
-    print("kinda low");
+    -- fprint("kinda low");
     bot:Action_AttackUnit(self.kinda_low_creep, false);
   elseif (dist > 250) then
-    print("get a bit closer");
+    -- fprint("get a bit closer");
     BotActions.MoveToLocation:Call(position);
   elseif (self.weak and self.weak:GetHealth() < 250) then
-    print("rotate");
+    -- fprint("rotate");
     if (not UnitHelper:IsFacingEntity(bot, self.weak, 10)) then
       BotActions.RotateTowards:Call(self.weak:GetLocation());
     end

@@ -19,7 +19,10 @@ function AbilityItems:new(o)
     o.ability["item_quelling_blade"] = require(GetScriptDirectory().."/dev/abilities/items/item_quelling_blade"):new();
     o.ability["item_iron_talon"]     = require(GetScriptDirectory().."/dev/abilities/items/item_iron_talon"):new();
     o.ability["item_tango"]   = require(GetScriptDirectory().."/dev/abilities/items/item_tango"):new();
+    o.ability["item_branches"]   = require(GetScriptDirectory().."/dev/abilities/items/item_branches"):new();
     o.ability["item_flask"]   = require(GetScriptDirectory().."/dev/abilities/items/item_flask"):new();
+    o.ability["item_bottle"]   = require(GetScriptDirectory().."/dev/abilities/items/item_bottle"):new();
+    o.ability["item_faerie_fire"]   = require(GetScriptDirectory().."/dev/abilities/items/item_branches"):new();
     return o
 end
 -----------------------------------------------

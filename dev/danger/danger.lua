@@ -11,9 +11,24 @@ Danger.danger_sources = {
   TowerDanger,
   HeroDanger
 }
+
+Danger.fast_danger_sources = {
+  FountainDanger
+}
 -----------------------------------------
 local DANGER_TRAVEL_DISTANCE = 1000;
 -----------------------------------------
+function Danger:Location( vLocation )
+  local total_danger = 0;
+  for i = 1, #self.fast_danger_sources do
+    local source = self.fast_danger_sources[i];
+    local s_danger = source:OfLocation(vLocation, GetTeam());
+    local e_danger = source:OfLocation(vLocation, GetEnemyTeam());
+    total_danger = total_danger + e_danger - s_danger;
+  end
+  return total_danger;
+end
+
 function Danger:SafestLocation(unit)
   local result_vector = 0;
   local total_delta = 0;

@@ -23,7 +23,7 @@ Game:InitializeUnits();
 --------------------------------------------------------
 function Think(  )
   -- print(GetBot():GetUnitName());
-  local t = RealTime();
+  -- local t = RealTime();
   Game:Update();
   -- print("  time spent in Game:Update "..(RealTime() - t)*1000); t = RealTime();
   TeamStrategy:Update();

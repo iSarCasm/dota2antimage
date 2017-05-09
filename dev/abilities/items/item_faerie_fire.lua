@@ -1,26 +1,24 @@
-local ItemFlask = {}
-      ItemFlask.name = "item_flask";
+local ItemFaerieFire = {}
+      ItemFaerieFire.name = "item_faerie_fire";
 ------------------------------------
 local InventoryHelper = require(GetScriptDirectory().."/dev/helper/inventory_helper")
 ------------------------------------
-function ItemFlask:new(o)
+function ItemFaerieFire:new(o)
     o = o or {}
     setmetatable(o, self)
     self.__index = self
     return o
 end
 
-function ItemFlask:Ability()
+function ItemFaerieFire:Ability()
   return InventoryHelper:GetItemByName(GetBot(), self.name, true);
 end
 ------------------------------------
-function ItemFlask:InstaUse(Mode, Strategy)
+function ItemFaerieFire:InstaUse(Mode, Strategy)
   local bot = GetBot();
-  if (not bot:HasModifier("modifier_flask_healing")) then
-    if ((bot:GetMaxHealth()-bot:GetHealth()) > 300) then
-      bot:Action_UseAbilityOnEntity(self:Ability(), bot);
-    end
+  if (bot:GetHealth < 100) then
+    bot:Action_UseAbility(self:Ability());
   end
 end
 ------------------------------------
-return ItemFlask;
+return ItemFaerieFire;

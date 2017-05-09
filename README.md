@@ -6,7 +6,6 @@ TODO:
   - use hash-table instances (for multiple bots) - done!
     - test with 2 bots on the same team - done!
 
-  - snipe courier
   - use shrines
   - go heal at fountain
   - fix backoff

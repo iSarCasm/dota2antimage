@@ -7,6 +7,7 @@ function NevermoreShadowraze:new()
     self.__index = self;
     raze.name = "nevermore_shadowraze2";
     raze.range = 450;
+    raze.base_effort = 0.3;
     return raze;
 end
 ------------------------------------

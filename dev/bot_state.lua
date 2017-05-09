@@ -16,6 +16,7 @@ local StateHarassHero        = require(GetScriptDirectory().."/dev/state/state_h
 local StateBackoff           = require(GetScriptDirectory().."/dev/state/state_backoff");
 local StateAttackTower       = require(GetScriptDirectory().."/dev/state/state_attack_tower");
 local StateUseAbility        = require(GetScriptDirectory().."/dev/state/state_use_ability");
+local StateUseShrine         = require(GetScriptDirectory().."/dev/state/state_use_shrine");
 --------------------------------------------------------
 local STATE_USE_ABILITY           = "STATE_USE_ABILITY";
 
@@ -61,7 +62,7 @@ local STATE_CONTROL_POWERRUNE     = "STATE_CONTROL_POWERRUNE";
 local STATE_CONTROL_RUNE          = "STATE_CONTROL_RUNE";
 
 local STATE_HEAL_FOUNTAIN         = "STATE_HEAL_FOUNTAIN";
-local STATE_HEAL_SHRINE           = "STATE_HEAL_SHRINE";
+local STATE_USE_SHRINE            = "STATE_USE_SHRINE";
 local STATE_ACCEPT_HELP           = "STATE_ACCEPT_HELP";
 local STATE_HELPING               = "STATE_HELPING";
 
@@ -98,6 +99,7 @@ function BotState:new(o)
     o.StateMachine.STATE_BACKOFF            = StateBackoff:new();
     o.StateMachine.STATE_ATTACK_TOWER       = StateAttackTower:new();
     o.StateMachine.STATE_USE_ABILITY        = StateUseAbility:new();
+    o.StateMachine.STATE_USE_SHRINE         = StateUseShrine:new();
     return o
 end
 --------------------------------------------------------
@@ -106,6 +108,7 @@ BotState.ScanStates = {
   STATE_FARM_JUNGLE,
   STATE_CONTROL_RUNE,
   STATE_HEAL_FOUNTAIN,
+  STATE_USE_SHRINE,
   STATE_ATTACK_HERO,
   STATE_HARASS_HERO,
   STATE_USE_ABILITY,
@@ -122,10 +125,10 @@ BotState.ScanStates = {
 --------------------------------------------------------
 function BotState:SetState(State)
   if (self.State ~= STATE_IDLE and (self.State ~= State or self.Argument ~= self:StateArgument(State))) then
-    print("state "..self.State.." ~= "..State);
-    print("or args "..self.Argument.." ~= "..self:StateArgument(State));
+    fprint("state "..self.State.." ~= "..State);
+    fprint("or args "..self.Argument.." ~= "..self:StateArgument(State));
     if (self.StateMachine[self.State].Reset) then
-      print("reset");
+      fprint("reset");
       self.StateMachine[self.State]:Reset();
     end
   end
@@ -137,14 +140,14 @@ function BotState:UpdateState(BotInfo, Mode, Strategy)
   local highestPotential = VERY_LOW_INT;
   local highestState = self.State;
   -- print(GetBot():GetUnitName().." states");
-  -- local t = RealTime();
+  local t = RealTime();
   for i = 1, #self.ScanStates do
     local state = self.ScanStates[i];
     local potential = self.StateMachine[state]:EvaluatePotential(BotInfo, Mode, Strategy);
     -- print("        time spent in self.StateMachine["..state.."]:EvaluatePotential "..(RealTime() - t)*1000); t = RealTime();
     -- print("Evaluate "..state.." as "..potential);
     if (GetBot():GetUnitName() == "npc_dota_hero_nevermore") then
-      DebugDrawText(25, 500 + i * 20, "Evaluate "..state.." as "..potential, 255, 255, 255);
+      DebugDrawText(25, 400 + i * 20, "Evaluate "..state.." as "..potential, 255, 255, 255);
     end
     if (potential > highestPotential) then
       highestPotential = potential;

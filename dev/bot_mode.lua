@@ -32,7 +32,7 @@ BotMode.Mode = MODE_LANING;
 BotMode.PrevMode = "none";
 function BotMode:DebugStateChange()
   if(self.PrevMode ~= self.Mode) then
-      print(GetBot():GetUnitName().." bot MODE: "..self.Mode.." <- "..self.PrevMode);
+      fprint(GetBot():GetUnitName().." bot MODE: "..self.Mode.." <- "..self.PrevMode);
       self.PrevMode = self.Mode;
   end
 end

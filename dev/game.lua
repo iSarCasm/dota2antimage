@@ -31,6 +31,7 @@ Game.JungleStates[JUNGLE_RADIANT_TOP_MID] = 0;
 Game.JungleStates[JUNGLE_RADIANT_TOP_ANCIENT] = 0;
 
 Game.Towers = {}
+Game.Shrines = {}
 ----------------------------------------------
 ----------------------------------------------
 function Game:TimeToRune(rune)
@@ -70,11 +71,30 @@ function Game:GetTowersForTeam(team)
   local team_towers = {};
   for i = 1, #self.Towers do
     local tower = self.Towers[i];
-    if (tower:GetTeam() == team) then
+    if ((not tower:IsNull()) and tower:GetTeam() == team) then
       table.insert(team_towers, tower);
     end
   end
   return team_towers;
+end
+
+function Game:GetShrinesForTeam(team)
+  local shrines = {};
+  local all_shrines = {
+    GetShrine(team, SHRINE_BASE_1),
+    GetShrine(team, SHRINE_BASE_2),
+    GetShrine(team, SHRINE_BASE_3),
+    GetShrine(team, SHRINE_BASE_4),
+    GetShrine(team, SHRINE_BASE_5),
+    GetShrine(team, SHRINE_JUNGLE_1),
+    GetShrine(team, SHRINE_JUNGLE_2)
+  }
+  for i = 1, #all_shrines do 
+    if (all_shrines[i] and not all_shrines[i]:IsNull()) then
+      table.insert(shrines, all_shrines[i]);
+    end
+  end
+  return shrines;
 end
 ----------------------------------------------
 ----------------------------------------------
@@ -122,13 +142,36 @@ end
 
 function Game:InitializeUnits()
   self.Towers = {};
-  local units = GetUnitList(UNIT_LIST_ALL);
-  for i = 1, #units do
-    local unit = units[i];
-    if (unit:IsTower()) then
-      table.insert(self.Towers, unit);
-    end
-  end
+  -- local units = GetUnitList(UNIT_LIST_ALL);
+  -- for i = 1, #units do
+  --   local unit = units[i];
+  --   if (unit:IsTower()) then
+  --     table.insert(self.Towers, unit);
+  --   end
+  -- end
+  table.insert(self.Towers, GetTower(TEAM_RADIANT, TOWER_TOP_1));
+  table.insert(self.Towers, GetTower(TEAM_RADIANT, TOWER_MID_1));
+  table.insert(self.Towers, GetTower(TEAM_RADIANT, TOWER_BOT_1));
+  table.insert(self.Towers, GetTower(TEAM_RADIANT, TOWER_TOP_2));
+  table.insert(self.Towers, GetTower(TEAM_RADIANT, TOWER_MID_2));
+  table.insert(self.Towers, GetTower(TEAM_RADIANT, TOWER_BOT_2));
+  table.insert(self.Towers, GetTower(TEAM_RADIANT, TOWER_TOP_3));
+  table.insert(self.Towers, GetTower(TEAM_RADIANT, TOWER_MID_3));
+  table.insert(self.Towers, GetTower(TEAM_RADIANT, TOWER_BOT_3));
+  table.insert(self.Towers, GetTower(TEAM_RADIANT, TOWER_BASE_1));
+  table.insert(self.Towers, GetTower(TEAM_RADIANT, TOWER_BASE_2));
+
+  table.insert(self.Towers, GetTower(TEAM_DIRE, TOWER_TOP_1));
+  table.insert(self.Towers, GetTower(TEAM_DIRE, TOWER_MID_1));
+  table.insert(self.Towers, GetTower(TEAM_DIRE, TOWER_BOT_1));
+  table.insert(self.Towers, GetTower(TEAM_DIRE, TOWER_TOP_2));
+  table.insert(self.Towers, GetTower(TEAM_DIRE, TOWER_MID_2));
+  table.insert(self.Towers, GetTower(TEAM_DIRE, TOWER_BOT_2));
+  table.insert(self.Towers, GetTower(TEAM_DIRE, TOWER_TOP_3));
+  table.insert(self.Towers, GetTower(TEAM_DIRE, TOWER_MID_3));
+  table.insert(self.Towers, GetTower(TEAM_DIRE, TOWER_BOT_3));
+  table.insert(self.Towers, GetTower(TEAM_DIRE, TOWER_BASE_1));
+  table.insert(self.Towers, GetTower(TEAM_DIRE, TOWER_BASE_2));
 end
 ----------------------------------------------
 function Game:Update()

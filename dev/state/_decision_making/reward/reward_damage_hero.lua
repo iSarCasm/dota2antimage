@@ -1,7 +1,7 @@
-local RewardHarassHero = {};
+local RewardDamageHero = {};
 -----------------------------------------
-function RewardHarassHero:Hero( hHero, damage )
+function RewardDamageHero:Hero( hHero, damage )
   return 1 * (damage - hHero:GetHealthRegen() * 3);
 end
 -----------------------------------------
-return RewardHarassHero;
+return RewardDamageHero;

@@ -4,8 +4,10 @@ local BotActions  = require(GetScriptDirectory().."/dev/bot_actions");
 local BotInfo     = require(GetScriptDirectory().."/dev/bot_info")
 local InventoryHelper = require(GetScriptDirectory().."/dev/helper/inventory_helper")
 local UnitHelper = require(GetScriptDirectory().."/dev/helper/unit_helper")
+local Creeping   = require(GetScriptDirectory().."/dev/state/state_farming_lane/creeping");
 -------------------------------------
-local RewardDamageHero  = require(GetScriptDirectory().."/dev/state/_decision_making/reward/reward_damage_hero");
+local RewardDamageHero   = require(GetScriptDirectory().."/dev/state/_decision_making/reward/reward_damage_hero");
+local RewardDamageCreep  = require(GetScriptDirectory().."/dev/state/_decision_making/reward/reward_damage_creep");
 local EffortWalk        = require(GetScriptDirectory().."/dev/state/_decision_making/effort/effort_walk");
 local EffortSpendMana   = require(GetScriptDirectory().."/dev/state/_decision_making/effort/effort_spend_mana");
 local EffortCooldown    = require(GetScriptDirectory().."/dev/state/_decision_making/effort/effort_cooldown");
@@ -34,12 +36,19 @@ function Shadowraze:EvaluatePotential()
   local bot = GetBot();
   local highest = VERY_LOW_INT;
   local units = bot:GetNearbyHeroes(1500, true, BOT_MODE_NONE);
+  local creeps = Creeping:GetNearbyCreeps(bot, 1500, true);
+  for k,v in pairs(creeps) do units[k] = v end -- merge creeps into untis
+  local reward = 0;
   if (#units ~= 0) then
     for i = 1, #units do
       local unit = units[i];
-      local reward = RewardDamageHero:Hero(unit, self:Ability():GetAbilityDamage());
+      if (unit:IsHero()) then
+        reward = RewardDamageHero:Hero(unit, self:Ability():GetAbilityDamage());
+      elseif (unit:IsCreep()) then
+        reward = RewardDamageCreep:Creep(unit, self:Ability():GetAbilityDamage());
+      end
       local effort = EffortWalk:IntoRange(unit:GetLocation(), self.range) + EffortDanger:OfLocation(unit:GetLocation()) 
-                        + EffortSpendMana:Mana(90) + EffortCooldown:Cooldown(10);
+                        + EffortSpendMana:Mana(90) + EffortCooldown:Cooldown(10) + self.base_effort;
       local potential = reward / effort;
 
       self.Potential[unit] = potential;

@@ -22,10 +22,10 @@ function M:EvaluatePotential(BotInfo, Mode, Strategy)
       return 24;
     elseif (GetBot():TimeSinceDamagedByCreep() < 0.75) then
       return 19;
-    elseif (GetBot():WasRecentlyDamagedByAnyHero(0.15)) then
-      return 10;
     elseif (GetBot():TimeSinceDamagedByCreep() < 1) then
       return 7;
+    elseif (GetBot():WasRecentlyDamagedByAnyHero(0.15)) then
+      return 4;
     end
   end
   return 0;

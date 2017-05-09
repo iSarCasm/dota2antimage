@@ -34,6 +34,7 @@ function FlexBot:Think()
   -- print("    time spent in self.botState:Update "..(RealTime() - t)*1000); t = RealTime();
 
   self.abilityItems:InstaUse(self.botInfo, self.botMode.Mode, TeamStrategy.Strategy);
+  self.botInfo:ResetTempVars();
 end
 --------------------------------------------------------
 --------------------------------------------------------

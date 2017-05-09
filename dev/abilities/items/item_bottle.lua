@@ -1,5 +1,5 @@
 local ItemFlask = {}
-      ItemFlask.name = "item_flask";
+      ItemFlask.name = "item_bottle";
 ------------------------------------
 local InventoryHelper = require(GetScriptDirectory().."/dev/helper/inventory_helper")
 ------------------------------------
@@ -16,8 +16,8 @@ end
 ------------------------------------
 function ItemFlask:InstaUse(Mode, Strategy)
   local bot = GetBot();
-  if (not bot:HasModifier("modifier_flask_healing")) then
-    if ((bot:GetMaxHealth()-bot:GetHealth()) > 300) then
+  if (not bot:HasModifier("modifier_bottle_regeneration")) then
+    if ((bot:GetMaxHealth()-bot:GetHealth()) > 300 or ((bot:GetMaxHealth()-bot:GetHealth()) > 90 and (bot:GetMaxMana()-bot:GetMana()) > 90)) then
       bot:Action_UseAbilityOnEntity(self:Ability(), bot);
     end
   end

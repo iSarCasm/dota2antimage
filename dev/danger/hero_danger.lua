@@ -13,13 +13,27 @@ function HeroDanger:Power(distance)
   end
 end
 
+function HeroDanger:OfLocation( vLocation, team )
+  local bEnemies = (team == GetEnemyTeam());
+  local all_heroes = GetBot().flex_bot.botInfo:GetNearbyHeroes(1599, bEnemies, BOT_MODE_NONE);
+  if (#all_heroes == 0 or ((not bEnemies) and #all_heroes == 1)) then
+    return 0;
+  end
+  local total_danger = 0;
+  for i = 1, #all_heroes do
+    local hero = all_heroes[i];
+    total_danger = total_danger + self:Power(GetUnitToLocationDistance(hero, vLocation));
+  end
+  return total_danger;
+end 
+
 function HeroDanger:PowerDelta(team, unit, distance)
   -- print("hero danger");
   self.HeroLocation = Vector(0, 0);
 
   local total_delta = 0;
   local bEnemies = (team == GetEnemyTeam());
-  local all_heroes = unit:GetNearbyHeroes(1599, bEnemies, BOT_MODE_NONE);
+  local all_heroes = unit.flex_bot.botInfo:GetNearbyHeroes(1599, bEnemies, BOT_MODE_NONE);
   -- print("heroes "..#all_heroes);
   if (#all_heroes == 0 or ((not bEnemies) and #all_heroes == 1)) then
     return 0;

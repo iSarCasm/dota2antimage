@@ -1,17 +1,10 @@
 local EffortDanger = {}
 ----------------------------------------------------
+local Danger       = require(GetScriptDirectory().."/dev/danger/danger");
 local VectorHelper = require(GetScriptDirectory().."/dev/helper/vector_helper")
 ----------------------------------------------------
 function EffortDanger:OfLocation(Location)
-  local bot = GetBot();
-  local dist = VectorHelper:Length(FOUNTAIN[GetTeam()] - Location);
-  return dist / 1000;
-end
-
-function EffortDanger:OfLocationForRange( vLocation, iRange )
-  local bot = GetBot();
-  local dist = VectorHelper:Length(FOUNTAIN[GetTeam()] - Location);
-  return dist / 1000;
+  return Danger:Location(Location);
 end
 
 function EffortDanger:Delta(Location)

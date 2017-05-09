@@ -18,15 +18,6 @@ end
 ------------------------------------
 function ItemQuellingBlade:InstaUse(Mode, Strategy)
   local bot = GetBot();
-  local trees = bot:GetNearbyTrees(300);
-  if (trees) then
-    for i = 1, #trees do
-      if (UnitHelper:IsFacingTree(bot, trees[i], 30) and IsLocationPassable(GetTreeLocation(trees[i]))) then
-        bot:Action_UseAbilityOnTree(self:Ability(), trees[i]);
-        return;
-      end
-    end
-  end
 end
 ------------------------------------
 return ItemQuellingBlade;
