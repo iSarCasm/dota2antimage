@@ -26,6 +26,8 @@ end
 function M.Escape(self, BotInfo, Mode, Strategy)
   local bot = GetBot();
   local location = Danger:SafestLocation(bot);
+  fprint("going to loc");
+  print(location);
   BotActions.MoveToLocation:Call(location);
 end
 -------------------------------------------------

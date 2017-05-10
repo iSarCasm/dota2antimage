@@ -1,13 +1,14 @@
 local HeroDanger = {};
+      HeroDanger.name = "hero";
 ------------------------------------------
 local VectorHelper = require(GetScriptDirectory().."/dev/helper/vector_helper");
 local Game         = require(GetScriptDirectory().."/dev/game");
 ------------------------------------------
 function HeroDanger:Power(distance)
   if (distance < 800) then 
-    return 90 / (distance*distance);
+    return 0.05 / (distance*distance);
   elseif (distance < 1000) then 
-    return 50 / (distance*distance);
+    return 0.0025 / (distance*distance);
   else
     return 0;
   end
@@ -34,7 +35,7 @@ function HeroDanger:PowerDelta(team, unit, distance)
   local total_delta = 0;
   local bEnemies = (team == GetEnemyTeam());
   local all_heroes = unit.flex_bot.botInfo:GetNearbyHeroes(1599, bEnemies, BOT_MODE_NONE);
-  -- print("heroes "..#all_heroes);
+  print("heroes "..#all_heroes);
   if (#all_heroes == 0 or ((not bEnemies) and #all_heroes == 1)) then
     return 0;
   end

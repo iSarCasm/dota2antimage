@@ -7,7 +7,7 @@ function HeroHelper:TooDangerous(unit)
   local burst_damage = 0;
   for i = 1, #heroes do
     local hero = heroes[i];
-    burst_damage = burst_damage + self:HeroBurstDamage(unit, hero, 3);
+    burst_damage = burst_damage + self:HeroBurstDamage(unit, hero, 5);
   end
   return unit:GetHealth() < burst_damage;
 end

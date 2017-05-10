@@ -3,13 +3,13 @@ local RewardHarassHero = {};
 local InventoryHelper = require(GetScriptDirectory().."/dev/helper/inventory_helper")
 local HeroHelper      = require(GetScriptDirectory().."/dev/helper/hero_helper")
 -----------------------------------------
-local HARASS_BASE = 5;
-local HARASS_FACTOR = 10;
-local FLASK_ADD = 14;
-local CLARITY_ADD = 10;
-local BOTTLE_ADD = 8;
+local HARASS_BASE = 6;
+local HARASS_FACTOR = 25;
+local FLASK_ADD = 22;
+local CLARITY_ADD = 17;
+local BOTTLE_ADD = 12;
 local REGEN_FACTOR = 5;
-local STOCK_HEALTH_FACTOR = 0.5;
+local STOCK_HEALTH_FACTOR = 0.4;
 -----------------------------------------
 function RewardHarassHero:Hero( hHero )
   local bot = GetBot();

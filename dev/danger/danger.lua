@@ -26,7 +26,7 @@ function Danger:Location( vLocation )
     local e_danger = source:OfLocation(vLocation, GetEnemyTeam());
     total_danger = total_danger + e_danger - s_danger;
   end
-  return total_danger;
+  return Max(0, total_danger);
 end
 
 function Danger:SafestLocation(unit)
@@ -36,15 +36,25 @@ function Danger:SafestLocation(unit)
     local source = self.danger_sources[i];
     local safety_delta = self:SafetyDelta(source, unit);
     local safety_vector = self:SafetyVector(source, unit);
-    local danger_delta = self:DangerDelta(source, unit);
+    local danger_delta = self:DangerDelta(source, unit) / 10;
     local danger_location = self:DangerVector(source, unit);
     local danger_vector = unit:GetLocation() + VectorHelper:Normalize(unit:GetLocation() - danger_location) * 250;
     total_delta = total_delta + safety_delta + danger_delta;
     result_vector = result_vector + safety_vector * safety_delta + danger_vector * danger_delta;
     self:Debug(unit, safety_vector, 0, 255);
     self:Debug(unit, danger_location, 255, 0);
+    fprint(source.name);
+    fprint(safety_delta);
+    fprint(danger_delta);
   end
-  return result_vector / total_delta;
+  local res = result_vector / total_delta;
+  fprint("my loc");
+  print(unit:GetLocation());
+  fprint("t loc");
+  print(res);
+  DebugDrawCircle(res, 50, 255, 255 ,255);
+  DebugDrawLine(unit:GetLocation(), res, 255, 255 ,255);
+  return res;
 end
 
 function Danger:SafetyDelta(source, unit)

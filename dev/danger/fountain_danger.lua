@@ -1,14 +1,15 @@
 local FountainDanger = {};
+      FountainDanger.name = "fountain";
 ------------------------------------------
 local VectorHelper = require(GetScriptDirectory().."/dev/helper/vector_helper")
 ------------------------------------------
 local DANGER_FOUNTAIN       = 500;
-local DANGER_FOUNTAIN_FAR   = 50;
-local DANGER_FOUNTAIN_BASE  = 5;
+local DANGER_FOUNTAIN_FAR   = 5000;
+local DANGER_FOUNTAIN_BASE  = 500;
 ------------------------------------------
 function FountainDanger:Power(distance)
   if (distance < 1000) then
-    return DANGER_FOUNTAIN / (distance*distance);
+    return DANGER_FOUNTAIN;
   elseif (distance < 3000) then
     return DANGER_FOUNTAIN_FAR / (distance*distance);
   else
@@ -17,7 +18,13 @@ function FountainDanger:Power(distance)
 end
 
 function FountainDanger:OfLocation( vLocation, team )
-  return self:Power(VectorHelper:Length(vLocation, FOUNTAIN[team]));
+local length = VectorHelper:Length(vLocation - FOUNTAIN[team]);
+  -- print("input vector")
+  -- print(vLocation);
+  -- print("team "..team);
+  -- print(FOUNTAIN[team]);
+  -- print("l "..length);
+  return self:Power(length);
 end
 
 function FountainDanger:ResultVector(team, unit, distance)

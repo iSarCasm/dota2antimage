@@ -65,7 +65,6 @@ function M.StateWalkToShop(self, BotInfo, Mode, Strategy)
   local loc = SHOP[self.Shop];
   if (self:ShopDistance(self.Shop) < 10 or (self.Shop == GetShop())) then
     self.StateMachine.State = self.STATE_BUY;
-    print(GetBot():GetUnitName().."buy update state "..self.StateMachine.State);  
   else
     BotActions.MoveToLocation:Call(loc);
   end

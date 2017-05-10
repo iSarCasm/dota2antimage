@@ -22,7 +22,7 @@ flexBot = FlexBot:new(Heroes:GetHero());
 Game:InitializeUnits();
 --------------------------------------------------------
 function Think(  )
-  Game:Update();
-  TeamStrategy:Update();
-  flexBot:Think();
+  -- Game:Update();
+  -- TeamStrategy:Update();
+  -- flexBot:Think();
 end

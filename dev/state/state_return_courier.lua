@@ -2,7 +2,7 @@ local M = {}
 local BotActions = require(GetScriptDirectory().."/dev/bot_actions");
 -------------------------------------------------
 M.StateMachine = {}
--------------------------------------------------
+  -------------------------------------------------
 function M:new(o)
     o = o or {}
     setmetatable(o, self)
@@ -18,7 +18,8 @@ end
 
 function M:ShouldReturn()
   local courier_state = GetCourierState(self.courier);
-  return (courier_state ~= COURIER_STATE_DELIVERING_ITEMS and courier_state ~= COURIER_STATE_RETURNING_TO_BASE and self:DistantFromFountain());
+  return self.courier and self.courier:IsAlive() and 
+    (courier_state ~= COURIER_STATE_DELIVERING_ITEMS and courier_state ~= COURIER_STATE_RETURNING_TO_BASE and self:DistantFromFountain());
 end
 
 function M:DistantFromFountain()

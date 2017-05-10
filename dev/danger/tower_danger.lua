@@ -1,4 +1,5 @@
 local TowerDanger = {};
+      TowerDanger.name = "tower";
 ------------------------------------------
 local VectorHelper = require(GetScriptDirectory().."/dev/helper/vector_helper");
 local Game         = require(GetScriptDirectory().."/dev/game");

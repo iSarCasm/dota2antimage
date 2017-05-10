@@ -27,8 +27,9 @@ function Laning:GetHeroBalance()
   return 1 - (my_power / (enemy_power + my_power));
 end
 
-function Laning:WorthWaitingForLhThere(vec, range)
-  return true;
+function Laning:TryRange(min, max)
+  local bot = GetBot();
+  return min + (bot:GetMaxHealth() - bot:GetHealth()) / bot:GetMaxHealth() * (max-min);
 end
 
 function Laning:PrepareForLhVector()
@@ -36,14 +37,9 @@ function Laning:PrepareForLhVector()
   local start_range = 200;                        -- 200 -> 200, 700 -> 200
   local end_range = bot:GetAttackRange() + 400;   -- 200 -> 600, 700 -> 1100
   local reward_vec = nil;
-  for try_range = start_range, end_range, 100 do
-    reward_vec = self.weak:GetLocation() + VectorHelper:Normalize(Danger:SafestLocation(bot) - self.weak:GetLocation()) * try_range;
-    if (self:WorthWaitingForLhThere(reward_vec, range)) then
-      return reward_vec;
-    end
-  end
-  return reward_vec;
-  return nil;
+  local try_range = self:TryRange(200, 1100);
+  fprint("rabng "..self:TryRange(200, 1100));
+  return self.weak:GetLocation() + VectorHelper:Normalize(Danger:SafestLocation(bot) - self.weak:GetLocation()) * try_range;
 end
 
 function Laning:ClosestAllyToVector(vec)
@@ -127,6 +123,8 @@ function Laning.LastHit(self, BotInfo)
     DebugDrawCircle(self.weak:GetLocation(), 20, 255, 255, 0);
   end
 
+  fprint(self.kinda_low_creep and "low" or "no low")
+
   DebugDrawCircle(position, 20, 0, 255 ,255);
   if (dist > 800) then
     -- fprint("really far from comfort");
@@ -140,13 +138,13 @@ function Laning.LastHit(self, BotInfo)
   elseif (dist > 250) then
     -- fprint("get a bit closer");
     BotActions.MoveToLocation:Call(position);
-  elseif (self.weak and self.weak:GetHealth() < 250) then
+  elseif (self.weak and self.weak:GetHealth() < 150) then
     -- fprint("rotate");
     if (not UnitHelper:IsFacingEntity(bot, self.weak, 10)) then
       BotActions.RotateTowards:Call(self.weak:GetLocation());
     end
   else
-    BotActions.Dance:Call(position, 200, 1);
+    BotActions.Dance:Call(position, 100, 1);
   end
 end
 

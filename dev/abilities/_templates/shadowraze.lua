@@ -47,6 +47,7 @@ function Shadowraze:EvaluatePotential()
       elseif (unit:IsCreep()) then
         reward = RewardDamageCreep:Creep(unit, self:Ability():GetAbilityDamage());
       end
+      if (GetUnitToUnitDistance(bot, unit) < (self.range-125+64)) then reward = 0; end;
       local effort = EffortWalk:IntoRange(unit:GetLocation(), self.range) + EffortDanger:OfLocation(unit:GetLocation()) 
                         + EffortSpendMana:Mana(90) + EffortCooldown:Cooldown(10) + self.base_effort;
       local potential = reward / effort;
@@ -64,8 +65,11 @@ function Shadowraze:EvaluatePotential()
 end
 ------------------------------------
 function Shadowraze:Run(BotInfo, Mode, Strategy)
+  if (not self.Unit or self.Unit:IsNull()) then return end;
+
   local bot = GetBot();
-  if (GetUnitToUnitDistance(bot, self.Unit) > (self.range+64)) then
+  local distance = GetUnitToUnitDistance(bot, self.Unit);
+  if (distance > (self.range+64)) then
     BotActions.MoveToLocation:Call(self.Unit:GetLocation());
   else
     if (not UnitHelper:IsFacingEntity(bot, self.Unit, 10)) then
@@ -73,9 +77,9 @@ function Shadowraze:Run(BotInfo, Mode, Strategy)
     end
   end
 
-  if (UnitHelper:IsFacingEntity(bot, self.Unit, 10) and GetUnitToUnitDistance(bot, self.Unit) <= (self.range+64)) then
+  if (UnitHelper:IsFacingEntity(bot, self.Unit, 10) and distance <= (self.range+64)) then
     bot:Action_UseAbility(self:Ability());
-  elseif (bot:IsCastingAbility() and (not UnitHelper:IsFacingEntity(bot, self.Unit, 10) or GetUnitToUnitDistance(bot, self.Unit) > (self.range+125+64))) then
+  elseif (bot:IsCastingAbility() and (not UnitHelper:IsFacingEntity(bot, self.Unit, 10) or distance > (self.range+125+64) or distance < (self.range-125+64))) then
     bot:Action_ClearActions(true);
   end
 end

@@ -61,7 +61,7 @@ function M.StateWaitRune(self, BotInfo, Mode, Strategy)
   if (GetRuneStatus(self.Rune) == 1) then
     self.StateMachine.State = self.STATE_PICK_RUNE;
   else
-    BotActions.Dance:Call(GetRuneSpawnLocation(self.Rune), 400, 1);
+    BotActions.Dance:Call(GetRuneSpawnLocation(self.Rune), 200, 1);
   end
 end
 

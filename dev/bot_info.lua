@@ -30,7 +30,7 @@ function BotInfo:GatherData()
     self.healthDelta = self.health - self.lastHealth;
   end
   self.enemy_heroes = bot:GetNearbyHeroes(1599, true, BOT_MODE_NONE);
-  self.ally_heroes = bot:GetNearbyHeroes(1599, true, BOT_MODE_NONE);
+  self.ally_heroes = bot:GetNearbyHeroes(1599, false, BOT_MODE_NONE);
 end
 
 function BotInfo:ResetTempVars()

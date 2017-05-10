@@ -57,13 +57,13 @@ function M:EvaluatePotential(BotInfo, Mode, Strategy)
     local effort = effort_walk + effort_danger + effort_wait + effort_kill_creeps;
     local potential = reward / effort;
 
-    -- print("Lane: .."..lane);
-    -- print("Reward: "..reward);
-    -- print("Kill: "..EffortKillCreepwave:Generic());
-    -- print("Wait: "..EffortWait:Creeps(lane));
-    -- print("Walk: "..EffortWalk:ToLocation(lane_location));
-    -- print("Danger: "..EffortDanger:OfLocation(lane_location));
-    -- print("P: "..potential);
+    -- fprint("Lane: .."..lane);
+    -- fprint("Reward: "..reward);
+    -- fprint("Kill: "..EffortKillCreepwave:Generic());
+    -- fprint("Wait: "..EffortWait:Creeps(lane));
+    -- fprint("Walk: "..EffortWalk:ToLocation(lane_location));
+    -- fprint("Danger: "..EffortDanger:OfLocation(lane_location));
+    -- fprint("P: "..potential);
 
     self.Potential[lane] = potential;
     if (potential > highest) then
