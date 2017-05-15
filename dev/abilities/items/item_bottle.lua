@@ -16,7 +16,7 @@ end
 ------------------------------------
 function ItemFlask:InstaUse(Mode, Strategy)
   local bot = GetBot();
-  if (not bot:HasModifier("modifier_bottle_regeneration")) then
+  if (not bot:HasModifier("modifier_bottle_regeneration") and self:Ability():GetCurrentCharges() > 0) then
     if ((bot:GetMaxHealth()-bot:GetHealth()) > 300 or ((bot:GetMaxHealth()-bot:GetHealth()) > 90 and (bot:GetMaxMana()-bot:GetMana()) > 90)) then
       bot:Action_UseAbilityOnEntity(self:Ability(), bot);
     end

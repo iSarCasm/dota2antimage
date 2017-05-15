@@ -23,11 +23,11 @@ end
 function M:EvaluatePotential(BotInfo, Mode, Strategy)
   local bot = GetBot();
   local highest = VERY_LOW_INT;
-  local heroes = bot.flex_bot.botInfo:GetNearbyHeroes(1500, true, BOT_MODE_NONE);
+  local heroes = FGetNearbyHeroes(1500, true);
   if (#heroes ~= 0) then
     for i = 1, #heroes do
       local hero = heroes[i];
-      local reward = RewardHarassHero:Hero(hero);
+      local reward = RewardHarassHero:Hero(hero, heroes);
       local effort = EffortWalk:IntoRange(hero:GetLocation(), bot:GetAttackRange()) + 1;
       local potential = reward / effort;
 
@@ -45,10 +45,14 @@ end
 -------------------------------------------------
 -------------------------------------------------
 function M.Fight(self, BotInfo, Mode, Strategy)
-  GetBot():Action_AttackUnit(self.Hero, false);
-  if ((GameTime() - GetBot():GetLastAttackTime()) < 0.1) then
-    GetBot().flex_bot.backoff = DotaTime() + 0.5;
-  end 
+  if (GetUnitToUnitDistance(GetBot(), self.Hero) > (GetBot():GetAttackRange() - 50) and GetBot():GetCurrentActionType() ~= BOT_ACTION_TYPE_ATTACK) then
+    BotActions.MoveToLocation:Call(self.Hero:GetLocation());
+  else
+    GetBot():Action_AttackUnit(self.Hero, false);
+    if ((GameTime() - GetBot():GetLastAttackTime()) < 0.1) then
+      GetBot().flex_bot.backoff = DotaTime() + 0.5;
+    end 
+  end
 end
 -------------------------------------------------
 -------------------------------------------------

@@ -1,7 +1,5 @@
 local Game = {};
 ----------------------------------------------
-local VectorHelper = require(GetScriptDirectory().."/dev/helper/vector_helper")
-----------------------------------------------
 Game.RuneStates = {}
 Game.RuneStates[RUNE_BOUNTY_1] = RUNE_STATUS_MISSING;
 Game.RuneStates[RUNE_BOUNTY_2] = RUNE_STATUS_MISSING;
@@ -59,7 +57,7 @@ function Game:TimeToJungle(jungle)
 end
 
 function Game:TimeToCreeps(lane)
-  local distance = VectorHelper:Length(GetFront(GetTeam(), lane) - GetFront(GetEnemyTeam(), lane));
+  local distance = VectorHelper.Length(GetFront(GetTeam(), lane) - GetFront(GetEnemyTeam(), lane));
   if (distance < 200) then
     return 0;
   else
@@ -122,7 +120,7 @@ function Game:UpdateJungle()
   for jungle = 1, JUNGLE_TOTAL do
     local jungle_location = JUNGLE_CAMP[jungle].Location;
     if (GetUnitToLocationDistance(bot, jungle_location) < 300) then
-      local creeps = bot:GetNearbyCreeps(800, true);
+      local creeps = FGetNearbyCreeps(600, true);
       -- print("creeps "..#creeps);
       if (#creeps == 0) then
         self.JungleStates[jungle] = 0;

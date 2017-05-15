@@ -35,3 +35,35 @@ function fprint(msg)
   print("[F "..mins..":"..secs.."."..mils.." "..GetBot():GetUnitName().."]\t"..msg);
 end
 
+function FGetNearbyHeroes(range, bEnemies)
+  if (range > 1599) then
+    return GetBot():GetNearbyHeroes(1599, bEnemies, BOT_MODE_NONE);
+  else
+    local botInfo = GetBot().flex_bot.botInfo;
+    local result_heroes = {};
+    local heroes = (bEnemies and botInfo.enemy_heroes or botInfo.ally_heroes);
+    for i = 1, #heroes do
+      if (GetUnitToUnitDistance(bot, heroes[i]) < range) then
+        table.insert(result_heroes, heroes[i]);
+      end
+    end
+    return result_heroes;
+  end
+end
+
+function FGetNearbyCreeps(range, bEnemy)
+  if (range > 1599) then
+    return GetBot():GetNearbyCreeps(range, bEnemy);
+  else
+    local botInfo = GetBot().flex_bot.botInfo;
+    local result_creeps = {};
+    local creeps = (bEnemy and botInfo.enemy_creeps or botInfo.ally_creeps);
+    for i = 1, #creeps do
+      if (GetUnitToUnitDistance(bot, creeps[i]) < range) then
+        table.insert(result_creeps, creeps[i]);
+      end
+    end
+    return result_creeps;
+  end
+ end
+

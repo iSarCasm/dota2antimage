@@ -16,7 +16,7 @@ end
 ------------------------------------
 function ItemFaerieFire:InstaUse(Mode, Strategy)
   local bot = GetBot();
-  if (bot:GetHealth < 100) then
+  if (bot:GetHealth() < 100) then
     bot:Action_UseAbility(self:Ability());
   end
 end

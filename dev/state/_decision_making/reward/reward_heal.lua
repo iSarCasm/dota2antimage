@@ -10,7 +10,7 @@ function RewardHeal:Fountain()
   local mp_max = bot:GetMaxMana();
   local low_health_multy = 1;
   if (hp < 200) then 
-    low_health_multy = 3;
+    low_health_multy = 4;
   end
   return ((hp_max - hp) + (mp_max - mp)) * low_health_multy * self.Multiplayer;
 end

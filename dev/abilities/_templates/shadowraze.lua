@@ -35,8 +35,8 @@ function Shadowraze:EvaluatePotential()
 
   local bot = GetBot();
   local highest = VERY_LOW_INT;
-  local units = bot:GetNearbyHeroes(1500, true, BOT_MODE_NONE);
-  local creeps = Creeping:GetNearbyCreeps(bot, 1500, true);
+  local units = FGetNearbyHeroes(1500, true);
+  local creeps = FGetNearbyCreeps(1500, true);
   for k,v in pairs(creeps) do units[k] = v end -- merge creeps into untis
   local reward = 0;
   if (#units ~= 0) then
@@ -47,7 +47,8 @@ function Shadowraze:EvaluatePotential()
       elseif (unit:IsCreep()) then
         reward = RewardDamageCreep:Creep(unit, self:Ability():GetAbilityDamage());
       end
-      if (GetUnitToUnitDistance(bot, unit) < (self.range-125+64)) then reward = 0; end;
+      local distance = GetUnitToUnitDistance(bot, unit);
+      if (distance < (self.range-125+64) or distance > (self.range+125+64)) then reward = 0; end;
       local effort = EffortWalk:IntoRange(unit:GetLocation(), self.range) + EffortDanger:OfLocation(unit:GetLocation()) 
                         + EffortSpendMana:Mana(90) + EffortCooldown:Cooldown(10) + self.base_effort;
       local potential = reward / effort;
@@ -77,9 +78,9 @@ function Shadowraze:Run(BotInfo, Mode, Strategy)
     end
   end
 
-  if (UnitHelper:IsFacingEntity(bot, self.Unit, 10) and distance <= (self.range+64)) then
+  if (UnitHelper:IsFacingEntity(bot, self.Unit, 10) and distance <= (self.range+125+64) and distance >= (self.range-125+64) and self.Unit:IsAlive()) then
     bot:Action_UseAbility(self:Ability());
-  elseif (bot:IsCastingAbility() and (not UnitHelper:IsFacingEntity(bot, self.Unit, 10) or distance > (self.range+125+64) or distance < (self.range-125+64))) then
+  elseif (bot:IsCastingAbility()) then
     bot:Action_ClearActions(true);
   end
 end

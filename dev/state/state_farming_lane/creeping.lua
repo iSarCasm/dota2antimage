@@ -7,113 +7,6 @@ local VectorHelper    = require(GetScriptDirectory().."/dev/helper/vector_helper
 M.TOWER_POWER = 400;
 M.MELEE_POWER = 45;
 M.RANGE_POWER = 80;
-function M:UpdateLaningState()
-  local bot = GetBot();
-  local pos = bot:GetLocation();
-
-  self.enemy_creeps = bot:GetNearbyCreeps(1599, true);
-  self.ally_creeps = bot:GetNearbyCreeps(1599, false);
-  self.nearby_ally_creeps = bot:GetNearbyCreeps(500, false);
-  self.tower = MapHelper:GetFrontTowerAt(UnitHelper:GetUnitLane(bot));
-  self.enemy_tower = MapHelper:GetEnemyFrontTowerAt(UnitHelper:GetUnitLane(bot));
-
-  local power_balance = 0;
-  local enemy_power = 0;
-  local ally_power = 0;
-  local total_power = 1;
-  self.enemyVector = Vector(0, 0);
-  self.allyVector = Vector(0, 0);
-  self.nearbyAllyVector = Vector(0, 0);
-  self.towerVector = Vector(0, 0);
-
-  -- Enemy Creep Vector
-  local positions_count = 0;
-  for _,creep in pairs(self.enemy_creeps)
-  do
-    if (creep:IsAlive()) then
-      allNil = false;
-      local creep_pos = creep:GetLocation();
-      local isMelee = (string.find(creep:GetUnitName(), "melee") ~= nil);
-      local power = isMelee and self.MELEE_POWER or self.RANGE_POWER;
-      power_balance = power_balance - power;
-      total_power = total_power + power;
-      enemy_power = enemy_power + power;
-      -- result
-      self.enemyVector[1] = self.enemyVector[1] + creep_pos[1];
-      self.enemyVector[2] = self.enemyVector[2] + creep_pos[2];
-      positions_count = positions_count + 1;
-    end
-  end
-  if (positions_count > 0) then
-    self.enemyVector[1] = self.enemyVector[1] / positions_count;
-    self.enemyVector[2] = self.enemyVector[2] / positions_count;
-  else
-    self.enemyVector = nil;
-  end
-  -- Enemy Tower
-  if (self.enemy_tower and (GetUnitToUnitDistance(bot, self.enemy_tower)) < 950) then
-    power_balance = power_balance - self.TOWER_POWER;
-  end
-  -- Ally Creep Vector
-  positions_count = 0;
-  for _,creep in pairs(self.ally_creeps)
-  do
-    if (creep:IsAlive()) then
-      allNil = false;
-      local creep_pos = creep:GetLocation();
-      local isMelee = (string.find(creep:GetUnitName(), "melee") ~= nil);
-      local power = isMelee and self.MELEE_POWER or self.RANGE_POWER;
-      power_balance = power_balance + power;
-      total_power = total_power + power;
-      ally_power = ally_power + power;
-      -- result
-      self.allyVector[1] = self.allyVector[1] + creep_pos[1];
-      self.allyVector[2] = self.allyVector[2] + creep_pos[2];
-      positions_count = positions_count + 1;
-    end
-  end
-  if (positions_count > 0) then
-    self.allyVector[1] = self.allyVector[1] / positions_count;
-    self.allyVector[2] = self.allyVector[2] / positions_count;
-  else
-    self.allyVector = nil;
-  end
-   -- Nearby Ally Creep Vector
-  positions_count = 0;
-  for _,creep in pairs(self.nearby_ally_creeps)
-  do
-    if (creep:IsAlive()) then
-      allNil = false;
-      local creep_pos = creep:GetLocation();
-      local isMelee = (string.find(creep:GetUnitName(), "melee") ~= nil);
-      local power = isMelee and self.MELEE_POWER or self.RANGE_POWER;
-      power_balance = power_balance + power;
-      total_power = total_power + power;
-      ally_power = ally_power + power;
-      -- result
-      self.nearbyAllyVector[1] = self.nearbyAllyVector[1] + creep_pos[1];
-      self.nearbyAllyVector[2] = self.nearbyAllyVector[2] + creep_pos[2];
-      positions_count = positions_count + 1;
-    end
-  end
-  if (positions_count > 0) then
-    self.nearbyAllyVector[1] = self.nearbyAllyVector[1] / positions_count;
-    self.nearbyAllyVector[2] = self.nearbyAllyVector[2] / positions_count;
-  else
-    self.nearbyAllyVector = nil;
-  end
-  -- Tower Vector
-  if (self.tower) then
-    allNil = false;
-    local tower_pos = self.tower:GetLocation();
-    -- result
-    self.towerVector[1] = tower_pos[1];
-    self.towerVector[2] = tower_pos[2];
-  else
-    self.towerVector = nil;
-  end
-end
-
 function M:ExtrapolatedDamage(creep, time)
   return 0;
 end
@@ -123,32 +16,20 @@ function M:GetPhysDamageToCreep(bot, creep)
   return UnitHelper:GetPhysDamageToUnit(bot, creep, true, (not isMelee));
 end
 
-function M:GetNearbyCreeps(bot, range, bEnemy)
-  if (range > 1599) then
-    print("extra bot:GetNearbyCreeps called!")
-    return bot:GetNearbyCreeps(range, bEnemy);
-  else
-    if (bEnemy) then
-      local creeps = self.enemy_creeps;
-      local result_creeps = {};
-      for i = 1, #creeps do
-        if (GetUnitToUnitDistance(bot, creeps[i]) < range) then
-          table.insert(result_creeps, creeps[i]);
-        end
-      end
-      return result_creeps;
-    else
-      local creeps = self.ally_creeps;
-      local result_creeps = {};
-      for i = 1, #creeps do
-        if (GetUnitToUnitDistance(bot, creeps[i]) < range) then
-          table.insert(result_creeps, creeps[i]);
-        end
-      end
-      return result_creeps;
+function M:GetNearestCreep(range, bEnemies)
+  local creeps = FGetNearbyCreeps(range, bEnemies);
+  local nearest_creeps = nil;
+  local nearest_distance = VERY_HIGH_INT;
+  for i = 1, #creeps do
+    local creep = creeps[i];
+    local distance = GetUnitToUnitDistance(GetBot(), creep);
+    if (creep and not creep:IsNull() and nearest_distance > distance) then
+      nearest_distance = distance;
+      nearest_creeps = creep;
     end
   end
- end
+  return nearest_creeps;
+end
 
 function M:CreepHasLessHealthThanNHits(bot, creep, hits)
   local BotInfo = bot.flex_bot.botInfo;
@@ -169,7 +50,7 @@ function M:CreepWithNHitsOfHealth(range, enemy, ally, hits)
   if ((enemy and ally) == false) then return nil end;
   local bot = GetBot();
   if (enemy) then
-    local enemy_creeps = self:GetNearbyCreeps(bot, range, true);
+    local enemy_creeps = FGetNearbyCreeps(range, true);
     for _,creep in pairs(enemy_creeps) do
       if (self:CreepHasLessHealthThanNHits(bot, creep, hits)) then
         return creep;
@@ -178,7 +59,7 @@ function M:CreepWithNHitsOfHealth(range, enemy, ally, hits)
   end
 
   if (ally) then
-    local ally_creeps = self:GetNearbyCreeps(bot, range, false);
+    local ally_creeps = FGetNearbyCreeps(range, false);
     for _,creep in pairs(ally_creeps) do
       if (self:CreepHasLessHealthThanNHits(bot, creep, hits)) then
         return creep;
@@ -189,22 +70,15 @@ function M:CreepWithNHitsOfHealth(range, enemy, ally, hits)
   return nil;
 end
 
-function M:AgroOffVec()
-  local bot = GetBot();
-  local lane = UnitHelper:GetUnitLane(bot);
-  local tower = MapHelper:GetFrontTowerAt(lane);
-  return bot:GetLocation() + (VectorHelper:Normalize(tower:GetLocation() - bot:GetLocation()) * 400); -- walk back range
-end
-
 function M:isAttackedByCreeps()
   return (GetBot():TimeSinceDamagedByTower() < 1 or GetBot():TimeSinceDamagedByCreep() < 0.5); -- ok
 end
 
 function M:WeakestCreep(range, ally)
   local bot = GetBot();
-  local creeps = bot:GetNearbyCreeps(range, true);
+  local creeps = FGetNearbyCreeps(range, true);
   if (ally) then
-    local ally_creeps = bot:GetNearbyCreeps(range, false);
+    local ally_creeps = FGetNearbyCreeps(range, false);
     for k,v in pairs(ally_creeps) do creeps[k] = v end
   end
   local lowest_hp = VERY_HIGH_INT;

@@ -18,6 +18,10 @@ function Think()
 end
 
 function GetBotNames()
-	return { "SarCasm", "ANDROIDp", "Smile", "LightOfHeaven", "Artstyle", "ChuaN", "PGG", "Vigoss", "G", "YaphetS", "NS", "Maelk", "XBOCT", "PlaymatE" };
+	return { 	
+		"SarCasm", "ANDROIDp", "Smile", "LightOfHeaven", 
+		"Artstyle", "ChuaN", "PGG", "Vigoss", "DreadIsBack", 
+		"YaphetS", "NS", "Maelk", "XBOCT", "PlaymatE" 
+	};
 end
 ----------------------------------------------------------------------------------------------------

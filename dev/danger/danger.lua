@@ -43,15 +43,8 @@ function Danger:SafestLocation(unit)
     result_vector = result_vector + safety_vector * safety_delta + danger_vector * danger_delta;
     self:Debug(unit, safety_vector, 0, 255);
     self:Debug(unit, danger_location, 255, 0);
-    fprint(source.name);
-    fprint(safety_delta);
-    fprint(danger_delta);
   end
   local res = result_vector / total_delta;
-  fprint("my loc");
-  print(unit:GetLocation());
-  fprint("t loc");
-  print(res);
   DebugDrawCircle(res, 50, 255, 255 ,255);
   DebugDrawLine(unit:GetLocation(), res, 255, 255 ,255);
   return res;

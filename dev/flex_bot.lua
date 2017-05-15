@@ -2,7 +2,6 @@ local TeamStrategy    = require(GetScriptDirectory().."/dev/team_strategy");
 local BotMode         = require(GetScriptDirectory().."/dev/bot_mode");
 local BotState        = require(GetScriptDirectory().."/dev/bot_state");
 local AbilityItems    = require(GetScriptDirectory().."/dev/abilities/ability_items")
-local Creeping        = require(GetScriptDirectory().."/dev/state/state_farming_lane/creeping");
 --------------------------------------------------------
 local FlexBot = {};
 --------------------------------------------------------
@@ -16,6 +15,7 @@ function FlexBot:new(BotInfo)
     flex_bot.botState = BotState:new();
     flex_bot.abilityItems = AbilityItems:new();
     GetBot().flex_bot = flex_bot; -- make flexBot accessible from any part of code via GetBot().flex_bot
+    GetBot().botInfo = flex_bot.botInfo; -- make botInfo accessible
     return flex_bot;
 end
 --------------------------------------------------------
@@ -24,9 +24,8 @@ function FlexBot:ResetTempVars()
 end
 --------------------------------------------------------
 function FlexBot:Think()
-  self.botInfo:GatherData();
-  Creeping:UpdateLaningState();
   self:ResetTempVars();
+  self.botInfo:GatherData();
   self.botMode:Update(TeamStrategy.Strategy);
 
   -- local t = RealTime();
@@ -34,7 +33,6 @@ function FlexBot:Think()
   -- print("    time spent in self.botState:Update "..(RealTime() - t)*1000); t = RealTime();
 
   self.abilityItems:InstaUse(self.botInfo, self.botMode.Mode, TeamStrategy.Strategy);
-  self.botInfo:ResetTempVars();
 end
 --------------------------------------------------------
 --------------------------------------------------------

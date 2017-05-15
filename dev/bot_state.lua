@@ -184,6 +184,9 @@ function BotState:Update(BotInfo, Mode, Strategy)
   -- print("      time spent in self:UpdateState "..(RealTime() - t)*1000); t = RealTime();
   self.StateMachine[self.State]:Run(BotInfo, Mode, Strategy);
   -- print("      time spent in self.StateMachine[self.State]:Run "..(RealTime() - t)*1000); t = RealTime();
+  if (GetBot():GetUnitName() == "npc_dota_hero_nevermore") then
+    DebugDrawText(25, 350, "STATE: "..self.State, 255, 255, 255);
+  end
 end
 --------------------------------------------------------
 return BotState;

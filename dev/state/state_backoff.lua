@@ -1,8 +1,12 @@
 local M = {}
 local BotActions        = require(GetScriptDirectory().."/dev/bot_actions");
 local Danger            = require(GetScriptDirectory().."/dev/danger/danger")
+local Creeping          = require(GetScriptDirectory().."/dev/state/state_farming_lane/creeping")
 -------------------------------------------------
 M.Potential = {};
+M.REASON_CREEPS = "REASON_CREEPS";
+M.REASON_TOWER = "REASON_TOWER";
+M.REASON_OTRHER = "REASON_OTRHER";
 -------------------------------------------------
 function M:new(o)
     o = o or {}
@@ -14,34 +18,38 @@ end
 function M:EvaluatePotential(BotInfo, Mode, Strategy)
   local bot = GetBot();
   if (bot.flex_bot.backoff and bot.flex_bot.backoff > DotaTime()) then
+    self.Reason = self.REASON_OTRHER;
     return 18;
   else
     if (GetBot():TimeSinceDamagedByTower() < 1) then
+      self.Reason = self.REASON_TOWER;
       return 29;
     elseif (GetBot():TimeSinceDamagedByTower() < 2) then
+      self.Reason = self.REASON_TOWER;
       return 24;
     elseif (GetBot():TimeSinceDamagedByCreep() < 0.75) then
+      self.Reason = self.REASON_CREEPS;
       return 19;
-    elseif (GetBot():TimeSinceDamagedByCreep() < 1) then
-      return 7;
-    elseif (GetBot():WasRecentlyDamagedByAnyHero(0.15)) then
-      return 4;
     end
   end
   return 0;
 end
 -------------------------------------------------
--------------------------------------------------
-function M.Escape(self, BotInfo, Mode, Strategy)
-  local bot = GetBot();
-  local location = Danger:SafestLocation(bot);
-  DebugDrawCircle(location, 55, 0, 0 ,255);
-  BotActions.MoveToLocation:Call(location);
-end
--------------------------------------------------
--------------------------------------------------
 function M:Run(BotInfo, Mode, Strategy)
-  self:Escape(self, BotInfo, Mode, Strategy);
+  local bot = GetBot();
+  if (self.Reason == self.REASON_TOWER or self.Reason == self.REASON_OTHER) then
+    local safest_location = Danger:SafestLocation(bot);
+    BotActions.MoveToLocation:Call(safest_location);
+  else
+    local nearest_ally_creep = Creeping:GetNearestCreep(600, false);
+    if (nearest_ally_creep) then
+      local move_point = bot:GetLocation() + (nearest_ally_creep:GetLocation() - bot:GetLocation()) * 1.5;
+      BotActions.MoveToLocation:Call(move_point);
+    else
+      local safest_location = Danger:SafestLocation(bot);
+    BotActions.MoveToLocation:Call(safest_location);
+    end
+  end
 end
 -------------------------------------------------
 return M;

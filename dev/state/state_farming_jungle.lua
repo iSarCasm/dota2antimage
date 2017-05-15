@@ -74,8 +74,8 @@ end
 
 function M.StateKillCamp(self, BotInfo, Mode, Strategy)
   local bot = GetBot();
-  local creeps = bot:GetNearbyCreeps(700, true);
-  if (#creeps > 0) then
+  local creeps = FGetNearbyCreeps(700, true);
+  if (#creeps > 0 and creeps[1] and not creeps[1]:InNull() and creeps[1]:IsAlive()) then
     bot:Action_AttackUnit(creeps[1], false);
   else
     self.StateMachine.State = self.STATE_WALK_TO_CAMP;

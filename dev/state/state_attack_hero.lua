@@ -24,7 +24,7 @@ end
 function M:EvaluatePotential(BotInfo, Mode, Strategy)
   local bot = GetBot();
   local highest = VERY_LOW_INT;
-  local heroes = bot:GetNearbyHeroes(1500, true, BOT_MODE_NONE);
+  local heroes = FGetNearbyHeroes(1500, true);
   if (#heroes ~= 0) then
     for i = 1, #heroes do
       local hero = heroes[i];

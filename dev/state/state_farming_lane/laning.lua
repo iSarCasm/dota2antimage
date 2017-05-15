@@ -19,7 +19,7 @@ function Laning:GetHeroBalance()
   local myself = GetBot();
   local my_power = HeroHelper:LaningDefensivePower(myself);
   local enemy_power = 0;
-  local enemy_heroes = myself.flex_bot.botInfo:GetNearbyHeroes(1500, true, BOT_MODE_NONE);
+  local enemy_heroes = FGetNearbyHeroes(1500, true);
   for _, hero in pairs(enemy_heroes) do
     enemy_power = enemy_power +  HeroHelper:LaningOffensivePower(hero, myself);
   end
@@ -38,15 +38,15 @@ function Laning:PrepareForLhVector()
   local end_range = bot:GetAttackRange() + 400;   -- 200 -> 600, 700 -> 1100
   local reward_vec = nil;
   local try_range = self:TryRange(200, 1100);
-  fprint("rabng "..self:TryRange(200, 1100));
   return self.weak:GetLocation() + VectorHelper:Normalize(Danger:SafestLocation(bot) - self.weak:GetLocation()) * try_range;
 end
 
 function Laning:ClosestAllyToVector(vec)
+  local botInfo = GetBot().botInfo;
   local closest_range = VERY_HIGH_INT;
   local closest = nil;
-  for i = 1, #Creeping.ally_creeps do
-    local creep = Creeping.ally_creeps[i];
+  for i = 1, #botInfo.ally_creeps do
+    local creep = botInfo.ally_creeps[i];
     local dist = GetUnitToLocationDistance(creep, vec);
     if (dist < closest_range) then
       closest_range = dist;
@@ -56,36 +56,50 @@ function Laning:ClosestAllyToVector(vec)
   return closest;
 end
 
+function Laning:EnemyHeroAttackBackoffRange(loc)
+  local heroes = GetBot().botInfo.enemy_heroes;
+  local backoff_range = 0;
+  for i = 1, #heroes do
+    local hero = heroes[i];
+    backoff_range = Max(backoff_range, hero:GetAttackRange() - GetUnitToLocationDistance(hero, loc))
+  end
+  return backoff_range;
+end
+
 function Laning:GetComfortPoint(BotInfo)
   local bot = GetBot();
+  local botInfo = GetBot().botInfo;
   -- DebugDrawText(500, 100, "Balance is "..hero_balance, 255, 255, 255);
-  if (Creeping.allyVector and self.weak and self.weak:IsAlive() and self.weak:GetHealth() < self:PrepareForLhHealth(bot, self.weak)) then -- time to get really close and wait for that juicy lash hit
+  if (botInfo.allyVector and self.weak and self.weak:IsAlive() and self.weak:GetHealth() < self:PrepareForLhHealth(bot, self.weak)) then -- time to get really close and wait for that juicy lash hit
     -- fprint("really low! "..self:PrepareForLhHealth(bot, self.weak));
     local prepare_for_lh_vec = self:PrepareForLhVector(); 
     if (prepare_for_lh_vec) then
-      DebugDrawCircle(prepare_for_lh_vec, 25, 0, 0 ,255);
+      DebugDrawCircle(prepare_for_lh_vec, 25, 0, 0, 255);
       -- fprint("prepare for lh "..self:PrepareForLhHealth(bot, self.weak));
       return prepare_for_lh_vec;
     end
   end
 
-  if (Creeping.enemyVector and Creeping.allyVector) then -- chilling behind creeps
-    local middleVector = (Creeping.enemyVector + Creeping.allyVector) / 2;
-    local closest_to_middle_ally_vector = self:ClosestAllyToVector(middleVector):GetLocation();
+  if (botInfo.enemyVector and botInfo.allyVector) then -- chilling behind creeps
+    local middleVector = (botInfo.enemyVector + botInfo.allyVector) / 2;
+    local closest_to_enemy_ally_vector = self:ClosestAllyToVector(botInfo.enemyVector):GetLocation();
     local closest_range = 250;
-    local exp_only_range = 1200;
-    local delta_range = exp_only_range - closest_range;
-    local middle_to_safest_vec = VectorHelper:Normalize(Danger:SafestLocation(bot) - closest_to_middle_ally_vector);
-    local hero_balance = self:GetHeroBalance();
+    local middle_to_safest_vec = VectorHelper:Normalize(Danger:SafestLocation(bot) - closest_to_enemy_ally_vector);
+    -- local hero_balance = self:GetHeroBalance();
     -- fprint("m is "..(closest_range + delta_range * hero_balance));
-    local result_vector = closest_to_middle_ally_vector + middle_to_safest_vec * (closest_range + delta_range * hero_balance);
-    DebugDrawCircle(closest_to_middle_ally_vector, 25, 0, 255 ,255);
-    DebugDrawLine(closest_to_middle_ally_vector, result_vector, 0, 255 ,255);
+    local backoff_range = self:EnemyHeroAttackBackoffRange(closest_to_enemy_ally_vector) + closest_range;
+    local result_vector = closest_to_enemy_ally_vector + middle_to_safest_vec * backoff_range;
+    fprint("backoff range "..backoff_range);
+    DebugDrawCircle(closest_to_enemy_ally_vector,  35, 0, 255 ,255);
+    DebugDrawLine(closest_to_enemy_ally_vector, result_vector, 0, 255 ,255);
+
+    DebugDrawCircle(botInfo.enemyVector, 35, 255, 0 ,0);
+    DebugDrawCircle(botInfo.allyVector, 35, 0, 255 ,0);
     return result_vector;
-  elseif (Creeping.enemyVector) then    -- run from creeps!
+  elseif (botInfo.enemyVector) then    -- run from creeps!
     return Danger:SafestLocation(bot);
-  elseif (Creeping.allyVector) then     -- follow allies!
-    return Creeping.allyVector;
+  elseif (botInfo.allyVector) then     -- follow allies!
+    return botInfo.allyVector;
   else
     return GetFront(GetTeam(), self.Lane);  -- go to lane's front
   end
@@ -115,36 +129,38 @@ function Laning.LastHit(self, BotInfo)
   local dist = GetUnitToLocationDistance(bot, position);
   local no_heroes_near = true; -- TODO
 
-  if (self.kinda_low_creep) then
-    DebugDrawCircle(self.kinda_low_creep:GetLocation(), 20, 255, 0, 0);
-  end
+  DebugDrawCircle(position, 40, 255, 255, 255);
 
-  if (self.weak) then
-    DebugDrawCircle(self.weak:GetLocation(), 20, 255, 255, 0);
-  end
+  -- if (self.kinda_low_creep) then
+  --   DebugDrawCircle(self.kinda_low_creep:GetLocation(), 20, 255, 0, 0);
+  -- end
 
-  fprint(self.kinda_low_creep and "low" or "no low")
+  -- if (self.weak) then
+  --   DebugDrawCircle(self.weak:GetLocation(), 20, 255, 255, 0);
+  -- end
+
+  -- fprint(self.kinda_low_creep and "low" or "no low")
 
   DebugDrawCircle(position, 20, 0, 255 ,255);
   if (dist > 800) then
-    -- fprint("really far from comfort");
+    fprint("really far from comfort");
     BotActions.MoveToLocation:Call(position);
   elseif (self.very_low_creep) then
-    -- fprint("last hit!");
+    fprint("last hit!");
     bot:Action_AttackUnit(self.very_low_creep, false);
   elseif (self.kinda_low_creep and no_heroes_near) then
-    -- fprint("kinda low");
+    fprint("kinda low");
     bot:Action_AttackUnit(self.kinda_low_creep, false);
   elseif (dist > 250) then
-    -- fprint("get a bit closer");
+    fprint("get a bit closer");
     BotActions.MoveToLocation:Call(position);
   elseif (self.weak and self.weak:GetHealth() < 150) then
-    -- fprint("rotate");
+    fprint("rotate");
     if (not UnitHelper:IsFacingEntity(bot, self.weak, 10)) then
       BotActions.RotateTowards:Call(self.weak:GetLocation());
     end
-  else
-    BotActions.Dance:Call(position, 100, 1);
+  -- else
+  --   BotActions.Dance:Call(position, 50, 1);
   end
 end
 
