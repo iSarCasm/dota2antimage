@@ -6,9 +6,9 @@ local Game         = require(GetScriptDirectory().."/dev/game");
 ------------------------------------------
 function HeroDanger:Power(distance)
   if (distance < 800) then 
-    return 0.005 / (distance*distance);
+    return 0.0005 / (distance*distance);
   elseif (distance < 1000) then 
-    return 0.00025 / (distance*distance);
+    return 0.000025 / (distance*distance);
   else
     return 0;
   end

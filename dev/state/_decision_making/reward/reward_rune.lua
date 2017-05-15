@@ -19,7 +19,7 @@ function RewardRune:Bounty(Rune, Mode, BotInfo)
   if (DotaTime() < 1) then
     basic_reward = 100; -- first rune gives 100 gold
   end
-  return basic_reward + self:LaningReward(Rune, Mode, BotInfo);
+  return basic_reward + self:LaningReward(Rune, Mode, BotInfo) + self:TimeRoleReward(Rune, Mode, BotInfo);
 end
 
 function RewardRune:LaningReward(Rune, Mode, BotInfo)
@@ -40,6 +40,13 @@ function RewardRune:LaningReward(Rune, Mode, BotInfo)
   else
     return 0;
   end
+end
+
+function RewardRune:TimeRoleReward(Rune, Mode, BotInfo)
+  if (DotaTime() < 1 and (BotInfo.ROLE ~= ROLE_CARRY or BotInfo.ROLE ~= ROLE_MID)) then
+    return -300;
+  end
+  return 0;
 end
 ----------------------------------------------------
 return RewardRune;

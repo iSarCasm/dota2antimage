@@ -1,6 +1,8 @@
 local RewardDamageCreep = {};
 -----------------------------------------
 function RewardDamageCreep:Creep( hCreep, damage )
+  if (hCreep:GetTeam() == TEAM_NEUTRAL) then return 0 end
+
   if (hCreep:GetHealth() <= damage) then
     local necro = GetBot():GetModifierByName("modifier_nevermore_necromastery");
     if (necro) then

@@ -40,7 +40,7 @@ function ItemTango:EvaluatePotential()
 
   local bot = GetBot();
   local highest = VERY_LOW_INT;
-  local trees = bot:GetNearbyTrees(1500);
+  local trees = bot:GetNearbyTrees(1599);
   if (#trees ~= 0) then
     for i = 1, #trees do
       local tree = trees[i];

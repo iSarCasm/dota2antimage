@@ -2,7 +2,7 @@ local BotInfo = require(GetScriptDirectory().."/dev/bot_info");
 -------------------------------------------
 local Hero = BotInfo:new();
 -------------------------------------------
-Hero:Init(Safelane(), ROLE_SUPPORT);
+Hero:Init(Safelane(), ROLE_FULLSUP);
 Hero.projectileSpeed = 1000; -- ??
 Hero.abilities = {
   "warlock_fatal_bonds",

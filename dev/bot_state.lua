@@ -129,6 +129,7 @@ function BotState:SetState(State)
     fprint("or args "..self.Argument.." ~= "..self:StateArgument(State));
     if (self.StateMachine[self.State].Reset) then
       fprint("reset");
+      GetBot():Action_ClearActions(false);
       self.StateMachine[self.State]:Reset();
     end
   end

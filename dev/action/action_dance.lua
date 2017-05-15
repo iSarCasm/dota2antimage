@@ -1,5 +1,4 @@
 local Dance = {}
-local VectorHelper = require(GetScriptDirectory().."/dev/helper/vector_helper")
 Dance.name = "Dance";
 -------------------------------------------------
 function Dance:Call(point, range, time)

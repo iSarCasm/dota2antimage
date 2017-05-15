@@ -3,7 +3,7 @@ local BotInfo = require(GetScriptDirectory().."/dev/bot_info");
 local Hero = BotInfo:new();
 -------------------------------------------
 Hero = Hero:new();
-Hero:Init(Hardlane(), ROLE_CARRY);
+Hero:Init(Hardlane(), ROLE_OFFLANE);
 Hero.projectileSpeed = 0;
 Hero.abilities = {
   "magnataur_shockwave",

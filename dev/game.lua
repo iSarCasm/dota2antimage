@@ -1,5 +1,7 @@
 local Game = {};
 ----------------------------------------------
+VectorHelper    = require(GetScriptDirectory().."/dev/helper/vector_helper");
+----------------------------------------------
 Game.RuneStates = {}
 Game.RuneStates[RUNE_BOUNTY_1] = RUNE_STATUS_MISSING;
 Game.RuneStates[RUNE_BOUNTY_2] = RUNE_STATUS_MISSING;
@@ -57,7 +59,7 @@ function Game:TimeToJungle(jungle)
 end
 
 function Game:TimeToCreeps(lane)
-  local distance = VectorHelper.Length(GetFront(GetTeam(), lane) - GetFront(GetEnemyTeam(), lane));
+  local distance = VectorHelper:Length(GetFront(GetTeam(), lane) - GetFront(GetEnemyTeam(), lane));
   if (distance < 200) then
     return 0;
   else
@@ -82,8 +84,6 @@ function Game:GetShrinesForTeam(team)
     GetShrine(team, SHRINE_BASE_1),
     GetShrine(team, SHRINE_BASE_2),
     GetShrine(team, SHRINE_BASE_3),
-    GetShrine(team, SHRINE_BASE_4),
-    GetShrine(team, SHRINE_BASE_5),
     GetShrine(team, SHRINE_JUNGLE_1),
     GetShrine(team, SHRINE_JUNGLE_2)
   }

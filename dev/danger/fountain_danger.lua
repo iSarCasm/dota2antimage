@@ -1,6 +1,8 @@
 local FountainDanger = {};
       FountainDanger.name = "fountain";
 ------------------------------------------
+VectorHelper    = require(GetScriptDirectory().."/dev/helper/vector_helper");
+------------------------------------------
 local DANGER_FOUNTAIN       = 500;
 local DANGER_FOUNTAIN_FAR   = 5000;
 local DANGER_FOUNTAIN_BASE  = 500;
@@ -16,7 +18,7 @@ function FountainDanger:Power(distance)
 end
 
 function FountainDanger:OfLocation( vLocation, team )
-local length = VectorHelper.Length(vLocation - FOUNTAIN[team]);
+local length = VectorHelper:Length(vLocation - FOUNTAIN[team]);
   -- print("input vector")
   -- print(vLocation);
   -- print("team "..team);

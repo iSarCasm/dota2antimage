@@ -31,6 +31,7 @@ function fprint(msg)
   local mins = math.floor(DotaTime() / 60);
   if (mins < 0) then mins = mins + 1 end;
   local secs = math.floor(DotaTime() % 60);
+  if (mins < 0) then secs = 60 - secs end;
   mils = math.floor(mils * 1000);
   print("[F "..mins..":"..secs.."."..mils.." "..GetBot():GetUnitName().."]\t"..msg);
 end
@@ -66,4 +67,3 @@ function FGetNearbyCreeps(range, bEnemy)
     return result_creeps;
   end
  end
-

@@ -8,11 +8,7 @@ function RewardHeal:Fountain()
   local hp_max = bot:GetMaxHealth();
   local mp = bot:GetMana();
   local mp_max = bot:GetMaxMana();
-  local low_health_multy = 1;
-  if (hp < 200) then 
-    low_health_multy = 4;
-  end
-  return ((hp_max - hp) + (mp_max - mp)) * low_health_multy * self.Multiplayer;
+  return ((hp_max - hp) * self:LowHealthK() + (mp_max - mp)) ;
 end
 
 function RewardHeal:Shrine( hShrine )
@@ -21,7 +17,14 @@ end
 
 function RewardHeal:Tango()
   local bot = GetBot();
-  return Min(115, bot:GetMaxHealth() - bot:GetHealth()) * self.Multiplayer;
+  return Min(115, bot:GetMaxHealth() - bot:GetHealth()) * self:LowHealthK();
+end
+
+function RewardHeal:LowHealthK()
+  if (GetBot():GetHealth() < 200) then 
+    return 1.75;
+  end
+  return 1;
 end
 -----------------------------------------
 return RewardHeal;

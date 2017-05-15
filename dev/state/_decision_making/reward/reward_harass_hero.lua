@@ -4,7 +4,7 @@ local InventoryHelper = require(GetScriptDirectory().."/dev/helper/inventory_hel
 local HeroHelper      = require(GetScriptDirectory().."/dev/helper/hero_helper")
 -----------------------------------------
 local HARASS_BASE = 6;
-local HARASS_FACTOR = 25;
+local HARASS_FACTOR = 15;
 local FLASK_ADD = 22;
 local CLARITY_ADD = 17;
 local BOTTLE_ADD = 12;

@@ -13,20 +13,34 @@ Danger.danger_sources = {
 }
 
 Danger.fast_danger_sources = {
-  FountainDanger
+  FountainDanger,
+  TowerDanger,
+  HeroDanger
 }
+
+Danger.CACHE = {time = DotaTime()}
 -----------------------------------------
 local DANGER_TRAVEL_DISTANCE = 1000;
 -----------------------------------------
 function Danger:Location( vLocation )
-  local total_danger = 0;
-  for i = 1, #self.fast_danger_sources do
-    local source = self.fast_danger_sources[i];
-    local s_danger = source:OfLocation(vLocation, GetTeam());
-    local e_danger = source:OfLocation(vLocation, GetEnemyTeam());
-    total_danger = total_danger + e_danger - s_danger;
+  local cached = self:GetCache(vLocation)
+  if (cached) then
+    -- print("cache hit")
+    -- print(vLocation)
+    return cached;
+  else
+    -- print("cache miss "..#self.CACHE)
+    -- print(vLocation)
+    local total_danger = 0;
+    for i = 1, #self.fast_danger_sources do
+      local source = self.fast_danger_sources[i];
+      local s_danger = source:OfLocation(vLocation, GetTeam());
+      local e_danger = source:OfLocation(vLocation, GetEnemyTeam());
+      total_danger = total_danger + e_danger - s_danger;
+    end
+    self:Cache(vLocation, total_danger);
+    return Max(0, total_danger);
   end
-  return Max(0, total_danger);
 end
 
 function Danger:SafestLocation(unit)
@@ -70,6 +84,26 @@ function Danger:Debug(unit, vector, cr, cg)
   if (not(vector.x == 0 and vector.y == 0)) then
     DebugDrawCircle(vector, 25, cr, cg ,0);
     DebugDrawLine(unit:GetLocation(), vector, cr, cg ,0);
+  end
+end
+
+function Danger:Cache(vector, value)
+  self.CACHE[vector.x+vector.y] = value
+end
+
+function Danger:GetCache(vector)
+  self:GC();
+  if (self.CACHE and self.CACHE[vector.x+vector.y]) then
+    return self.CACHE[vector.x+vector.y]
+  end
+  return nil
+end
+
+function Danger:GC()
+  if (DotaTime() ~= self.CACHE.time) then
+    fprint("GC")
+    self.CACHE = {}
+    self.CACHE.time = DotaTime()
   end
 end
 -----------------------------------------
