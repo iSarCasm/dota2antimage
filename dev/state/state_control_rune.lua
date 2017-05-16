@@ -34,6 +34,11 @@ function M:EvaluatePotential(BotInfo, Mode, Strategy)
     local reward = RewardRune:Generic(rune, Mode, BotInfo);
     local rune_location = GetRuneSpawnLocation(rune);
     local effort = EffortWait:Rune(rune) + EffortWalk:ToLocation(rune_location) + EffortDanger:OfLocation(rune_location);
+    -- fprint("RUNE "..rune);
+    -- fprint("reward "..RewardRune:Generic(rune, Mode, BotInfo))
+    -- fprint("wait "..EffortWait:Rune(rune));
+    -- fprint("walk "..EffortWalk:ToLocation(rune_location));
+    -- fprint("danger "..EffortDanger:OfLocation(rune_location))
     local potential = reward / effort;
 
     self.Potential[rune] = potential;

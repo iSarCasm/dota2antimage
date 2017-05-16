@@ -1,6 +1,6 @@
 local RewardHeal = {};
 -----------------------------------------
-RewardHeal.Multiplayer = 0.075;
+RewardHeal.Multiplayer = 0.1;
 -----------------------------------------
 function RewardHeal:Fountain()
   local bot = GetBot();
@@ -8,7 +8,7 @@ function RewardHeal:Fountain()
   local hp_max = bot:GetMaxHealth();
   local mp = bot:GetMana();
   local mp_max = bot:GetMaxMana();
-  return ((hp_max - hp) * self:LowHealthK() + (mp_max - mp)) ;
+  return ((hp_max - hp) * self:LowHealthK() + (mp_max - mp))  * self.Multiplayer;
 end
 
 function RewardHeal:Shrine( hShrine )
@@ -17,7 +17,7 @@ end
 
 function RewardHeal:Tango()
   local bot = GetBot();
-  return Min(115, bot:GetMaxHealth() - bot:GetHealth()) * self:LowHealthK();
+  return Min(115, bot:GetMaxHealth() - bot:GetHealth()) * self:LowHealthK() * self.Multiplayer;
 end
 
 function RewardHeal:LowHealthK()

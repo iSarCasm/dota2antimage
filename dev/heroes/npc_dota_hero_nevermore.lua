@@ -3,7 +3,7 @@ local BotInfo = require(GetScriptDirectory().."/dev/bot_info");
 local Hero = BotInfo:new();
 -------------------------------------------
 Hero = Hero:new();
-Hero:Init(LANE_MID, ROLE_CARRY);
+Hero:Init(LANE_MID, ROLE_MID);
 Hero.projectileSpeed = 1200;
 Hero.abilities = {
   "nevermore_shadowraze1",

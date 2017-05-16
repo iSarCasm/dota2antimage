@@ -13,11 +13,11 @@ end
 -------------------------------------------------
 function M:EvaluatePotential(BotInfo, Mode, Strategy)
   local bot = GetBot();
-  return ((self:HasItemsToDeliver(bot) and GetCourierState(GetCourier(0)) == COURIER_STATE_AT_BASE) and 100000 or -999);
+  return ((self:HasItemsWorthToDeliver(bot) and GetCourierState(GetCourier(0)) == COURIER_STATE_AT_BASE) and 100000 or -999);
 end
 
-function M:HasItemsToDeliver(bot)
-  return (bot:GetStashValue() + bot:GetCourierValue()) > 0
+function M:HasItemsWorthToDeliver(bot)
+  return (bot:GetStashValue() + bot:GetCourierValue()) > 500 or (bot.botInfo.ROLE == ROLE_MID and (bot:GetStashValue() + bot:GetCourierValue()) > 0)
 end
 -------------------------------------------------
 function M:Run(BotInfo, Mode, Strategy)

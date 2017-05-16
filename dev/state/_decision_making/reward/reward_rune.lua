@@ -43,7 +43,7 @@ function RewardRune:LaningReward(Rune, Mode, BotInfo)
 end
 
 function RewardRune:TimeRoleReward(Rune, Mode, BotInfo)
-  if (DotaTime() < 1 and (BotInfo.ROLE ~= ROLE_CARRY or BotInfo.ROLE ~= ROLE_MID)) then
+  if (DotaTime() < 1 and not (BotInfo.ROLE == ROLE_CARRY or BotInfo.ROLE == ROLE_MID)) then
     return -300;
   end
   return 0;

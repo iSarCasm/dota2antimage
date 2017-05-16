@@ -1,6 +1,7 @@
 local Danger = {};
 -----------------------------------------
-local VectorHelper = require(GetScriptDirectory().."/dev/helper/vector_helper");
+local Cache         = require(GetScriptDirectory().."/dev/cache");
+local VectorHelper  = require(GetScriptDirectory().."/dev/helper/vector_helper");
 -----------------------------------------
 local FountainDanger  = require(GetScriptDirectory().."/dev/danger/fountain_danger");
 local TowerDanger     = require(GetScriptDirectory().."/dev/danger/tower_danger");
@@ -11,35 +12,28 @@ Danger.danger_sources = {
   TowerDanger,
   HeroDanger
 }
-
-Danger.fast_danger_sources = {
-  FountainDanger,
-  TowerDanger,
-  HeroDanger
-}
-
-Danger.CACHE = {time = DotaTime()}
 -----------------------------------------
 local DANGER_TRAVEL_DISTANCE = 1000;
 -----------------------------------------
 function Danger:Location( vLocation )
-  local cached = self:GetCache(vLocation)
+  local cached = Cache:GetCacheVector(CACHE_DANGER, vLocation)
   if (cached) then
     -- print("cache hit")
     -- print(vLocation)
     return cached;
   else
-    -- print("cache miss "..#self.CACHE)
+    -- print("cache miss "..#Cache.Data[CACHE_DANGER])
     -- print(vLocation)
     local total_danger = 0;
-    for i = 1, #self.fast_danger_sources do
-      local source = self.fast_danger_sources[i];
+    for i = 1, #self.danger_sources do
+      local source = self.danger_sources[i];
       local s_danger = source:OfLocation(vLocation, GetTeam());
       local e_danger = source:OfLocation(vLocation, GetEnemyTeam());
       total_danger = total_danger + e_danger - s_danger;
     end
-    self:Cache(vLocation, total_danger);
-    return Max(0, total_danger);
+    local result = Max(0, total_danger)
+    Cache:CacheVector(CACHE_DANGER, vLocation, result)
+    return result
   end
 end
 
@@ -101,7 +95,7 @@ end
 
 function Danger:GC()
   if (DotaTime() ~= self.CACHE.time) then
-    fprint("GC")
+    -- fprint("GC")
     self.CACHE = {}
     self.CACHE.time = DotaTime()
   end

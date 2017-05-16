@@ -5,6 +5,7 @@ require(GetScriptDirectory().."/dev/constants/runes");
 require(GetScriptDirectory().."/dev/constants/shops");
 require(GetScriptDirectory().."/dev/constants/fountains");
 require(GetScriptDirectory().."/dev/constants/jungle");
+require(GetScriptDirectory().."/dev/constants/cache_types");
 require(GetScriptDirectory().."/dev/helper/global_helper");
 --------------------------------------------------------
 Game            = require(GetScriptDirectory().."/dev/game");
